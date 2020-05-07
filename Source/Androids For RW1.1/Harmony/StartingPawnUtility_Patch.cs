@@ -16,6 +16,7 @@ namespace MOARANDROIDS
             public static void Listener(ref Pawn __result)
             {
                 if (__result == null) return;
+
                 if (Faction.OfPlayer.def.basicMemberKind.defName != "AndroidT2ColonistGeneral")
                 {
                 }

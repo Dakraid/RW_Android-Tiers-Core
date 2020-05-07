@@ -24,33 +24,25 @@ namespace MOARANDROIDS
                         Utils.getRandomMapOfPlayer().gameConditionManager.ConditionIsActive(GameConditionDefOf.SolarFlare) || Settings.androidsAreRare && Rand.Chance(0.95f))
                         return;
 
-                    var nbHumanoids = 0;
+                    IEnumerable<Pawn> pawn = __result as Pawn[] ?? __result.ToArray();
+                    var nbHumanoids = pawn.Where(e => e.def.race != null && e.def.race.Humanlike).Count(e => e.trader == null && e.TraderKind == null);
 
-                    foreach (var e in __result)
-                        //Si humanoide
-                        if (e.def.race != null && e.def.race.Humanlike)
-                            //Si pas commercant
-                            if (e.trader == null && e.TraderKind == null)
-                                nbHumanoids++;
-
-                        //Si android T1/T2 suppression traits ==> Je suis bete cest a cause des surrogates que j'ai crus qu'il avais des traits
-                        /*if(e.def.defName == Utils.T1 || e.def.defName == Utils.T2)
-                            {
-                                Utils.removeAllTraits(e);
-                            }*/
+                    //Si android T1/T2 suppression traits ==> Je suis bete cest a cause des surrogates que j'ai crus qu'il avais des traits
+                    /*if(e.def.defName == Utils.T1 || e.def.defName == Utils.T2)
+                        {
+                            Utils.removeAllTraits(e);
+                        }*/
 
                     //Faction de niveau industriel et plus ET nb pawn généré supérieur ou égal à 5
-                    if (parms.faction.def.techLevel >= TechLevel.Industrial && nbHumanoids >= 5)
+                    if (parms.faction.def.techLevel < TechLevel.Industrial || nbHumanoids < 5) return;
+
                     {
-                        var other = new List<Pawn>();
                         var ret = new List<Pawn>();
-                        var tmp = __result.ToList();
+                        var tmp = pawn.ToList();
 
                         //On supprime les non humains ET trader
                         //int nba = tmp.RemoveAll((Pawn x) => (x.def.race == null || !x.def.race.Humanlike || x.trader != null || x.TraderKind != null));
-                        foreach (var x in tmp)
-                            if (x.def.race == null || !x.def.race.Humanlike || x.trader != null || x.TraderKind != null)
-                                other.Add(x);
+                        var other = tmp.Where(x => x.def.race == null || !x.def.race.Humanlike || x.trader != null || x.TraderKind != null).ToList();
 
                         //Purge dans list de travail
                         foreach (var e in other) tmp.Remove(e);
@@ -63,6 +55,7 @@ namespace MOARANDROIDS
                         {
                             if (Settings.percentageOfSurrogateInAnotherFactionGroupMin == 0.0f)
                                 return;
+
                             nb = 1;
                         }
 
@@ -189,7 +182,7 @@ namespace MOARANDROIDS
                             {
                                 cas.externalController = tmp[i];
                                 var cso = tmp[i].TryGetComp<CompSurrogateOwner>();
-                                if (cso != null) cso.setControlledSurrogate(surrogate, true);
+                                cso?.setControlledSurrogate(surrogate, true);
                             }
 
                             //Transfere equipement
@@ -219,17 +212,15 @@ namespace MOARANDROIDS
                                 foreach (var e in surrogate.equipment.AllEquipmentListForReading)
                                     try
                                     {
-                                        if (Utils.CELOADED && e != null && e.def.IsRangedWeapon)
-                                        {
-                                            var ammoUser = Utils.TryGetCompByTypeName(e, "CompAmmoUser", "CombatExtended");
-                                            if (ammoUser != null)
-                                            {
-                                                var props = Traverse.Create(ammoUser).Property("Props").GetValue();
-                                                var magazineSize = Traverse.Create(props).Field("magazineSize").GetValue<int>();
-                                                var def = Traverse.Create(ammoUser).Field("selectedAmmo").GetValue<ThingDef>();
-                                                if (def != null) Traverse.Create(ammoUser).Method("ResetAmmoCount", def).GetValue();
-                                            }
-                                        }
+                                        if (!Utils.CELOADED || e == null || !e.def.IsRangedWeapon) continue;
+
+                                        var ammoUser = Utils.TryGetCompByTypeName(e, "CompAmmoUser", "CombatExtended");
+                                        if (ammoUser == null) continue;
+
+                                        var props = Traverse.Create(ammoUser).Property("Props").GetValue();
+                                        var magazineSize = Traverse.Create(props).Field("magazineSize").GetValue<int>();
+                                        var def = Traverse.Create(ammoUser).Field("selectedAmmo").GetValue<ThingDef>();
+                                        if (def != null) Traverse.Create(ammoUser).Method("ResetAmmoCount", def).GetValue();
                                     }
                                     catch (Exception)
                                     {
@@ -258,16 +249,14 @@ namespace MOARANDROIDS
                                             path = e.def.apparel.wornGraphicPath + "_" + surrogate.story.bodyType.defName + "_south";
 
                                         Texture2D appFoundTex = null;
-                                        Texture2D appTex = null;
                                         //CHeck dans les mods de la texture
                                         for (var j = LoadedModManager.RunningModsListForReading.Count - 1; j >= 0; j--)
                                         {
-                                            appTex = LoadedModManager.RunningModsListForReading[j].GetContentHolder<Texture2D>().Get(path);
-                                            if (appTex != null)
-                                            {
-                                                appFoundTex = appTex;
-                                                break;
-                                            }
+                                            var appTex = LoadedModManager.RunningModsListForReading[j].GetContentHolder<Texture2D>().Get(path);
+                                            if (appTex == null) continue;
+
+                                            appFoundTex = appTex;
+                                            break;
                                         }
 
                                         //Check RW mods  de la texture
@@ -278,11 +267,10 @@ namespace MOARANDROIDS
                                         }
 
                                         //SI pb avec texture on ne l'ajoute pas
-                                        if (appFoundTex != null)
-                                        {
-                                            tmp[i].apparel.Remove(e);
-                                            surrogate.apparel.Wear(e);
-                                        }
+                                        if (appFoundTex == null) continue;
+                                        
+                                        tmp[i].apparel.Remove(e);
+                                        surrogate.apparel.Wear(e);
                                     }
                                 }
                                 catch (Exception ex)
@@ -302,9 +290,8 @@ namespace MOARANDROIDS
                                     tmp[i].inventory.innerContainer.TryTransferAllToContainer(surrogate.inventory.innerContainer);
 
                                     //Suppression des drogues 
-                                    foreach (var el in surrogate.inventory.innerContainer.ToList())
-                                        if (el.def.IsDrug)
-                                            surrogate.inventory.innerContainer.Remove(el);
+                                    foreach (var el in surrogate.inventory.innerContainer.ToList().Where(el => el.def.IsDrug))
+                                        surrogate.inventory.innerContainer.Remove(el);
                                 }
                                 catch (Exception ex)
                                 {

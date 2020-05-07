@@ -26,7 +26,6 @@ namespace MOARANDROIDS
 
         private void CreateExplosion()
         {
-            var smoke = DamageDefOf.Smoke;
             var instigator = this.instigator;
             var def = this.def;
             var weaponDef = this.weaponDef;

@@ -32,3 +32,7 @@ C:\Users\AaronDB\Desktop\Mods Folder for Mod Folders\Rimworld\Android-Tiers-Core
 C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\Android-Tiers-Core\1.1\Assemblies\AndroidTiers.dll
 C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\Android-Tiers-Core\Source\Androids For RW1.1\obj\Debug\Androids.csproj.CoreCompileInputs.cache
 C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\Android-Tiers-Core\Source\Androids For RW1.1\obj\Debug\AndroidTiers.dll
+G:\SteamLibrary\steamapps\common\RimWorld\Mods\RW_Android-Tiers-Core\1.1\Assemblies\AndroidTiers.dll
+G:\SteamLibrary\steamapps\common\RimWorld\Mods\RW_Android-Tiers-Core\Source\Androids For RW1.1\obj\Debug\Androids.csprojAssemblyReference.cache
+G:\SteamLibrary\steamapps\common\RimWorld\Mods\RW_Android-Tiers-Core\Source\Androids For RW1.1\obj\Debug\Androids.csproj.CoreCompileInputs.cache
+G:\SteamLibrary\steamapps\common\RimWorld\Mods\RW_Android-Tiers-Core\Source\Androids For RW1.1\obj\Debug\AndroidTiers.dll

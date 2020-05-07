@@ -9,25 +9,20 @@ namespace MOARANDROIDS
     {
         public override IEnumerable<BodyPartRecord> GetPartsToApplyOn(Pawn pawn, RecipeDef recipe)
         {
-            for (var i = 0; i < recipe.appliedOnFixedBodyParts.Count; i++)
-            {
-                var part = recipe.appliedOnFixedBodyParts[i];
-                var bpList = pawn.RaceProps.body.AllParts;
-                for (var j = 0; j < bpList.Count; j++)
-                {
-                    var record = bpList[j];
-                    if (record.def == part)
-                    {
-                        var diffs = from x in pawn.health.hediffSet.hediffs
-                            where x.Part == record
-                            select x;
-                        if (diffs.Count() != 1 || diffs.First().def != recipe.addsHediff)
-                            if (record.parent == null || pawn.health.hediffSet.GetNotMissingParts().Contains(record.parent))
-                                if (!pawn.health.hediffSet.PartOrAnyAncestorHasDirectlyAddedParts(record) || pawn.health.hediffSet.HasDirectlyAddedPartFor(record))
-                                    yield return record;
-                    }
-                }
-            }
+            return from part in recipe.appliedOnFixedBodyParts
+                let bpList = pawn.RaceProps.body.AllParts
+                let part1 = part
+                from record in from record in bpList
+                    where record.def == part1
+                    let record1 = record
+                    let diffs = from x in pawn.health.hediffSet.hediffs
+                        where x.Part == record1
+                        select x
+                    where diffs.Count() != 1 || diffs.First().def != recipe.addsHediff
+                    where record.parent == null || pawn.health.hediffSet.GetNotMissingParts().Contains(record.parent)
+                    where !pawn.health.hediffSet.PartOrAnyAncestorHasDirectlyAddedParts(record) || pawn.health.hediffSet.HasDirectlyAddedPartFor(record)
+                    select record
+                select record;
         }
 
         public override void ApplyOnPawn(Pawn pawn, BodyPartRecord part, Pawn billDoer, List<Thing> ingredients, Bill bill)
@@ -35,6 +30,7 @@ namespace MOARANDROIDS
             if (billDoer != null)
             {
                 if (CheckSurgeryFailAndroid(billDoer, pawn, ingredients, part, bill)) return;
+
                 TaleRecorder.RecordTale(TaleDefOf.DidSurgery, billDoer, pawn);
                 MedicalRecipesUtility.RestorePartAndSpawnAllPreviousParts(pawn, part, billDoer.Position, billDoer.Map);
             }

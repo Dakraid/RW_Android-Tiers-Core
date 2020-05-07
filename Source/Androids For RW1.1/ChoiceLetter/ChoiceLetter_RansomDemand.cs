@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using Verse;
 
@@ -31,35 +32,31 @@ namespace MOARANDROIDS
                         if (Rand.Chance(1.0f - Settings.riskCryptolockerScam))
                         {
                             //Suppression cryptolocker des surrogates
-                            foreach (var map in Find.Maps)
-                            foreach (var t in map.listerThings.AllThings)
-                                if (cryptolockedThings.Contains(t.GetUniqueLoadID()))
-                                    try
+                            foreach (var t in Find.Maps.SelectMany(map => map.listerThings.AllThings.Where(t => cryptolockedThings.Contains(t.GetUniqueLoadID()))))
+                                try
+                                {
+                                    if (t is Pawn p)
                                     {
-                                        if (t is Pawn)
-                                        {
-                                            var p = (Pawn) t;
-                                            if (p.IsSurrogateAndroid()) p.health.AddHediff(Utils.hediffNoHost);
-                                        }
-                                        else
-                                        {
-                                            t.SetFaction(Faction.OfPlayer);
-                                            var cf = t.TryGetComp<CompFlickable>();
-                                            if (cf != null) cf.SwitchIsOn = true;
-                                        }
-
-                                        var csm = t.TryGetComp<CompSkyMind>();
-                                        if (csm != null)
-                                            csm.Infected = -1;
+                                        if (p.IsSurrogateAndroid()) p.health.AddHediff(Utils.hediffNoHost);
                                     }
-                                    catch (Exception)
+                                    else
                                     {
+                                        t.SetFaction(Faction.OfPlayer);
+                                        var cf = t.TryGetComp<CompFlickable>();
+                                        if (cf != null) cf.SwitchIsOn = true;
                                     }
 
-                            if (deviceType)
-                                Messages.Message("ATPP_CryptolockerDeviceClearedByFaction".Translate(faction.Name), MessageTypeDefOf.PositiveEvent);
-                            else
-                                Messages.Message("ATPP_CryptolockerClearedByFaction".Translate(faction.Name), MessageTypeDefOf.PositiveEvent);
+                                    var csm = t.TryGetComp<CompSkyMind>();
+                                    if (csm != null)
+                                        csm.Infected = -1;
+                                }
+                                catch (Exception)
+                                {
+                                }
+
+                            Messages.Message(
+                                deviceType ? "ATPP_CryptolockerDeviceClearedByFaction".Translate(faction.Name) : "ATPP_CryptolockerClearedByFaction".Translate(faction.Name),
+                                MessageTypeDefOf.PositiveEvent);
                         }
                         else
                         {
@@ -78,8 +75,6 @@ namespace MOARANDROIDS
                 }
             }
         }
-
-        public override bool CanShowInLetterStack => base.CanShowInLetterStack;
 
         public override void ExposeData()
         {

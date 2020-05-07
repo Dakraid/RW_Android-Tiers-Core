@@ -24,12 +24,11 @@ namespace MOARANDROIDS
 
                     var obj = Find.Selector.SelectedObjects;
 
-                    if (obj != null && obj.Count == 1 && obj[0] is Pawn)
-                    {
-                        var pawn = (Pawn) obj[0];
+                    if (obj == null || obj.Count != 1 || !(obj[0] is Pawn)) return true;
 
-                        if (pawn.IsAndroidTier()) warnOnFail = false;
-                    }
+                    var pawn = (Pawn) obj[0];
+
+                    if (pawn.IsAndroidTier()) warnOnFail = false;
 
                     return true;
                 }
@@ -53,25 +52,14 @@ namespace MOARANDROIDS
             {
                 try
                 {
-                    if (Utils.HOSPITALITY_LOADED && CPaths.HospitalityPatchInsideFindBedFor) // && target.Thing.GetType().IsSubclassOf(typeof(Building_Bed)))
-                    {
-                        if (pawn.IsAndroidTier())
-                        {
-                            if (Utils.ExceptionSurrogatePodGuest.Contains(t.def.defName))
-                                __result = false;
-                            else
-                                __result = true;
-                        }
-                        else
-                        {
-                            if (Utils.ExceptionSurrogatePodGuest.Contains(t.def.defName))
-                                __result = true;
-                            else
-                                __result = false;
-                        }
+                    if (!Utils.HOSPITALITY_LOADED || !CPaths.HospitalityPatchInsideFindBedFor) return;
 
-                        //Log.Message(">>"+pawn.LabelShort+" "+t.def.defName+" "+__result);
-                    }
+                    if (pawn.IsAndroidTier())
+                        __result = !Utils.ExceptionSurrogatePodGuest.Contains(t.def.defName);
+                    else
+                        __result = Utils.ExceptionSurrogatePodGuest.Contains(t.def.defName);
+
+                    //Log.Message(">>"+pawn.LabelShort+" "+t.def.defName+" "+__result);
                 }
                 catch (Exception e)
                 {

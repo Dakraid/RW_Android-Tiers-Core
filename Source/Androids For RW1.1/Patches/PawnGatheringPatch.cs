@@ -13,6 +13,7 @@ namespace MOARANDROIDS.Patches
             public static bool Prefix(Pawn p, ref bool __result)
             {
                 if (p.needs?.food == null || p.needs?.rest == null) return ReplacementForAndroids(p, out __result);
+
                 return true;
             }
 

@@ -13,10 +13,10 @@ namespace MOARANDROIDS
             [HarmonyPostfix]
             public static void Listener(Pawn p)
             {
-                if (Utils.PawnInventoryGeneratorCanHackInvNutritionValue)
-                    //restauration du coef de nutrition
-                    if (Utils.ExceptionAndroidList.Contains(p.def.defName) && p.def.defName != Utils.M7)
-                        p.kindDef.invNutrition = Utils.PawnInventoryGeneratorLastInvNutritionValue;
+                if (!Utils.PawnInventoryGeneratorCanHackInvNutritionValue) return;
+
+                if (Utils.ExceptionAndroidList.Contains(p.def.defName) && p.def.defName != Utils.M7)
+                    p.kindDef.invNutrition = Utils.PawnInventoryGeneratorLastInvNutritionValue;
             }
         }
 
@@ -26,13 +26,12 @@ namespace MOARANDROIDS
             [HarmonyPrefix]
             public static bool Listener(Pawn p)
             {
-                if (Utils.PawnInventoryGeneratorCanHackInvNutritionValue)
-                    //mise en place coef de nutrition fake
-                    if (Utils.ExceptionAndroidList.Contains(p.def.defName) && p.def.defName != Utils.M7)
-                    {
-                        Utils.PawnInventoryGeneratorLastInvNutritionValue = p.kindDef.invNutrition;
-                        p.kindDef.invNutrition = 1.0f;
-                    }
+                if (!Utils.PawnInventoryGeneratorCanHackInvNutritionValue) return true;
+
+                if (!Utils.ExceptionAndroidList.Contains(p.def.defName) || p.def.defName == Utils.M7) return true;
+
+                Utils.PawnInventoryGeneratorLastInvNutritionValue = p.kindDef.invNutrition;
+                p.kindDef.invNutrition = 1.0f;
 
                 return true;
             }

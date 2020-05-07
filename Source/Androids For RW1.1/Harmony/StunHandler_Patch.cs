@@ -17,11 +17,9 @@ namespace MOARANDROIDS
             [HarmonyPrefix]
             public static void Listener(DamageInfo dinfo, ref bool affectedByEMP, Thing ___parent)
             {
-                if (___parent is Pawn)
-                {
-                    var pawn = (Pawn) ___parent;
-                    if (Utils.ExceptionAndroidWithoutSkinList.Contains(pawn.def.defName) || Utils.ExceptionAndroidAnimals.Contains(pawn.def.defName)) affectedByEMP = true;
-                }
+                if (!(___parent is Pawn pawn)) return;
+
+                if (Utils.ExceptionAndroidWithoutSkinList.Contains(pawn.def.defName) || Utils.ExceptionAndroidAnimals.Contains(pawn.def.defName)) affectedByEMP = true;
             }
         }
     }

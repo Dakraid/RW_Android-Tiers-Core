@@ -135,9 +135,7 @@ namespace MOARANDROIDS
                     Utils.traitSimpleMinded = DefDatabase<TraitDef>.GetNamed("SimpleMindedAndroid", false);
 
                     //generating list of androids without skin
-                    foreach (var el in Utils.ExceptionAndroidList)
-                        if (!Utils.ExceptionAndroidWithSkinList.Contains(el))
-                            Utils.ExceptionAndroidWithoutSkinList.Add(el);
+                    foreach (var el in Utils.ExceptionAndroidList.Where(el => !Utils.ExceptionAndroidWithSkinList.Contains(el))) Utils.ExceptionAndroidWithoutSkinList.Add(el);
 
                     //Check if TX serie loaded
                     if (DefDatabase<PawnKindDef>.GetNamed("ATPP_AndroidTX2CollectiveSoldier", false) != null)
@@ -201,17 +199,10 @@ namespace MOARANDROIDS
                     var tcd = DefDatabase<ThingCategoryDef>.GetNamed("alienCorpseCategory", false);
 
                     if (tcd != null && r != null)
-                        foreach (var el in tcd.childThingDefs)
+                        foreach (var el in tcd.childThingDefs.Where(el => el != null).Where(el => !Utils.ExceptionAndroidCorpseList.Contains(el.defName)))
                         {
-                            if (el == null)
-                                continue;
-                            //Log.Message(el.defName);
-
-                            if (!Utils.ExceptionAndroidCorpseList.Contains(el.defName))
-                            {
-                                Log.Message("[ATPP] BlacklistigOtherAR  : " + el.defName);
-                                r.fixedIngredientFilter.SetAllow(el, false);
-                            }
+                            Log.Message("[ATPP] BlacklistigOtherAR  : " + el.defName);
+                            r.fixedIngredientFilter.SetAllow(el, false);
                         }
 
                     //Dynamicaly add "Meat_Human" to recipe TX3/TX4
@@ -239,7 +230,7 @@ namespace MOARANDROIDS
                     foreach (var td in DefDatabase<ThingDef>.AllDefsListForReading)
                         try
                         {
-                            if (td != null && td.race != null)
+                            if (td?.race != null)
                             {
                                 //Dynamic fix Fluffy_BirdsAndBees mod which add sex to androids
                                 if (Utils.BIRDSANDBEES_LOADED && (Utils.ExceptionAndroidList.Contains(td.defName) || Utils.ExceptionAndroidAnimals.Contains(td.defName)))
@@ -249,26 +240,22 @@ namespace MOARANDROIDS
                                     {
                                         //remove neutering operation
                                         if (td.recipes != null)
-                                            foreach (var cr in td.recipes.ToList())
-                                                if (cr.defName == "Neuter" || cr.defName == "InstallBasicReproductiveOrgans" || cr.defName == "InstallBionicReproductiveOrgans")
-                                                    td.recipes.Remove(cr);
+                                            foreach (var cr in td.recipes.ToList().Where(cr => cr.defName == "Neuter" || cr.defName == "InstallBasicReproductiveOrgans" || cr.defName == "InstallBionicReproductiveOrgans"))
+                                                td.recipes.Remove(cr);
 
                                         //Cut reproductive organs
                                         if (td.race.body != null && td.race.body.corePart != null && td.race.body.corePart.parts != null)
                                         {
-                                            foreach (var cbp in td.race.body.corePart.parts.ToList())
-                                                if (cbp.def.defName == "ReproductiveOrgans")
-                                                    td.race.body.corePart.parts.Remove(cbp);
-                                            foreach (var cbp in td.race.body.AllParts.ToList())
-                                                if (cbp.def.defName == "ReproductiveOrgans")
-                                                    td.race.body.AllParts.Remove(cbp);
+                                            foreach (var cbp in td.race.body.corePart.parts.ToList().Where(cbp => cbp.def.defName == "ReproductiveOrgans"))
+                                                td.race.body.corePart.parts.Remove(cbp);
+                                            foreach (var cbp in td.race.body.AllParts.ToList().Where(cbp => cbp.def.defName == "ReproductiveOrgans"))
+                                                td.race.body.AllParts.Remove(cbp);
                                         }
 
                                         //Remove old-age  hediffgivers
                                         if (td.race.hediffGiverSets != null)
-                                            foreach (var hg in td.race.hediffGiverSets.ToList())
-                                                if (hg.defName == "HumanoidFertility")
-                                                    td.race.hediffGiverSets.Remove(hg);
+                                            foreach (var hg in td.race.hediffGiverSets.ToList().Where(hg => hg.defName == "HumanoidFertility"))
+                                                td.race.hediffGiverSets.Remove(hg);
                                     }
                                     catch (Exception ex)
                                     {
@@ -279,54 +266,40 @@ namespace MOARANDROIDS
                                 if (td.race.intelligence == Intelligence.Humanlike)
                                 {
                                     //SkyMind
-                                    var cp = new CompProperties();
-                                    cp.compClass = typeof(CompSkyMind);
+                                    var cp = new CompProperties {compClass = typeof(CompSkyMind)};
                                     td.comps.Add(cp);
 
                                     //CompSurrogate
                                     if (td.defName != "M7Mech")
                                     {
-                                        cp = new CompProperties();
-                                        cp.compClass = typeof(CompSurrogateOwner);
+                                        cp = new CompProperties {compClass = typeof(CompSurrogateOwner)};
                                         td.comps.Add(cp);
                                     }
 
-                                    cp = new CompProperties();
-                                    cp.compClass = typeof(CompAndroidState);
+                                    cp = new CompProperties {compClass = typeof(CompAndroidState)};
                                     td.comps.Add(cp);
 
                                     //Si androide on va venir stocké dans la Raceprops s'il sagit d'un androide evolué ou non
-                                    if (Utils.ExceptionAndroidList.Contains(td.defName))
-                                    {
-                                        if (Utils.ExceptionAndroidListAdvanced.Contains(td.defName))
-                                            td.race.gestationPeriodDays = 2;
-                                        else
-                                            td.race.gestationPeriodDays = 1;
+                                    if (!Utils.ExceptionAndroidList.Contains(td.defName)) continue;
 
-                                        try
-                                        {
-                                            if (!Settings.allowHumanDrugsForAndroids)
-                                                //Remove autogenerated administerXXX for androids
-                                                foreach (var el in td.AllRecipes.ToList())
-                                                foreach (var blacklistedFood in Utils.BlacklistAndroidFood)
-                                                    if (el.defName == "Administer_" + blacklistedFood)
-                                                    {
-                                                        td.AllRecipes.Remove(el);
-                                                        break;
-                                                    }
-                                        }
-                                        catch (Exception e)
-                                        {
-                                            Log.Message("[ATPP] RemovingAndroidAdministerFood " + e.Message + " " + e.StackTrace);
-                                        }
+                                    td.race.gestationPeriodDays = Utils.ExceptionAndroidListAdvanced.Contains(td.defName) ? 2 : 1;
+
+                                    try
+                                    {
+                                        if (Settings.allowHumanDrugsForAndroids) continue;
+
+                                        foreach (var el in td.AllRecipes.ToList().Where(el => Enumerable.Any(Utils.BlacklistAndroidFood, blacklistedFood => el.defName == "Administer_" + blacklistedFood)))
+                                            td.AllRecipes.Remove(el);
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Log.Message("[ATPP] RemovingAndroidAdministerFood " + e.Message + " " + e.StackTrace);
                                     }
                                 }
                                 else if (Utils.ExceptionAndroidAnimalPowered.Contains(td.defName))
                                 {
                                     //Log.Message("=>" + td.defName);
-                                    var cp = new CompProperties();
-                                    cp = new CompProperties();
-                                    cp.compClass = typeof(CompAndroidState);
+                                    var cp = new CompProperties {compClass = typeof(CompAndroidState)};
                                     td.comps.Add(cp);
                                 }
                             }
@@ -334,42 +307,33 @@ namespace MOARANDROIDS
                             {
                                 if (Utils.ExceptionAutodoors.Contains(td.defName))
                                 {
-                                    var cp = new CompProperties();
-                                    cp.compClass = typeof(CompAutoDoor);
+                                    var cp = new CompProperties {compClass = typeof(CompAutoDoor)};
                                     td.comps.Add(cp);
 
                                     //SkyMind
-                                    cp = new CompProperties();
-                                    cp.compClass = typeof(CompSkyMind);
+                                    cp = new CompProperties {compClass = typeof(CompSkyMind)};
                                     td.comps.Add(cp);
                                 }
                                 else if (td.defName == "ATPP_AndroidPod" || td.defName == "ATPP_AndroidPodMech" || td.defName == "AndroidOperationBed")
                                 {
-                                    var cp = new CompProperties();
-                                    cp.compClass = typeof(CompAndroidPod);
+                                    var cp = new CompProperties {compClass = typeof(CompAndroidPod)};
                                     td.comps.Add(cp);
 
                                     td.tickerType = TickerType.Normal;
 
-                                    if (td.defName == "AndroidOperationBed")
-                                    {
-                                        var cp2 = new CompProperties_Power();
-                                        cp2.compClass = typeof(CompPowerTrader);
-                                        cp2.shortCircuitInRain = true;
-                                        cp2.basePowerConsumption = 80;
-                                        td.comps.Add(cp2);
-                                    }
+                                    if (td.defName != "AndroidOperationBed") continue;
+
+                                    var cp2 = new CompProperties_Power {compClass = typeof(CompPowerTrader), shortCircuitInRain = true, basePowerConsumption = 80};
+                                    td.comps.Add(cp2);
                                 }
                                 else if (td.thingClass != null && (td.thingClass == typeof(Building_Turret) || td.thingClass.IsSubclassOf(typeof(Building_Turret))))
                                 {
                                     //SkyMind
-                                    var cp = new CompProperties();
-                                    cp.compClass = typeof(CompSkyMind);
+                                    var cp = new CompProperties {compClass = typeof(CompSkyMind)};
                                     td.comps.Add(cp);
 
                                     //RemoteTurret
-                                    cp = new CompProperties();
-                                    cp.compClass = typeof(CompRemotelyControlledTurret);
+                                    cp = new CompProperties {compClass = typeof(CompRemotelyControlledTurret)};
                                     td.comps.Add(cp);
                                 }
                                 else
@@ -377,30 +341,24 @@ namespace MOARANDROIDS
                                     if (Utils.ExceptionSkyCloudCores.Contains(td.defName))
                                         continue;
 
-                                    if (td.comps != null)
+                                    if (td.comps == null) continue;
+
+                                    var found = false;
+                                    var flickable = false;
+                                        
+                                    foreach (var e in td.comps.Where(e => e.compClass != null))
                                     {
-                                        var found = false;
-                                        var flickable = false;
+                                        if (e.compClass == typeof(CompFlickable))
+                                            flickable = true;
 
-                                        foreach (var e in td.comps)
-                                        {
-                                            if (e.compClass == null)
-                                                continue;
-
-                                            if (e.compClass == typeof(CompFlickable))
-                                                flickable = true;
-
-                                            if (e.compClass == typeof(CompPowerTrader) || e.compClass == typeof(CompPowerPlant) || e.compClass.IsSubclassOf(typeof(CompPowerPlant)))
-                                                found = true;
-                                        }
-
-                                        if (found && flickable)
-                                        {
-                                            var cp = new CompProperties();
-                                            cp.compClass = typeof(CompSkyMind);
-                                            td.comps.Add(cp);
-                                        }
+                                        if (e.compClass == typeof(CompPowerTrader) || e.compClass == typeof(CompPowerPlant) || e.compClass.IsSubclassOf(typeof(CompPowerPlant)))
+                                            found = true;
                                     }
+
+                                    if (!found || !flickable) continue;
+
+                                    var cp = new CompProperties {compClass = typeof(CompSkyMind)};
+                                    td.comps.Add(cp);
                                 }
                             }
                         }
@@ -680,29 +638,31 @@ namespace MOARANDROIDS
                     foreach (var e in doctor.workGiversByPriority)
                         try
                         {
-                            var cd = new WorkGiverDef();
-                            cd.workType = Utils.WorkTypeDefSmithing;
-                            cd.priorityInType = e.priorityInType;
-                            cd.verb = e.verb;
-                            cd.gerund = e.gerund;
-                            cd.requiredCapacities = e.requiredCapacities;
-                            cd.label = e.label;
-                            cd.giverClass = e.giverClass;
-                            cd.billGiversAllAnimals = e.billGiversAllAnimals;
-                            cd.billGiversAllAnimalsCorpses = e.billGiversAllAnimalsCorpses;
-                            cd.billGiversAllHumanlikes = e.billGiversAllHumanlikes;
-                            cd.billGiversAllHumanlikesCorpses = e.billGiversAllHumanlikesCorpses;
-                            cd.billGiversAllMechanoidsCorpses = e.billGiversAllMechanoidsCorpses;
-                            cd.canBeDoneWhileDrafted = e.canBeDoneWhileDrafted;
-                            cd.tagToGive = e.tagToGive;
-                            cd.scanThings = e.scanThings;
-                            cd.scanCells = e.scanCells;
-                            cd.workTags = e.workTags;
-                            cd.autoTakeablePriorityDrafted = e.autoTakeablePriorityDrafted;
-                            cd.feedAnimalsOnly = e.feedAnimalsOnly;
-                            cd.feedHumanlikesOnly = e.feedHumanlikesOnly;
-                            cd.fixedBillGiverDefs = e.fixedBillGiverDefs;
-                            cd.emergency = e.emergency;
+                            var cd = new WorkGiverDef
+                            {
+                                workType = Utils.WorkTypeDefSmithing,
+                                priorityInType = e.priorityInType,
+                                verb = e.verb,
+                                gerund = e.gerund,
+                                requiredCapacities = e.requiredCapacities,
+                                label = e.label,
+                                giverClass = e.giverClass,
+                                billGiversAllAnimals = e.billGiversAllAnimals,
+                                billGiversAllAnimalsCorpses = e.billGiversAllAnimalsCorpses,
+                                billGiversAllHumanlikes = e.billGiversAllHumanlikes,
+                                billGiversAllHumanlikesCorpses = e.billGiversAllHumanlikesCorpses,
+                                billGiversAllMechanoidsCorpses = e.billGiversAllMechanoidsCorpses,
+                                canBeDoneWhileDrafted = e.canBeDoneWhileDrafted,
+                                tagToGive = e.tagToGive,
+                                scanThings = e.scanThings,
+                                scanCells = e.scanCells,
+                                workTags = e.workTags,
+                                autoTakeablePriorityDrafted = e.autoTakeablePriorityDrafted,
+                                feedAnimalsOnly = e.feedAnimalsOnly,
+                                feedHumanlikesOnly = e.feedHumanlikesOnly,
+                                fixedBillGiverDefs = e.fixedBillGiverDefs,
+                                emergency = e.emergency
+                            };
                             cd.gerund = e.gerund;
                             cd.verb = e.verb;
                             cd.label = e.label;
@@ -737,57 +697,33 @@ namespace MOARANDROIDS
                         //Ajout PawnkindDefs des androids
                         var pkd = new List<string>
                             {"AndroidT1RaiderFactionSpecific", "AndroidT2RaiderFactionSpecific", "AndroidT3RaiderFactionSpecific", "AndroidT4RaiderFactionSpecific"};
-                        foreach (var x in pkd)
-                        {
-                            var p = DefDatabase<PawnKindDef>.GetNamed(x, false);
-                            Utils.AndroidsPKDHostile.Add(p);
-                        }
+                        foreach (var p in pkd.Select(x => DefDatabase<PawnKindDef>.GetNamed(x, false))) Utils.AndroidsPKDHostile.Add(p);
 
                         pkd = new List<string>
                         {
                             "ATPP_AndroidTX2RaiderFactionSpecific", "ATPP_AndroidTX2KRaiderFactionSpecific", "ATPP_AndroidTX3RaiderFactionSpecific",
                             "ATPP_AndroidTX4RaiderFactionSpecific"
                         };
-                        foreach (var x in pkd)
-                        {
-                            var p = DefDatabase<PawnKindDef>.GetNamed(x, false);
-                            Utils.AndroidsXSeriePKDHostile.Add(p);
-                        }
+                        foreach (var p in pkd.Select(x => DefDatabase<PawnKindDef>.GetNamed(x, false))) Utils.AndroidsXSeriePKDHostile.Add(p);
 
                         pkd = new List<string>
                         {
                             "ATPP_AndroidTX2IRaiderFactionSpecific", "ATPP_AndroidTX2KIRaiderFactionSpecific", "ATPP_AndroidTX3IRaiderFactionSpecific",
                             "ATPP_AndroidTX4IRaiderFactionSpecific"
                         };
-                        foreach (var x in pkd)
-                        {
-                            var p = DefDatabase<PawnKindDef>.GetNamed(x, false);
-                            Utils.AndroidsXISeriePKDHostile.Add(p);
-                        }
+                        foreach (var p in pkd.Select(x => DefDatabase<PawnKindDef>.GetNamed(x, false))) Utils.AndroidsXISeriePKDHostile.Add(p);
 
 
                         pkd = new List<string> {"AndroidT1CollectiveSoldier", "AndroidT2CollectiveSoldier", "AndroidT3CollectiveSoldier", "AndroidT4CollectiveSoldier"};
-                        foreach (var x in pkd)
-                        {
-                            var p = DefDatabase<PawnKindDef>.GetNamed(x, false);
-                            Utils.AndroidsPKDNeutral.Add(p);
-                        }
+                        foreach (var p in pkd.Select(x => DefDatabase<PawnKindDef>.GetNamed(x, false))) Utils.AndroidsPKDNeutral.Add(p);
 
                         pkd = new List<string>
                             {"ATPP_AndroidTX2CollectiveSoldier", "ATPP_AndroidTX2KCollectiveSoldier", "ATPP_AndroidTX3CollectiveSoldier", "ATPP_AndroidTX4CollectiveSoldier"};
-                        foreach (var x in pkd)
-                        {
-                            var p = DefDatabase<PawnKindDef>.GetNamed(x, false);
-                            Utils.AndroidsXSeriePKDNeutral.Add(p);
-                        }
+                        foreach (var p in pkd.Select(x => DefDatabase<PawnKindDef>.GetNamed(x, false))) Utils.AndroidsXSeriePKDNeutral.Add(p);
 
                         pkd = new List<string>
                             {"ATPP_AndroidTX2ICollectiveSoldier", "ATPP_AndroidTX2KICollectiveSoldier", "ATPP_AndroidTX3ICollectiveSoldier", "ATPP_AndroidTX4ICollectiveSoldier"};
-                        foreach (var x in pkd)
-                        {
-                            var p = DefDatabase<PawnKindDef>.GetNamed(x, false);
-                            Utils.AndroidsXISeriePKDNeutral.Add(p);
-                        }
+                        foreach (var p in pkd.Select(x => DefDatabase<PawnKindDef>.GetNamed(x, false))) Utils.AndroidsXISeriePKDNeutral.Add(p);
                     }
                     catch (Exception ex)
                     {
@@ -797,14 +733,8 @@ namespace MOARANDROIDS
 
                     //Remplissage des mentalBreakDef des virused lite
                     var selMentalBreaks = new List<string> {"Wander_Sad", "InsultingSpree", "TargetedInsultingSpree", "MurderousRage"};
-                    MentalBreakDef mb;
 
-                    foreach (var ct in selMentalBreaks)
-                    {
-                        mb = DefDatabase<MentalBreakDef>.GetNamed(ct, false);
-                        if (mb != null)
-                            Utils.VirusedRandomMentalBreak.Add(mb);
-                    }
+                    foreach (var mb in selMentalBreaks.Select(ct => DefDatabase<MentalBreakDef>.GetNamed(ct, false)).Where(mb => mb != null)) Utils.VirusedRandomMentalBreak.Add(mb);
 
                     Log.Message("[ATPP] " + selMentalBreaks.Count + " MentalBreaks collected");
 
@@ -867,15 +797,12 @@ namespace MOARANDROIDS
             foreach (var p in map.mapPawns.AllPawns)
                 if (p.IsAndroidTier() && p.health != null && p.health.hediffSet != null)
                 {
-                    foreach (var he in p.health.hediffSet.hediffs)
-                        if (Utils.BlacklistAndroidHediff.Contains(he.def.defName))
-                            toDel.Add(he);
+                    toDel.AddRange(p.health.hediffSet.hediffs.Where(he => Utils.BlacklistAndroidHediff.Contains(he.def.defName)));
 
-                    if (toDel.Count() > 0)
-                    {
-                        foreach (var h in toDel) p.health.hediffSet.hediffs.Remove(h);
-                        toDel.Clear();
-                    }
+                    if (!toDel.Any()) continue;
+
+                    foreach (var h in toDel) p.health.hediffSet.hediffs.Remove(h);
+                    toDel.Clear();
                 }
         }
 
@@ -886,7 +813,7 @@ namespace MOARANDROIDS
                 if (p.IsSurrogateAndroid())
                 {
                     var cas = p.TryGetComp<CompAndroidState>();
-                    if (cas != null && cas.surrogateController != null) connectUser(p);
+                    if (cas?.surrogateController != null) connectUser(p);
                 }
         }
 
@@ -949,19 +876,18 @@ namespace MOARANDROIDS
             }
 
             //Toutes les 6 sec check etat réseau
-            if (CGT % 360 == 0)
-            {
-                if (!Settings.disableLowNetworkMalus)
-                    checkSkyMindSignalPerformance();
+            if (CGT % 360 != 0) return;
 
-                checkSkyMindAutoReconnect();
+            if (!Settings.disableLowNetworkMalus)
+                checkSkyMindSignalPerformance();
 
-                //Check solarFlare dans les caravans
-                checkSolarFlarStuffInCaravans();
+            checkSkyMindAutoReconnect();
 
-                if (Utils.POWERPP_LOADED)
-                    checkDisconnectedFromLWPNAndroid();
-            }
+            //Check solarFlare dans les caravans
+            checkSolarFlarStuffInCaravans();
+
+            if (Utils.POWERPP_LOADED)
+                checkDisconnectedFromLWPNAndroid();
         }
 
         /*
@@ -1020,7 +946,7 @@ namespace MOARANDROIDS
             foreach (var p in c.pawns)
             {
                 var cas = p.TryGetComp<CompAndroidState>();
-                if (cas != null) cas.checkSolarFlareStuff();
+                cas?.checkSolarFlareStuff();
             }
         }
 
@@ -1062,9 +988,8 @@ namespace MOARANDROIDS
                     csm.Infected = -1;
 
 
-                    if (t is Pawn)
+                    if (t is Pawn p)
                     {
-                        var p = (Pawn) t;
                         Utils.makeAndroidBatteryOverload(p);
                     }
                     else
@@ -1077,11 +1002,10 @@ namespace MOARANDROIDS
                 }
 
                 //Fin de la contamination vitale du dispositif
-                if (csm.infectedEndGT != -1 && csm.infectedEndGT <= GT)
-                {
-                    csm.infectedEndGT = -1;
-                    csm.Infected = -1;
-                }
+                if (csm.infectedEndGT == -1 || csm.infectedEndGT > GT) continue;
+
+                csm.infectedEndGT = -1;
+                csm.Infected = -1;
             }
         }
 
@@ -1134,32 +1058,15 @@ namespace MOARANDROIDS
                 }
             else
                 //Pas d'antenne permetant de relayer le signal on va impacter els surrogates
-                foreach (var s in listerSurrogateAndroids[MUID])
+                foreach (var s in from s in listerSurrogateAndroids[MUID] where !s.Dead && s.health.hediffSet.GetFirstHediffOfDef(Utils.hediffHaveRXChip) == null let he = s.health.hediffSet.GetFirstHediffOfDef(Utils.hediffLowNetworkSignal) where he == null select s)
                 {
-                    //Les porteur de RX en sont exempté
-                    if (s.Dead || s.health.hediffSet.GetFirstHediffOfDef(Utils.hediffHaveRXChip) != null)
-                        continue;
-
-                    var he = s.health.hediffSet.GetFirstHediffOfDef(Utils.hediffLowNetworkSignal);
-                    if (he == null)
-                        //Log.Message("HEREEEEE");
-                        s.health.AddHediff(Utils.hediffLowNetworkSignal);
+                    s.health.AddHediff(Utils.hediffLowNetworkSignal);
                 }
         }
 
         public void checkSkyMindAutoReconnect()
         {
-            foreach (var el in listerSkyMindable)
-            {
-                var csm = el.TryGetComp<CompSkyMind>();
-
-                if (csm == null)
-                    continue;
-
-                if (csm.autoconn && !csm.connected)
-                    if (csm.canBeConnectedToSkyMind())
-                        Utils.GCATPP.connectUser(el);
-            }
+            foreach (var el in from el in listerSkyMindable let csm = el.TryGetComp<CompSkyMind>() where csm != null where csm.autoconn && !csm.connected where csm.canBeConnectedToSkyMind() select el) Utils.GCATPP.connectUser(el);
         }
 
 
@@ -1168,12 +1075,13 @@ namespace MOARANDROIDS
          */
         public void checkNeedRandomlyDisconnectUsers()
         {
-            if (nbSlot < connectedThing.Count())
-                while (nbSlot < connectedThing.Count())
-                {
-                    var c = connectedThing.RandomElement();
-                    disconnectUser(c);
-                }
+            if (nbSlot >= connectedThing.Count()) return;
+
+            while (nbSlot < connectedThing.Count())
+            {
+                var c = connectedThing.RandomElement();
+                disconnectUser(c);
+            }
         }
 
         public void reProcessNbSlot()
@@ -1196,11 +1104,10 @@ namespace MOARANDROIDS
                         toDel.Add(el2);
                     }
 
-                if (toDel != null)
-                {
-                    foreach (var t in toDel) el.Value.Remove(t);
-                    toDel.Clear();
-                }
+                if (toDel == null) continue;
+
+                foreach (var t in toDel) el.Value.Remove(t);
+                toDel.Clear();
             }
 
 
@@ -1219,11 +1126,10 @@ namespace MOARANDROIDS
                         toDel.Add(el2);
                     }
 
-                if (toDel != null)
-                {
-                    foreach (var t in toDel) el.Value.Remove(t);
-                    toDel.Clear();
-                }
+                if (toDel == null) continue;
+
+                foreach (var t in toDel) el.Value.Remove(t);
+                toDel.Clear();
             }
 
             //Si plus de support reseau skymind et core alors play alerte vocale
@@ -1249,7 +1155,8 @@ namespace MOARANDROIDS
                     toDel.Add(el);
                 }
 
-            if (toDel != null)
+            if (toDel == null) return;
+
             {
                 foreach (var el in toDel) listerSecurityServers.Remove(el);
 
@@ -1274,7 +1181,8 @@ namespace MOARANDROIDS
                     toDel.Add(el);
                 }
 
-            if (toDel != null)
+            if (toDel == null) return;
+
             {
                 foreach (var el in toDel) listerHackingServers.Remove(el);
 
@@ -1299,7 +1207,8 @@ namespace MOARANDROIDS
                     toDel.Add(el);
                 }
 
-            if (toDel != null)
+            if (toDel == null) return;
+
             {
                 foreach (var el in toDel) listerSkillServers.Remove(el);
 
@@ -1324,10 +1233,7 @@ namespace MOARANDROIDS
 
         public int getNbSurrogateAndroids()
         {
-            var ret = 0;
-            foreach (var el in listerSurrogateAndroids) ret += el.Value.Count();
-
-            return ret;
+            return listerSurrogateAndroids.Sum(el => el.Value.Count());
         }
 
         public int getNbSlotSecurisedAvailable()
@@ -1359,40 +1265,37 @@ namespace MOARANDROIDS
         private void checkHeldThingsPawnInSkyMind(Pawn cpawn)
         {
             var th = cpawn.carryTracker.GetDirectlyHeldThings();
-            if (th != null)
-                foreach (var t in th)
-                {
-                    //Log.Message("2) " + t.LabelShortCap);
-                    Pawn cp = null;
-                    if (t is Pawn)
-                        cp = (Pawn) t;
-                    if (cp != null && !cp.Dead && (cp.def.defName.ContainsAny(Utils.ExceptionAndroidList) || cp.VXChipPresent())) connectedThing.Add(cp);
-                }
+            if (th == null) return;
+
+            foreach (var t in th)
+            {
+                //Log.Message("2) " + t.LabelShortCap);
+                Pawn cp = null;
+                if (t is Pawn pawn)
+                    cp = pawn;
+                if (cp != null && !cp.Dead && (cp.def.defName.ContainsAny(Utils.ExceptionAndroidList) || cp.VXChipPresent())) connectedThing.Add(cp);
+            }
         }
 
         public bool isConnectedToSkyMind(Thing colonist, bool tryAutoConnect = false)
         {
-            if (connectedThing.Contains(colonist)) return true;
-
-            //Si un mind EST le skyCLoud hote est allumé ET booté alors oui considéré comme connected
-            if (colonist is Pawn)
+            while (true)
             {
-                var cso = colonist.TryGetComp<CompSurrogateOwner>();
-                if (cso != null && cso.skyCloudHost != null)
+                if (connectedThing.Contains(colonist)) return true;
+
+                //Si un mind EST le skyCLoud hote est allumé ET booté alors oui considéré comme connected
+                if (colonist is Pawn)
                 {
-                    var csc = cso.skyCloudHost.TryGetComp<CompSkyCloudCore>();
-                    if (csc != null && csc.Booted())
-                        return true;
+                    var cso = colonist.TryGetComp<CompSurrogateOwner>();
+                    var csc = cso?.skyCloudHost?.TryGetComp<CompSkyCloudCore>();
+                    if (csc != null && csc.Booted()) return true;
                 }
-            }
 
-            if (tryAutoConnect)
-            {
+                if (!tryAutoConnect) return false;
+
                 connectUser(colonist);
-                return isConnectedToSkyMind(colonist);
+                tryAutoConnect = false;
             }
-
-            return false;
         }
 
         public bool connectUser(Thing thing)
@@ -1401,44 +1304,42 @@ namespace MOARANDROIDS
             if (connectedThing.Contains(thing))
             {
                 //Si surrogate on va en plus declencher un changement de Map
-                if (thing is Pawn)
-                {
-                    var pawn = (Pawn) thing;
-                    if (pawn.IsSurrogateAndroid())
-                        foreach (var entry in listerSurrogateAndroids.ToList())
-                        {
-                            var MUID = entry.Key;
+                if (!(thing is Pawn pawn)) return true;
+                if (!pawn.IsSurrogateAndroid()) return true;
 
-                            if (entry.Value.Contains(pawn)) pushSurrogateAndroidNotifyMapChanged(pawn, MUID);
-                        }
-                }
+                foreach (var MUID in from entry in listerSurrogateAndroids.ToList() let MUID = entry.Key where entry.Value.Contains(pawn) select MUID) pushSurrogateAndroidNotifyMapChanged(pawn, MUID);
 
                 return true;
             }
 
             if (connectedThing.Count() >= nbSlot) return false;
 
-            if (!connectedThing.Contains(thing))
+            if (connectedThing.Contains(thing)) return true;
+
             {
                 connectedThing.Add(thing);
-                if (thing is Pawn)
+                switch (thing)
                 {
-                    var pawn = (Pawn) thing;
-                    var cas = pawn.TryGetComp<CompAndroidState>();
-                    //Si surrogate ajout a la liste des surrogates (ET connecté au skyMind)
-                    if (cas != null && cas.isSurrogate)
-                        pushSurrogateAndroid(pawn);
-                    else
-                        pushSkyMindUser(pawn);
+                    case Pawn pawn:
+                    {
+                        var cas = pawn.TryGetComp<CompAndroidState>();
+                        //Si surrogate ajout a la liste des surrogates (ET connecté au skyMind)
+                        if (cas != null && cas.isSurrogate)
+                            pushSurrogateAndroid(pawn);
+                        else
+                            pushSkyMindUser(pawn);
 
-                    pawn.BroadcastCompSignal("SkyMindNetworkUserConnected");
-                }
-                else if (thing is Building)
-                {
-                    var build = (Building) thing;
-                    if (!listerConnectedDevices.Contains(build))
-                        listerConnectedDevices.Add(thing);
-                    build.BroadcastCompSignal("SkyMindNetworkUserConnected");
+                        pawn.BroadcastCompSignal("SkyMindNetworkUserConnected");
+                        break;
+                    }
+                    case Building building:
+                    {
+                        var build = building;
+                        if (!listerConnectedDevices.Contains(build))
+                            listerConnectedDevices.Add(building);
+                        build.BroadcastCompSignal("SkyMindNetworkUserConnected");
+                        break;
+                    }
                 }
             }
 
@@ -1449,13 +1350,14 @@ namespace MOARANDROIDS
 
         public void disconnectUser(Thing thing)
         {
-            if (connectedThing.Contains(thing))
-            {
-                connectedThing.Remove(thing);
+            if (!connectedThing.Contains(thing)) return;
 
-                if (thing is Pawn)
+            connectedThing.Remove(thing);
+
+            switch (thing)
+            {
+                case Pawn pawn:
                 {
-                    var pawn = (Pawn) thing;
                     var cas = pawn.TryGetComp<CompAndroidState>();
                     //Si surrogate retrait de la liste des surrogates (ET connecté au skyMind)
                     if (cas != null && cas.isSurrogate)
@@ -1471,13 +1373,15 @@ namespace MOARANDROIDS
                     }
 
                     pawn.BroadcastCompSignal("SkyMindNetworkUserDisconnected");
+                    break;
                 }
-                else if (thing is Building)
+                case Building building:
                 {
-                    var build = (Building) thing;
+                    var build = building;
                     if (listerConnectedDevices.Contains(build))
-                        listerConnectedDevices.Remove(thing);
+                        listerConnectedDevices.Remove(building);
                     build.BroadcastCompSignal("SkyMindNetworkUserDisconnected");
+                    break;
                 }
             }
         }
@@ -1548,16 +1452,11 @@ namespace MOARANDROIDS
             var tmp = ret.ToList();
 
             //Linearisation des surrogates a travers les maps
-            foreach (var e in listerSurrogateAndroids) ret = ret.Concat(e.Value).ToList();
+            ret = listerSurrogateAndroids.Aggregate(ret, (current, e) => current.Concat(e.Value).ToList());
 
             if (withoutVirus)
-                foreach (var e in tmp)
-                {
-                    var csm = e.TryGetComp<CompSkyMind>();
-                    if (csm != null)
-                        if (csm.Infected != -1)
-                            ret.Remove(e);
-                }
+                foreach (var e in from e in tmp let csm = e.TryGetComp<CompSkyMind>() where csm != null where csm.Infected != -1 select e)
+                    ret.Remove(e);
 
             while (ret.Count > nb) ret.Remove(ret.RandomElement());
 
@@ -1570,13 +1469,8 @@ namespace MOARANDROIDS
             var tmp = ret.ToList();
 
             if (withoutVirus)
-                foreach (var e in tmp)
-                {
-                    var csm = e.TryGetComp<CompSkyMind>();
-                    if (csm != null)
-                        if (csm.Infected != -1)
-                            ret.Remove(e);
-                }
+                foreach (var e in from e in tmp let csm = e.TryGetComp<CompSkyMind>() where csm != null where csm.Infected != -1 select e)
+                    ret.Remove(e);
 
             while (ret.Count > nb) ret.Remove(ret.RandomElement());
 
@@ -1594,9 +1488,7 @@ namespace MOARANDROIDS
 
         public Pawn getRandomSkyMindUser()
         {
-            if (listerSkyMindUsers.Count == 0)
-                return null;
-            return listerSkyMindUsers.RandomElement();
+            return listerSkyMindUsers.Count == 0 ? null : listerSkyMindUsers.RandomElement();
         }
 
 
@@ -1605,11 +1497,10 @@ namespace MOARANDROIDS
             if (!listerSkyMindServers.ContainsKey(build.Map))
                 listerSkyMindServers[build.Map] = new List<Building>();
 
-            if (build.TryGetComp<CompPowerTrader>().PowerOn)
-            {
-                listerSkyMindServers[build.Map].Add(build);
-                reProcessNbSlot();
-            }
+            if (!build.TryGetComp<CompPowerTrader>().PowerOn) return;
+
+            listerSkyMindServers[build.Map].Add(build);
+            reProcessNbSlot();
         }
 
         public void popSkyMindServer(Building build, Map map)
@@ -1628,11 +1519,10 @@ namespace MOARANDROIDS
             if (!listerSkyMindWANServers.ContainsKey(build.Map))
                 listerSkyMindWANServers[build.Map] = new List<Building>();
 
-            if (!listerSkyMindWANServers[build.Map].Contains(build) && build.TryGetComp<CompPowerTrader>().PowerOn)
-            {
-                listerSkyMindWANServers[build.Map].Add(build);
-                reProcessNbSlot();
-            }
+            if (listerSkyMindWANServers[build.Map].Contains(build) || !build.TryGetComp<CompPowerTrader>().PowerOn) return;
+
+            listerSkyMindWANServers[build.Map].Add(build);
+            reProcessNbSlot();
         }
 
         public void popSkyMindWANServer(Building build, Map map)
@@ -1668,11 +1558,10 @@ namespace MOARANDROIDS
             foreach (var el in listerReloadStation[map])
             {
                 var curDist = android.Position.DistanceTo(el.Position);
-                if (dist > curDist)
-                {
-                    dist = curDist;
-                    ret = el;
-                }
+                if (!(dist > curDist)) continue;
+
+                dist = curDist;
+                ret = el;
             }
 
             return ret;
@@ -1680,9 +1569,7 @@ namespace MOARANDROIDS
 
         public List<Building> getReloadStations(Map map)
         {
-            if (listerReloadStation.ContainsKey(map))
-                return listerReloadStation[map];
-            return null;
+            return listerReloadStation.ContainsKey(map) ? listerReloadStation[map] : null;
         }
 
         /*
@@ -1691,26 +1578,7 @@ namespace MOARANDROIDS
         public Building getFreeReloadStation(Map map, Pawn android)
         {
             //Log.Message("Nb RS en stock " + listerReloadStation.Count);
-            if (listerReloadStation.ContainsKey(map))
-                //Log.Message("ICI DISPONIBLE !!!!!");
-                foreach (var el in listerReloadStation[map].OrderBy(b => b.Position.DistanceTo(android.Position)))
-                {
-                    if (el == null || el.Destroyed || el.IsBrokenDown() || !el.TryGetComp<CompPowerTrader>().PowerOn || !el.Position.InAllowedArea(android))
-                        continue;
-
-                    var rs = el.TryGetComp<CompReloadStation>();
-                    if (rs == null)
-                        continue;
-                    if (rs.getNbAndroidReloading(true) < 8)
-                    {
-                        var freePlace = rs.getFreeReloadPlacePos(android);
-                        //Check en plus si il y a une place de disponible du fait qu'une partie peut etre occulté par un mur etc...
-                        if (freePlace != IntVec3.Invalid && android.CanReach(freePlace, PathEndMode.OnCell, Danger.Deadly))
-                            return el;
-                    }
-                }
-
-            return null;
+            return listerReloadStation.ContainsKey(map) ? (from el in listerReloadStation[map].OrderBy(b => b.Position.DistanceTo(android.Position)) where !el.Destroyed && !el.IsBrokenDown() && el.TryGetComp<CompPowerTrader>().PowerOn && el.Position.InAllowedArea(android) let rs = el.TryGetComp<CompReloadStation>() where rs != null where rs.getNbAndroidReloading(true) < 8 let freePlace = rs.getFreeReloadPlacePos(android) where freePlace != IntVec3.Invalid && android.CanReach(freePlace, PathEndMode.OnCell, Danger.Deadly) select el).FirstOrDefault() : null;
         }
 
         public int getNextSkyCloudID()
@@ -1725,49 +1593,66 @@ namespace MOARANDROIDS
 
         public int getNextSXID(int v)
         {
-            if (v == 10)
-                return S10NID;
-            if (v == 4)
-                return S4NID;
-            if (v == 3)
-                return S3NID;
-            if (v == 2)
-                return S2NID;
-            if (v == 0)
-                return S0NID;
-            if (v == 12)
-                return SX2NID;
-            if (v == 120)
-                return SX2KNID;
-            if (v == 13)
-                return SX3NID;
-            if (v == 14)
-                return SX4NID;
-            return S1NID;
+            switch (v)
+            {
+                case 10:
+                    return S10NID;
+                case 4:
+                    return S4NID;
+                case 3:
+                    return S3NID;
+                case 2:
+                    return S2NID;
+                case 0:
+                    return S0NID;
+                case 12:
+                    return SX2NID;
+                case 120:
+                    return SX2KNID;
+                case 13:
+                    return SX3NID;
+                case 14:
+                    return SX4NID;
+                default:
+                    return S1NID;
+            }
         }
 
         public void incNextSXID(int v)
         {
-            if (v == 10)
-                S10NID++;
-            else if (v == 4)
-                S4NID++;
-            else if (v == 3)
-                S3NID++;
-            else if (v == 2)
-                S2NID++;
-            else if (v == 0)
-                S0NID++;
-            else if (v == 12)
-                SX2NID++;
-            else if (v == 120)
-                SX2KNID++;
-            else if (v == 13)
-                SX3NID++;
-            else if (v == 14)
-                SX4NID++;
-            else
-                S1NID++;
+            switch (v)
+            {
+                case 10:
+                    S10NID++;
+                    break;
+                case 4:
+                    S4NID++;
+                    break;
+                case 3:
+                    S3NID++;
+                    break;
+                case 2:
+                    S2NID++;
+                    break;
+                case 0:
+                    S0NID++;
+                    break;
+                case 12:
+                    SX2NID++;
+                    break;
+                case 120:
+                    SX2KNID++;
+                    break;
+                case 13:
+                    SX3NID++;
+                    break;
+                case 14:
+                    SX4NID++;
+                    break;
+                default:
+                    S1NID++;
+                    break;
+            }
         }
 
         /*
@@ -1775,13 +1660,7 @@ namespace MOARANDROIDS
          */
         public List<Thing> getHeatSensitiveDevicesByHotLevel(Map map, int hotLevel)
         {
-            var ret = new List<Thing>();
-            if (!listerHeatSensitiveDevices.ContainsKey(map))
-                return null;
-            foreach (var device in listerHeatSensitiveDevices[map])
-                if (device.TryGetComp<CompHeatSensitive>().hotLevel == hotLevel)
-                    ret.Add(device);
-            return ret;
+            return !listerHeatSensitiveDevices.ContainsKey(map) ? null : listerHeatSensitiveDevices[map].Where(device => device.TryGetComp<CompHeatSensitive>().hotLevel == hotLevel).Cast<Thing>().ToList();
         }
 
         private void checkRemoveAndroidFactions()
@@ -1793,9 +1672,8 @@ namespace MOARANDROIDS
                 {
                     if (!androidFactionCoalition.defeated)
                     {
-                        foreach (var el in Find.WorldObjects.SettlementBases.ToList())
-                            if (el.Faction == androidFactionCoalition)
-                                savedIASCoalition.Add(el);
+                        foreach (var el in Find.WorldObjects.SettlementBases.ToList().Where(el => el.Faction == androidFactionCoalition))
+                            savedIASCoalition.Add(el);
 
                         if (savedIASCoalition.Count != 0)
                             foreach (var el in savedIASCoalition)
@@ -1855,15 +1733,15 @@ namespace MOARANDROIDS
             }
 
             androidFactionInsurrection = Find.FactionManager.FirstFactionOfDef(DefDatabase<FactionDef>.GetNamed("AndroidRebellionAtlas"));
-            if (androidFactionInsurrection != null)
+            if (androidFactionInsurrection == null) return;
+
             {
                 if (Settings.androidsAreRare)
                 {
                     if (!androidFactionInsurrection.defeated)
                     {
-                        foreach (var el in Find.WorldObjects.SettlementBases.ToList())
-                            if (el.Faction == androidFactionInsurrection)
-                                savedIASInsurrection.Add(el);
+                        foreach (var el in Find.WorldObjects.SettlementBases.ToList().Where(el => el.Faction == androidFactionInsurrection))
+                            savedIASInsurrection.Add(el);
 
                         if (savedIASInsurrection.Count != 0)
                             foreach (var el in savedIASInsurrection)
@@ -2067,12 +1945,12 @@ namespace MOARANDROIDS
 
         public bool isThereSkyCloudCore()
         {
-            return listerSkyCloudCores.Count() > 0;
+            return listerSkyCloudCores.Any();
         }
 
         public bool isThereSkyCloudCoreAbs()
         {
-            return listerSkyCloudCoresAbs.Count() > 0;
+            return listerSkyCloudCoresAbs.Any();
         }
 
         public void pushRelayTower(Building build)
@@ -2179,20 +2057,15 @@ namespace MOARANDROIDS
 
             //Check si suffisament d'energie pour accueillir l'android
             var qtConsumed = Utils.getConsumedPowerByAndroid(android.def.defName);
-            if (LWPN != null
-                && !LWPN.Destroyed
-                && (LWPN.def.defName == "ARKPPP_LocalWirelessPowerEmitter" || LWPN.def.defName == "ARKPPP_LocalWirelessPortablePowerEmitter" &&
-                    listerLWPNAndroid[LWPN].Count() < Settings.maxAndroidByPortableLWPN)
-                && LWPN.TryGetComp<CompPowerTrader>().PowerOn
-                && Utils.getCurrentAvailableEnergy(LWPN.PowerComp.PowerNet) - qtConsumed > 0)
-            {
-                listerLWPNAndroid[LWPN].Add(android);
-                //incrémentation qt de courant consommé pat LWPN
-                LWPN.TryGetComp<CompPowerTrader>().PowerOutput -= qtConsumed;
-                return true;
-            }
+            if (LWPN.Destroyed ||
+                (LWPN.def.defName != "ARKPPP_LocalWirelessPowerEmitter" &&
+                 (LWPN.def.defName != "ARKPPP_LocalWirelessPortablePowerEmitter" || listerLWPNAndroid[LWPN].Count() >= Settings.maxAndroidByPortableLWPN)) ||
+                !LWPN.TryGetComp<CompPowerTrader>().PowerOn || !(Utils.getCurrentAvailableEnergy(LWPN.PowerComp.PowerNet) - qtConsumed > 0)) return false;
 
-            return false;
+            listerLWPNAndroid[LWPN].Add(android);
+            //incrémentation qt de courant consommé pat LWPN
+            LWPN.TryGetComp<CompPowerTrader>().PowerOutput -= qtConsumed;
+            return true;
         }
 
 
@@ -2210,16 +2083,7 @@ namespace MOARANDROIDS
 
         public int getNbAssistingMinds()
         {
-            var nb = 0;
-            foreach (var c in listerSkyCloudCores)
-            {
-                var csc = c.TryGetComp<CompSkyCloudCore>();
-                //Comptabilisation que si le systeme à bouté
-                if (csc != null && csc.Booted())
-                    nb += csc.assistingMinds.Count();
-            }
-
-            return nb;
+            return listerSkyCloudCores.Select(c => c.TryGetComp<CompSkyCloudCore>()).Where(csc => csc != null && csc.Booted()).Sum(csc => csc.assistingMinds.Count());
         }
 
         private void reset()

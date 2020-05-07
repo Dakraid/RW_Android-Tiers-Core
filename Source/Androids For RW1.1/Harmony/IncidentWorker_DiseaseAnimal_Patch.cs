@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -20,11 +21,7 @@ namespace MOARANDROIDS
                 if (__result == null)
                     return;
 
-                var ret = new List<Pawn>();
-
-                foreach (var el in __result)
-                    if (Utils.ExceptionAndroidAnimals.Contains(el.def.defName))
-                        ret.Add(el);
+                var ret = __result.Where(el => Utils.ExceptionAndroidAnimals.Contains(el.def.defName)).ToList();
 
                 __result = ret;
             }

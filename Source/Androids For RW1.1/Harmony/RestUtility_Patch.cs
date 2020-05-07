@@ -43,10 +43,10 @@ namespace MOARANDROIDS
                     }
 
                     //Interdiction aux szurrogates de se servir des autres lits
-                    if (!bedIsSurrogatePod && !bedIsSurrogateM7Pod && !isSleepingSpot)
-                        //Si M7 et surrogate controlé ou non ==>interdiction OU si surrogate android non controllé ==>Interdiction
-                        if (isSurrogateM7 || sleeperIsRegularAndroid)
-                            __result = false;
+                    if (bedIsSurrogatePod || bedIsSurrogateM7Pod || isSleepingSpot) return;
+
+                    if (isSurrogateM7 || sleeperIsRegularAndroid)
+                        __result = false;
                 }
                 catch (Exception e)
                 {

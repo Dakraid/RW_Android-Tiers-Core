@@ -16,7 +16,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>..\..\1.1\Assemblies\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -36,9 +36,11 @@
   <ItemGroup>
     <Reference Include="0Harmony, Version=2.0.0.10, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\..\..\References\0Harmony.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp, Version=1.1.7429.26553, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\..\..\References\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -147,7 +149,6 @@
     <Compile Include="Enum\AndroidPaintColor.cs" />
     <Compile Include="Harmony\Alert_ColonistNeedsRescuing_Patch.cs" />
     <Compile Include="Harmony\Alert_NeedColonistBeds_Patch.cs" />
-    <Compile Include="Harmony\ApparelGraphicRecordGetter_Patch.cs" />
     <Compile Include="Harmony\ApparelUtility_Patch.cs" />
     <Compile Include="Harmony\Apparel_Patch.cs" />
     <Compile Include="Harmony\Building_Bed_Patch.cs" />
@@ -199,7 +200,6 @@
     <Compile Include="Harmony\RestUtility_Patch.cs" />
     <Compile Include="Harmony\SickPawnVisitUtility_Patch.cs" />
     <Compile Include="Harmony\StartingPawnUtility_Patch.cs" />
-    <Compile Include="Harmony\StorytellerComp_Triggered_Patch.cs" />
     <Compile Include="Harmony\StunHandler_Patch.cs" />
     <Compile Include="Harmony\TaleRecorder_Patch.cs" />
     <Compile Include="Harmony\TaleUtility_Patch.cs" />

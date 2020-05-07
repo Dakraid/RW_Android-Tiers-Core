@@ -32,31 +32,7 @@ namespace MOARANDROIDS
                 var pawn2 = FindPawnTarget(pawn);
                 var flag3 = pawn2 != null;
                 var flag4 = flag3;
-                if (flag4)
-                {
-                    result = MeleeAttackJob(pawn, pawn2);
-                }
-                else
-                {
-                    var flag5 = pawn2 != null;
-                    var flag6 = flag5;
-                    if (flag6)
-                        using (var pawnPath = pawn.Map.pathFinder.FindPath(pawn.Position, pawn2.Position, TraverseParms.For(pawn, Danger.None, TraverseMode.PassDoors)))
-                        {
-                            var flag7 = !pawnPath.Found;
-                            var flag8 = flag7;
-                            if (flag8) return null;
-                            var flag9 = !pawnPath.TryFindLastCellBeforeBlockingDoor(pawn, out var intVec);
-                            var flag10 = flag9;
-                            if (flag10)
-                            {
-                                Log.Error(pawn + " did TryFindLastCellBeforeDoor but found none when it should have been one. Target: " + pawn2.LabelCap);
-                                return null;
-                            }
-                        }
-
-                    result = null;
-                }
+                result = flag4 ? MeleeAttackJob(pawn, pawn2) : null;
             }
 
             return result;

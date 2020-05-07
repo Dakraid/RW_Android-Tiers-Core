@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
   <name>Android tiers</name>
-  <author>Atlas, aRandomKiwi</author>
+  <author>Atlas, aRandomKiwi, Netrve</author>
   <supportedVersions>
 	<li>1.0</li>
 	<li>1.1</li>
@@ -16,6 +16,7 @@
   </modDependencies>
   <packageId>Atlas.AndroidTiers</packageId>
   <description><![CDATA[  
+    Unofficial Fork by Netrve
 	- Adds 4 tiers of android along with an android doggo
 	- 2 new android factions
 	- Allow to remotely control surrogate androids
@@ -25,7 +26,7 @@
 	- Fully customizable
 	- More, etc etc 
 	
-	Version <color=#FFD800>2.0.2</color>
+	Version <color=#FFD800>2.1.0</color>
 	]]>
   </description>
 </ModMetaData>

@@ -30,18 +30,19 @@ namespace MOARANDROIDS
         public override void DoWindowContents(Rect inRect)
         {
             base.DoWindowContents(inRect);
-            if (Event.current.type == EventType.KeyDown)
+            if (Event.current.type != EventType.KeyDown) return;
+            
+            switch (Event.current.keyCode)
             {
-                if (Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter)
-                {
-                    if (buttonAAction != null) buttonAAction();
+                case KeyCode.Return:
+                case KeyCode.KeypadEnter:
+                    buttonAAction?.Invoke();
                     Close();
-                }
-                else if (Event.current.keyCode == KeyCode.Escape)
-                {
-                    if (buttonBAction != null) buttonBAction();
+                    break;
+                case KeyCode.Escape:
+                    buttonBAction?.Invoke();
                     Close();
-                }
+                    break;
             }
         }
     }

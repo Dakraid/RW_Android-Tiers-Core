@@ -126,14 +126,12 @@ namespace BlueLeakTest
     {
         public static bool Prefix(ref string __result, PawnCapacityDef __instance, Pawn pawn)
         {
-            if (pawn != null && pawn.RaceProps != null && pawn.RaceProps.FleshType == DefDatabase<FleshTypeDef>.GetNamed("Android"))
-                if (__instance.GetModExtension<AndroidCapacityLabel>() != null)
-                {
-                    __result = __instance.GetModExtension<AndroidCapacityLabel>().androidNewLabel;
-                    return false;
-                }
+            if (pawn?.RaceProps == null || pawn.RaceProps.FleshType != DefDatabase<FleshTypeDef>.GetNamed("Android")) return true;
 
-            return true;
+            if (__instance.GetModExtension<AndroidCapacityLabel>() == null) return true;
+
+            __result = __instance.GetModExtension<AndroidCapacityLabel>().androidNewLabel;
+            return false;
         }
     }
 
@@ -164,68 +162,70 @@ namespace BlueLeakTest
 
             var rnd = new Random();
             string key;
-            if (faction.PlayerRelationKind == FactionRelationKind.Hostile)
+            switch (faction.PlayerRelationKind)
             {
-                switch (rnd.Next(1, 4))
-                {
-                    case 1:
-                        key = "AndroidFactionGreetingHostileI";
-                        break;
-                    case 2:
-                        key = "AndroidFactionGreetingHostileII";
-                        break;
-                    case 3:
-                        key = "AndroidFactionGreetingHostileIII";
-                        break;
+                case FactionRelationKind.Hostile:
+                    switch (rnd.Next(1, 4))
+                    {
+                        case 1:
+                            key = "AndroidFactionGreetingHostileI";
+                            break;
+                        case 2:
+                            key = "AndroidFactionGreetingHostileII";
+                            break;
+                        case 3:
+                            key = "AndroidFactionGreetingHostileIII";
+                            break;
 
-                    default:
-                        key = "AndroidFactionGreetingHostileI";
-                        break;
-                }
+                        default:
+                            key = "AndroidFactionGreetingHostileI";
+                            break;
+                    }
 
-                __result.text = key.Translate(value).AdjustedFor(pawn);
-            }
-            else if (faction.PlayerRelationKind == FactionRelationKind.Neutral)
-            {
-                switch (rnd.Next(1, 4))
-                {
-                    case 1:
-                        key = "AndroidFactionGreetingWaryI";
-                        break;
-                    case 2:
-                        key = "AndroidFactionGreetingWaryII";
-                        break;
-                    case 3:
-                        key = "AndroidFactionGreetingWaryIII";
-                        break;
+                    __result.text = key.Translate(value).AdjustedFor(pawn);
+                    break;
+                case FactionRelationKind.Neutral:
+                    switch (rnd.Next(1, 4))
+                    {
+                        case 1:
+                            key = "AndroidFactionGreetingWaryI";
+                            break;
+                        case 2:
+                            key = "AndroidFactionGreetingWaryII";
+                            break;
+                        case 3:
+                            key = "AndroidFactionGreetingWaryIII";
+                            break;
 
-                    default:
-                        key = "AndroidFactionGreetingWaryI";
-                        break;
-                }
+                        default:
+                            key = "AndroidFactionGreetingWaryI";
+                            break;
+                    }
 
-                __result.text = key.Translate(value, negotiator.LabelShort, negotiator.Named("NEGOTIATOR"), pawn.Named("LEADER")).AdjustedFor(pawn);
-            }
-            else
-            {
-                switch (rnd.Next(1, 4))
-                {
-                    case 1:
-                        key = "AndroidFactionGreetingWarmI";
-                        break;
-                    case 2:
-                        key = "AndroidFactionGreetingWarmII";
-                        break;
-                    case 3:
-                        key = "AndroidFactionGreetingWarmIII";
-                        break;
+                    __result.text = key.Translate(value, negotiator.LabelShort, negotiator.Named("NEGOTIATOR"), pawn.Named("LEADER")).AdjustedFor(pawn);
+                    break;
+                case FactionRelationKind.Ally:
+                    break;
+                default:
+                    switch (rnd.Next(1, 4))
+                    {
+                        case 1:
+                            key = "AndroidFactionGreetingWarmI";
+                            break;
+                        case 2:
+                            key = "AndroidFactionGreetingWarmII";
+                            break;
+                        case 3:
+                            key = "AndroidFactionGreetingWarmIII";
+                            break;
 
-                    default:
-                        key = "AndroidFactionGreetingWarmI";
-                        break;
-                }
+                        default:
+                            key = "AndroidFactionGreetingWarmI";
+                            break;
+                    }
 
-                __result.text = key.Translate(value, negotiator.LabelShort, negotiator.Named("NEGOTIATOR"), pawn.Named("LEADER")).AdjustedFor(pawn);
+                    __result.text = key.Translate(value, negotiator.LabelShort, negotiator.Named("NEGOTIATOR"), pawn.Named("LEADER")).AdjustedFor(pawn);
+                    break;
             }
         }
     }
@@ -237,6 +237,7 @@ namespace BlueLeakTest
         private static void Postfix(ref Pawn __result)
         {
             if (__result == null) return;
+
             if (Faction.OfPlayer.def.basicMemberKind != PawnKindDefOf.AndroidT2ColonistGeneral)
             {
             }
@@ -283,10 +284,7 @@ namespace BlueLeakTest
     {
         private static bool Prefix(CompFoodPoisonable __instance, Pawn ingester)
         {
-            var value = Traverse.Create(__instance).Field("ingester").GetValue<Pawn>();
-            if (ingester.IsAndroid())
-                return false;
-            return true;
+            return !ingester.IsAndroid();
         }
     }
 
@@ -297,14 +295,11 @@ namespace BlueLeakTest
         private static bool Prefix(Pawn_HealthTracker __instance, DamageInfo? dinfo, Hediff hediff, Pawn ___pawn)
         {
             var value = Traverse.Create(__instance).Field("pawn").GetValue<Pawn>();
-            if (value.kindDef == PawnKindDefOf.MicroScyther || value.kindDef == PawnKindDefOf.AbominationAtlas || value.kindDef == PawnKindDefOf.M7MechPawn &&
-                ___pawn.TryGetComp<CompAndroidState>() != null && !___pawn.TryGetComp<CompAndroidState>().isSurrogate)
-            {
-                value.Kill(null);
-                return false;
-            }
+            if (value.kindDef != PawnKindDefOf.MicroScyther && value.kindDef != PawnKindDefOf.AbominationAtlas &&
+                (value.kindDef != PawnKindDefOf.M7MechPawn || ___pawn.TryGetComp<CompAndroidState>() == null || ___pawn.TryGetComp<CompAndroidState>().isSurrogate)) return true;
 
-            return true;
+            value.Kill(null);
+            return false;
         }
     }
 }

@@ -18,9 +18,10 @@ namespace MOARANDROIDS
             {
                 try
                 {
-                    if (Utils.ExceptionAndroidList.Contains(ingester.def.defName))
-                        if (Settings.androidNeedToEatMore)
-                            __result *= 0.5f;
+                    if (!Utils.ExceptionAndroidList.Contains(ingester.def.defName)) return;
+
+                    if (Settings.androidNeedToEatMore)
+                        __result *= 0.5f;
                 }
                 catch (Exception e)
                 {
@@ -38,12 +39,11 @@ namespace MOARANDROIDS
             [HarmonyPostfix]
             public static void Listener(Thing __instance, ref bool __result)
             {
-                if (__instance is Pawn)
-                {
-                    var cso = ((Pawn) __instance).TryGetComp<CompSurrogateOwner>();
-                    if (cso != null && cso.skyCloudHost != null)
-                        __result = true;
-                }
+                if (!(__instance is Pawn pawn)) return;
+
+                var cso = pawn.TryGetComp<CompSurrogateOwner>();
+                if (cso?.skyCloudHost != null)
+                    __result = true;
             }
         }
     }

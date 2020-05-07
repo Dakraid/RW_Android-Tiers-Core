@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 using Verse;
 
@@ -17,17 +18,15 @@ namespace MOARANDROIDS
             public static void Listener(ListerThings __instance, ThingRequest req, ref List<Thing> __result)
             {
                 List<Thing> ret = null;
-                if (Utils.QEE_LOADED && req.singleDef != null && req.singleDef.defName == "QE_GenomeSequencerFilled")
-                {
-                    foreach (var el in __instance.AllThings)
-                        if (el.def.defName == "QE_GenomeSequencerFilled" || Utils.ExceptionQEEGS.Contains(el.def.defName))
-                        {
-                            if (ret == null) ret = new List<Thing>();
-                            ret.Add(el);
-                        }
+                if (!Utils.QEE_LOADED || req.singleDef == null || req.singleDef.defName != "QE_GenomeSequencerFilled") return;
 
-                    __result = ret;
+                foreach (var el in __instance.AllThings.Where(el => el.def.defName == "QE_GenomeSequencerFilled" || Utils.ExceptionQEEGS.Contains(el.def.defName)))
+                {
+                    if (ret == null) ret = new List<Thing>();
+                    ret.Add(el);
                 }
+
+                __result = ret;
             }
         }
     }

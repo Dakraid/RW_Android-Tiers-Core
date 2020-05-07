@@ -28,11 +28,10 @@ namespace MOARANDROIDS
         public override void CompPostTick(ref float severityAdjustment)
         {
             ticksToHeal--;
-            if (ticksToHeal <= 0)
-            {
-                TryHealRandomWound();
-                ResetTicksToHeal();
-            }
+            if (ticksToHeal > 0) return;
+            
+            TryHealRandomWound();
+            ResetTicksToHeal();
         }
 
         private void TryHealRandomWound()
@@ -40,6 +39,7 @@ namespace MOARANDROIDS
             IEnumerable<Hediff> hediffs = Pawn.health.hediffSet.hediffs;
             if (stuff == null) stuff = HediffUtility.IsTended;
             if (!hediffs.Where(stuff).TryRandomElement(out var hediff)) return;
+
             if (hediff.def != RimWorld.HediffDefOf.WoundInfection || hediff.def.makesSickThought) hediff.Severity -= HealingProps.HealingAmount;
         }
 

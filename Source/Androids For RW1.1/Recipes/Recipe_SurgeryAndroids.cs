@@ -35,58 +35,54 @@ namespace MOARANDROIDS
                 surgeon.mindState.inspirationHandler.EndInspiration(InspirationDefOf.Inspired_Surgery);
             }
 
-            if (!Rand.Chance(num))
+            if (Rand.Chance(num)) return false;
+
+            if (Rand.Chance(recipe.deathOnFailedSurgeryChance))
             {
-                if (Rand.Chance(recipe.deathOnFailedSurgeryChance))
+                HealthUtility.GiveInjuriesOperationFailureCatastrophic(patient, part);
+                if (!patient.Dead) patient.Kill(null);
+                Messages.Message("MessageMedicalOperationFailureFatalAndroid".Translate(surgeon.LabelShort, patient.LabelShort, recipe.label), patient,
+                    MessageTypeDefOf.NegativeHealthEvent);
+            }
+            else if (Rand.Chance(0.5f))
+            {
+                if (Rand.Chance(0.1f))
                 {
-                    HealthUtility.GiveInjuriesOperationFailureCatastrophic(patient, part);
-                    if (!patient.Dead) patient.Kill(null);
-                    Messages.Message("MessageMedicalOperationFailureFatalAndroid".Translate(surgeon.LabelShort, patient.LabelShort, recipe.label), patient,
+                    Messages.Message("MessageMedicalOperationFailureRidiculousAndroid".Translate(surgeon.LabelShort, patient.LabelShort), patient,
                         MessageTypeDefOf.NegativeHealthEvent);
-                }
-                else if (Rand.Chance(0.5f))
-                {
-                    if (Rand.Chance(0.1f))
-                    {
-                        Messages.Message("MessageMedicalOperationFailureRidiculousAndroid".Translate(surgeon.LabelShort, patient.LabelShort), patient,
-                            MessageTypeDefOf.NegativeHealthEvent);
-                        HealthUtility.GiveInjuriesOperationFailureRidiculous(patient);
-                    }
-                    else
-                    {
-                        Messages.Message("MessageMedicalOperationFailureCatastrophicAndroid".Translate(surgeon.LabelShort, patient.LabelShort), patient,
-                            MessageTypeDefOf.NegativeHealthEvent);
-                        HealthUtility.GiveInjuriesOperationFailureCatastrophic(patient, part);
-                    }
+                    HealthUtility.GiveInjuriesOperationFailureRidiculous(patient);
                 }
                 else
                 {
-                    Messages.Message("MessageMedicalOperationFailureMinorAndroid".Translate(surgeon.LabelShort, patient.LabelShort), patient, MessageTypeDefOf.NegativeHealthEvent);
-                    HealthUtility.GiveInjuriesOperationFailureMinor(patient, part);
+                    Messages.Message("MessageMedicalOperationFailureCatastrophicAndroid".Translate(surgeon.LabelShort, patient.LabelShort), patient,
+                        MessageTypeDefOf.NegativeHealthEvent);
+                    HealthUtility.GiveInjuriesOperationFailureCatastrophic(patient, part);
                 }
-
-                if (!patient.Dead) TryGainBotchedSurgeryThought(patient, surgeon);
-                return true;
+            }
+            else
+            {
+                Messages.Message("MessageMedicalOperationFailureMinorAndroid".Translate(surgeon.LabelShort, patient.LabelShort), patient, MessageTypeDefOf.NegativeHealthEvent);
+                HealthUtility.GiveInjuriesOperationFailureMinor(patient, part);
             }
 
-            return false;
+            if (!patient.Dead) TryGainBotchedSurgeryThought(patient, surgeon);
+            return true;
         }
 
         // Token: 0x06001266 RID: 4710 RVA: 0x0008C4AD File Offset: 0x0008A8AD
         private void TryGainBotchedSurgeryThought(Pawn patient, Pawn surgeon)
         {
             if (!patient.RaceProps.Humanlike) return;
+
             patient.needs.mood.thoughts.memories.TryGainMemory(ThoughtDefOf.BotchedMySurgery, surgeon);
         }
 
         protected void applyFrameworkColor(Pawn pawn)
         {
             var cas = pawn.TryGetComp<CompAndroidState>();
-            if (cas == null)
-                return;
 
             //Renouvellement délais de rouille
-            cas.clearRusted();
+            cas?.clearRusted();
         }
     }
 }

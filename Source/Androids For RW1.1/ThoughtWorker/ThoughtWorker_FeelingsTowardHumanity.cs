@@ -43,10 +43,7 @@ namespace MOARANDROIDS
                         else
                         {
                             var flag5 = num == 2;
-                            if (flag5)
-                                result = ThoughtState.ActiveAtStage(1);
-                            else
-                                result = false;
+                            result = flag5 ? ThoughtState.ActiveAtStage(1) : false;
                         }
                     }
                 }

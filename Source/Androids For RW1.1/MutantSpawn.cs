@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using RimWorld;
 using Verse;
@@ -14,16 +15,13 @@ namespace MOARANDROIDS
             {
                 var stringBuilder = new StringBuilder();
                 stringBuilder.Append(base.LabelInBrackets);
-                if (comps != null)
-                    for (var i = 0; i < comps.Count; i++)
-                    {
-                        var compLabelInBracketsExtra = comps[i].CompLabelInBracketsExtra;
-                        if (!compLabelInBracketsExtra.NullOrEmpty())
-                        {
-                            if (stringBuilder.Length != 0) stringBuilder.Append(", ");
-                            stringBuilder.Append(compLabelInBracketsExtra);
-                        }
-                    }
+                if (comps == null) return stringBuilder.ToString();
+                
+                foreach (var compLabelInBracketsExtra in comps.Select(t => t.CompLabelInBracketsExtra).Where(compLabelInBracketsExtra => !compLabelInBracketsExtra.NullOrEmpty()))
+                {
+                    if (stringBuilder.Length != 0) stringBuilder.Append(", ");
+                    stringBuilder.Append(compLabelInBracketsExtra);
+                }
 
                 return stringBuilder.ToString();
             }
@@ -33,11 +31,9 @@ namespace MOARANDROIDS
         {
             get
             {
-                if (comps != null)
-                    for (var i = 0; i < comps.Count; i++)
-                        if (comps[i].CompShouldRemove)
-                            return true;
-                return base.ShouldRemove;
+                if (comps == null) return base.ShouldRemove;
+                
+                return Enumerable.Any(comps, t => t.CompShouldRemove) || base.ShouldRemove;
             }
         }
 
@@ -45,11 +41,9 @@ namespace MOARANDROIDS
         {
             get
             {
-                if (comps != null)
-                    for (var i = 0; i < comps.Count; i++)
-                        if (comps[i].CompDisallowVisible())
-                            return false;
-                return base.Visible;
+                if (comps == null) return base.Visible;
+
+                return !Enumerable.Any(comps, t => t.CompDisallowVisible()) && base.Visible;
             }
         }
 
@@ -59,12 +53,9 @@ namespace MOARANDROIDS
             {
                 var stringBuilder = new StringBuilder();
                 stringBuilder.Append(base.TipStringExtra);
-                if (comps != null)
-                    for (var i = 0; i < comps.Count; i++)
-                    {
-                        var compTipStringExtra = comps[i].CompTipStringExtra;
-                        if (!compTipStringExtra.NullOrEmpty()) stringBuilder.AppendLine(compTipStringExtra);
-                    }
+                if (comps == null) return stringBuilder.ToString();
+
+                foreach (var compTipStringExtra in comps.Select(t => t.CompTipStringExtra).Where(compTipStringExtra => !compTipStringExtra.NullOrEmpty())) stringBuilder.AppendLine(compTipStringExtra);
 
                 return stringBuilder.ToString();
             }
@@ -74,11 +65,7 @@ namespace MOARANDROIDS
         {
             get
             {
-                for (var i = 0; i < comps.Count; i++)
-                {
-                    var compStateIcon = comps[i].CompStateIcon;
-                    if (compStateIcon.HasValue) return compStateIcon;
-                }
+                foreach (var compStateIcon in comps.Select(t => t.CompStateIcon).Where(compStateIcon => compStateIcon.HasValue)) return compStateIcon;
 
                 return TextureAndColor.None;
             }
@@ -88,100 +75,103 @@ namespace MOARANDROIDS
         {
             get
             {
-                var num = 0f;
                 var hediffs = pawn.health.hediffSet.hediffs;
-                for (var i = 0; i < hediffs.Count; i++)
-                    if (hediffs[i] is Hediff_Injury && !hediffs[i].IsPermanent())
-                        num += hediffs[i].Severity;
+                var num = hediffs.Where(t => t is Hediff_Injury && !t.IsPermanent()).Sum(t => t.Severity);
+
                 var missingPartsCommonAncestors = pawn.health.hediffSet.GetMissingPartsCommonAncestors();
-                for (var j = 0; j < missingPartsCommonAncestors.Count; j++)
-                    if (missingPartsCommonAncestors[j].IsFreshNonSolidExtremity)
-                        num += missingPartsCommonAncestors[j].Part.def.GetMaxHealth(pawn);
+                num += missingPartsCommonAncestors.Where(t => t.IsFreshNonSolidExtremity).Sum(t => t.Part.def.GetMaxHealth(pawn));
+
                 return num > 38f * pawn.RaceProps.baseHealthScale;
             }
         }
 
         public override void PostAdd(DamageInfo? dinfo)
         {
-            if (comps != null)
-                for (var i = 0; i < comps.Count; i++)
-                    comps[i].CompPostPostAdd(dinfo);
+            if (comps == null) return;
+            
+            foreach (var diff in comps)
+                diff.CompPostPostAdd(dinfo);
         }
 
         public override void PostRemoved()
         {
             base.PostRemoved();
-            if (comps != null)
-                for (var i = 0; i < comps.Count; i++)
-                    comps[i].CompPostPostRemoved();
+            if (comps == null) return;
+            
+            foreach (var diff in comps)
+                diff.CompPostPostRemoved();
         }
 
         public override void PostTick()
         {
             base.PostTick();
-            if (comps != null)
-            {
-                var num = 0f;
-                for (var i = 0; i < comps.Count; i++) comps[i].CompPostTick(ref num);
-                if (num != 0f) Severity += num;
-            }
+            if (comps == null) return;
+            
+            var num = 0f;
+            foreach (var diff in comps)
+                diff.CompPostTick(ref num);
+
+            if (num != 0f) Severity += num;
         }
 
         public override void ExposeData()
         {
             base.ExposeData();
             if (Scribe.mode == LoadSaveMode.LoadingVars) InitializeComps();
-            if (comps != null)
-                for (var i = 0; i < comps.Count; i++)
-                    comps[i].CompExposeData();
+            if (comps == null) return;
+            
+            foreach (var diff in comps)
+                diff.CompExposeData();
         }
 
         public override void Tended(float quality, int batchPosition = 0)
         {
-            for (var i = 0; i < comps.Count; i++) comps[i].CompTended(quality, batchPosition);
+            foreach (var diff in comps)
+                diff.CompTended(quality, batchPosition);
         }
 
         public override bool TryMergeWith(Hediff other)
         {
-            if (base.TryMergeWith(other))
-            {
-                for (var i = 0; i < comps.Count; i++) comps[i].CompPostMerged(other);
-                return true;
-            }
+            if (!base.TryMergeWith(other)) return false;
 
-            return false;
+            foreach (var diff in comps)
+                diff.CompPostMerged(other);
+
+            return true;
         }
 
         public override void Notify_PawnDied()
         {
             base.Notify_PawnDied();
-            for (var i = 0; i < comps.Count; i++) comps[i].Notify_PawnDied();
+            foreach (var diff in comps)
+                diff.Notify_PawnDied();
         }
 
         public override void ModifyChemicalEffect(ChemicalDef chem, ref float effect)
         {
-            for (var i = 0; i < comps.Count; i++) comps[i].CompModifyChemicalEffect(chem, ref effect);
+            foreach (var diff in comps)
+                diff.CompModifyChemicalEffect(chem, ref effect);
         }
 
         public override void PostMake()
         {
             base.PostMake();
             InitializeComps();
-            for (var i = 0; i < comps.Count; i++) comps[i].CompPostMake();
+            foreach (var diff in comps)
+                diff.CompPostMake();
         }
 
         private void InitializeComps()
         {
-            if (def.comps != null)
+            if (def.comps == null) return;
+
+            comps = new List<HediffComp>();
+            foreach (var diff in def.comps)
             {
-                comps = new List<HediffComp>();
-                for (var i = 0; i < def.comps.Count; i++)
-                {
-                    var hediffComp = (HediffComp) Activator.CreateInstance(def.comps[i].compClass);
-                    hediffComp.props = def.comps[i];
-                    hediffComp.parent = this;
-                    comps.Add(hediffComp);
-                }
+                var hediffComp = (HediffComp) Activator.CreateInstance(diff.compClass);
+                hediffComp.props = diff;
+                hediffComp.parent = this;
+                comps.Add(hediffComp);
             }
         }
 
@@ -189,18 +179,15 @@ namespace MOARANDROIDS
         {
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine(base.DebugString());
-            if (comps != null)
-                for (var i = 0; i < comps.Count; i++)
-                {
-                    string str;
-                    if (comps[i].ToString().Contains("_"))
-                        str = comps[i].ToString().Split('_')[1];
-                    else
-                        str = comps[i].ToString();
-                    stringBuilder.AppendLine("--" + str);
-                    var text = comps[i].CompDebugString();
-                    if (!text.NullOrEmpty()) stringBuilder.AppendLine(text.TrimEnd().Indented());
-                }
+            if (comps == null) return stringBuilder.ToString();
+
+            foreach (var diff in comps)
+            {
+                var str = diff.ToString().Contains("_") ? diff.ToString().Split('_')[1] : diff.ToString();
+                stringBuilder.AppendLine("--" + str);
+                var text = diff.CompDebugString();
+                if (!text.NullOrEmpty()) stringBuilder.AppendLine(text.TrimEnd().Indented());
+            }
 
             return stringBuilder.ToString();
         }
@@ -208,11 +195,10 @@ namespace MOARANDROIDS
         public override void Tick()
         {
             ageTicks++;
-            if (Severity >= 1f)
-            {
-                DoMutation(pawn);
-                pawn.Destroy();
-            }
+            if (!(Severity >= 1f)) return;
+
+            DoMutation(pawn);
+            pawn.Destroy();
         }
 
         public static void DoMutation(Pawn premutant)

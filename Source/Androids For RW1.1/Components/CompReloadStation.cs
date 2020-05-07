@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using System.Linq;
+using RimWorld;
 using Verse;
 using Verse.AI;
 
@@ -45,6 +46,7 @@ namespace MOARANDROIDS
 
             if (parent == null)
                 return ret;
+
             if (ret == null)
                 ret = "";
 
@@ -87,55 +89,33 @@ namespace MOARANDROIDS
             foreach (var adjPos in ((Building) parent).CellsAdjacent8WayAndInside())
             {
                 var thingList = adjPos.GetThingList(parent.Map);
-                if (thingList != null)
-                    for (var i = 0; i < thingList.Count; i++)
-                    {
-                        var cp = thingList[i] as Pawn;
-
-                        /*if (cp != null && cp.IsColonist)
-                            Log.Message("=>" + cp.LabelShortCap + " "+ cp.CurJobDef.defName);*/
-
-                        //Il sagit d'un android  et il execute le jobDriver "ATPP_GoReloadBattery"
-                        if (cp != null && Utils.ExceptionAndroidCanReloadWithPowerList.Contains(cp.def.defName) && cp.CurJobDef.defName == "ATPP_GoReloadBattery")
-                            if (cp.needs.food.CurLevelPercentage < 1.0)
-                            {
-                                cp.needs.food.CurLevelPercentage += Settings.percentageOfBatteryChargedEach6Sec;
-                                Utils.throwChargingMote(cp);
-                            }
-                    }
+                if (thingList == null) continue;
+                
+                foreach (var cp in thingList.Select(t => t as Pawn).Where(cp => cp != null && Utils.ExceptionAndroidCanReloadWithPowerList.Contains(cp.def.defName) && cp.CurJobDef.defName == "ATPP_GoReloadBattery").Where(cp => cp.needs.food.CurLevelPercentage < 1.0))
+                {
+                    cp.needs.food.CurLevelPercentage += Settings.percentageOfBatteryChargedEach6Sec;
+                    Utils.throwChargingMote(cp);
+                }
             }
         }
 
         public IntVec3 getFreeReloadPlacePos(Pawn android)
         {
-            var ok = true;
-            var parentPos = parent.Position;
             foreach (var adjPos in ((Building) parent).CellsAdjacent8WayAndInside())
             {
-                ok = true;
+                var ok = true;
                 var thingList = adjPos.GetThingList(parent.Map);
-                if (thingList != null)
-                {
-                    for (var i = 0; i < thingList.Count; i++)
-                    {
-                        var cp = thingList[i] as Pawn;
+                if (thingList == null) continue;
+                
+                if (thingList.Select(t => t as Pawn).Any(cp => cp != null && cp.IsColonist && Utils.ExceptionAndroidList.Contains(cp.def.defName))) ok = false;
 
-                        //Il sagit d'un android 
-                        if (cp != null && cp.IsColonist && Utils.ExceptionAndroidList.Contains(cp.def.defName))
-                        {
-                            ok = false;
-                            break;
-                        }
-                    }
+                //Si pas déjà d'android dessus
+                if (!ok) continue;
 
-                    //Si pas déjà d'android dessus
-                    if (ok)
-                        //Check si atteignable par l'android
-                        if (android.CanReach(adjPos, PathEndMode.OnCell, Danger.Deadly))
-                            //Check si emplacement pas deja réservé par un android 
-                            if (!android.Map.pawnDestinationReservationManager.IsReserved(adjPos))
-                                return adjPos;
-                }
+                if (!android.CanReach(adjPos, PathEndMode.OnCell, Danger.Deadly)) continue;
+                    
+                if (!android.Map.pawnDestinationReservationManager.IsReserved(adjPos))
+                    return adjPos;
             }
 
             return IntVec3.Invalid;
@@ -149,21 +129,20 @@ namespace MOARANDROIDS
             foreach (var adjPos in ((Building) parent).CellsAdjacent8WayAndInside())
             {
                 var thingList = adjPos.GetThingList(parent.Map);
-                if (thingList != null)
-                    for (var i = 0; i < thingList.Count; i++)
-                    {
-                        var cp = thingList[i] as Pawn;
-
-                        //Il sagit d'un android 
-                        if (cp != null && cp.IsColonist && Utils.ExceptionAndroidList.Contains(cp.def.defName) && cp.CurJobDef.defName == "ATPP_GoReloadBattery")
-                        {
-                            if (countOnly)
-                                ret++;
-                            else
-                                //Si son job est "reloading" alors incrémentation (il ne sagit pas d'un android ne faisant que passer)
-                                ret += Utils.getConsumedPowerByAndroid(cp.def.defName);
-                        }
-                    }
+                if (thingList == null) continue;
+                
+                foreach (var t in thingList)
+                {
+                    //Il sagit d'un android 
+                    if (!(t is Pawn cp) || !cp.IsColonist || !Utils.ExceptionAndroidList.Contains(cp.def.defName) ||
+                        cp.CurJobDef.defName != "ATPP_GoReloadBattery") continue;
+                        
+                    if (countOnly)
+                        ret++;
+                    else
+                        //Si son job est "reloading" alors incrémentation (il ne sagit pas d'un android ne faisant que passer)
+                        ret += Utils.getConsumedPowerByAndroid(cp.def.defName);
+                }
             }
 
             return ret;

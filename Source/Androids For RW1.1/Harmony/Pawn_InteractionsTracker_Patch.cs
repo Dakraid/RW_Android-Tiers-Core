@@ -16,14 +16,10 @@ namespace MOARANDROIDS
             [HarmonyPrefix]
             public static bool Listener(Pawn recipient, InteractionDef intDef, Pawn ___pawn, ref bool __result)
             {
-                if ((___pawn.IsBasicAndroidTier() || recipient.IsBasicAndroidTier())
-                    && Utils.IgnoredInteractionsByBasicAndroids.Contains(intDef.defName))
-                {
-                    __result = false;
-                    return false;
-                }
+                if ((!___pawn.IsBasicAndroidTier() && !recipient.IsBasicAndroidTier()) || !Utils.IgnoredInteractionsByBasicAndroids.Contains(intDef.defName)) return true;
 
-                return true;
+                __result = false;
+                return false;
             }
         }
     }

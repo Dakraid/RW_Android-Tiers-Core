@@ -39,27 +39,32 @@ namespace MOARANDROIDS
             Material iconMat = null;
 
             //Si temperature du device chaude
-            if (powerComp.PowerOn && !parent.IsBrokenDown() && hotLevelInt != 0)
+            if (!powerComp.PowerOn || parent.IsBrokenDown() || hotLevelInt == 0) return;
+            
+            switch (hotLevelInt)
             {
-                if (hotLevelInt == 1)
+                case 1:
                     iconMat = Tex.matHotLevel1;
-                else if (hotLevelInt == 2)
+                    break;
+                case 2:
                     iconMat = Tex.matHotLevel2;
-                else if (hotLevelInt == 3)
+                    break;
+                case 3:
                     iconMat = Tex.matHotLevel3;
-
-                var vector = parent.TrueCenter();
-                vector.y = AltitudeLayer.MetaOverlays.AltitudeFor() + 0.28125f;
-                vector.x += parent.def.size.x / 4;
-
-                vector.z -= 1;
-
-                var num = (Time.realtimeSinceStartup + 397f * (parent.thingIDNumber % 571)) * 4f;
-                var num2 = ((float) Math.Sin(num) + 1f) * 0.5f;
-                num2 = 0.3f + num2 * 0.7f;
-                var material = FadedMaterialPool.FadedVersionOf(iconMat, num2);
-                Graphics.DrawMesh(MeshPool.plane05, vector, Quaternion.identity, material, 0);
+                    break;
             }
+
+            var vector = parent.TrueCenter();
+            vector.y = AltitudeLayer.MetaOverlays.AltitudeFor() + 0.28125f;
+            vector.x += parent.def.size.x / 4;
+
+            vector.z -= 1;
+
+            var num = (Time.realtimeSinceStartup + 397f * (parent.thingIDNumber % 571)) * 4f;
+            var num2 = ((float) Math.Sin(num) + 1f) * 0.5f;
+            num2 = 0.3f + num2 * 0.7f;
+            var material = FadedMaterialPool.FadedVersionOf(iconMat, num2);
+            Graphics.DrawMesh(MeshPool.plane05, vector, Quaternion.identity, material, 0);
         }
 
         // Token: 0x06002851 RID: 10321 RVA: 0x00133CC9 File Offset: 0x001320C9
@@ -88,10 +93,7 @@ namespace MOARANDROIDS
 
         public void setNewExplosionThreshold()
         {
-            if (isSkyCloudCore)
-                ticksBeforeMelt = Rand.Range(Settings.nbHoursMinSkyCloudServerRunningHotBeforeExplode * 2500, Settings.nbHoursMaxSkyCloudServerRunningHotBeforeExplode * 2500);
-            else
-                ticksBeforeMelt = Rand.Range(Settings.nbHoursMinServerRunningHotBeforeExplode * 2500, Settings.nbHoursMaxServerRunningHotBeforeExplode * 2500);
+            ticksBeforeMelt = isSkyCloudCore ? Rand.Range(Settings.nbHoursMinSkyCloudServerRunningHotBeforeExplode * 2500, Settings.nbHoursMaxSkyCloudServerRunningHotBeforeExplode * 2500) : Rand.Range(Settings.nbHoursMinServerRunningHotBeforeExplode * 2500, Settings.nbHoursMaxServerRunningHotBeforeExplode * 2500);
         }
 
         public override void CompTick()
@@ -104,14 +106,13 @@ namespace MOARANDROIDS
         public override void ReceiveCompSignal(string signal)
         {
             //Arret manuel ou  composant endommagé => arret ambiance
-            if (signal == "FlickedOff" || signal == "Breakdown" || signal == "PowerTurnedOff")
-            {
-                if (hotLevelInt == 3)
-                    StopSustainerHot();
+            if (signal != "FlickedOff" && signal != "Breakdown" && signal != "PowerTurnedOff") return;
+            
+            if (hotLevelInt == 3)
+                StopSustainerHot();
 
-                hotLevelInt = 0;
-                nbTicksSinceHot3 = 0;
-            }
+            hotLevelInt = 0;
+            nbTicksSinceHot3 = 0;
         }
 
 
@@ -152,37 +153,30 @@ namespace MOARANDROIDS
             }
 
             //Meltingdown condition remplie on fait péter le serveur
-            if (nbTicksSinceHot3 >= ticksBeforeMelt)
-            {
-                var rnd = new Random();
-                //Reset le meltdown counter
-                nbTicksSinceHot3 = 0;
-                //Définition nouveau seuil d'explosion
-                setNewExplosionThreshold();
+            if (nbTicksSinceHot3 < ticksBeforeMelt) return;
 
-                makeExplosion();
-                Find.LetterStack.ReceiveLetter("ATPP_ComptHeatSensitiveComputerMeltTitle".Translate(), "ATPP_ComptHeatSensitiveComputerMeltDesc".Translate(),
-                    LetterDefOf.NegativeEvent, new TargetInfo(parent.Position, parent.Map));
-            }
+            //Reset le meltdown counter
+            nbTicksSinceHot3 = 0;
+            //Définition nouveau seuil d'explosion
+            setNewExplosionThreshold();
+
+            makeExplosion();
+            Find.LetterStack.ReceiveLetter("ATPP_ComptHeatSensitiveComputerMeltTitle".Translate(), "ATPP_ComptHeatSensitiveComputerMeltDesc".Translate(),
+                LetterDefOf.NegativeEvent, new TargetInfo(parent.Position, parent.Map));
         }
 
         public void makeExplosion()
         {
             //Passe le dispositif en broken
-            if (parent != null)
-            {
-                var bd = parent.TryGetComp<CompBreakdownable>();
-                if (bd != null)
-                    bd.DoBreakdown();
+            if (parent == null) return;
+            
+            var bd = parent.TryGetComp<CompBreakdownable>();
+            bd?.DoBreakdown();
 
-                var b = (Building) parent;
-                b.HitPoints -= (int) (b.HitPoints * Rand.Range(0.10f, 0.45f));
+            var b = (Building) parent;
+            b.HitPoints -= (int) (b.HitPoints * Rand.Range(0.10f, 0.45f));
 
-                if (isSkyCloudCore)
-                    GenExplosion.DoExplosion(parent.Position, parent.Map, 8, DamageDefOf.Flame, null);
-                else
-                    GenExplosion.DoExplosion(parent.Position, parent.Map, 2, DamageDefOf.Flame, null);
-            }
+            GenExplosion.DoExplosion(parent.Position, parent.Map, isSkyCloudCore ? 8 : 2, DamageDefOf.Flame, null);
         }
 
         public override void PostDeSpawn(Map map)
@@ -201,32 +195,34 @@ namespace MOARANDROIDS
             if (powerComp != null && !powerComp.PowerOn)
                 return "";
 
-            if (hotLevelInt == 3)
-                return "ATPP_CompHotSensitiveHot3Text".Translate();
-            if (hotLevelInt == 2)
-                return "ATPP_CompHotSensitiveHot2Text".Translate();
-            if (hotLevelInt == 1)
-                return "ATPP_CompHotSensitiveHot1Text".Translate();
-            return "ATPP_CompHotSensitiveHot0Text".Translate();
+            switch (hotLevelInt)
+            {
+                case 3:
+                    return "ATPP_CompHotSensitiveHot3Text".Translate();
+                case 2:
+                    return "ATPP_CompHotSensitiveHot2Text".Translate();
+                case 1:
+                    return "ATPP_CompHotSensitiveHot1Text".Translate();
+                default:
+                    return "ATPP_CompHotSensitiveHot0Text".Translate();
+            }
         }
 
 
         private void StartSustainerHot()
         {
-            if (sustainerHot == null && !Settings.disableServersAlarm)
-            {
-                var info = SoundInfo.InMap(parent);
-                sustainerHot = Props.hotSoundDef.TrySpawnSustainer(info);
-            }
+            if (sustainerHot != null || Settings.disableServersAlarm) return;
+            
+            var info = SoundInfo.InMap(parent);
+            sustainerHot = Props.hotSoundDef.TrySpawnSustainer(info);
         }
 
         private void StopSustainerHot()
         {
-            if (sustainerHot != null)
-            {
-                sustainerHot.End();
-                sustainerHot = null;
-            }
+            if (sustainerHot == null) return;
+            
+            sustainerHot.End();
+            sustainerHot = null;
         }
     }
 }

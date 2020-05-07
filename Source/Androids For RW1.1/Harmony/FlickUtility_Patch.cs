@@ -31,36 +31,30 @@ namespace MOARANDROIDS
                     string txt;
 
                     //Si serveur principal installé sur la map alors automatisation du flick
-                    if (Utils.GCATPP.isThereSkyCloudCore())
+                    if (!Utils.GCATPP.isThereSkyCloudCore()) return true;
+                    if (!csm.connected)
+                        return true;
+
+                    var cf = t.TryGetComp<CompFlickable>();
+                    if (cf == null) return false;
+                    //Affichage texte
+                    if (cf.SwitchIsOn)
                     {
-                        if (!csm.connected)
-                            return true;
-
-                        var cf = t.TryGetComp<CompFlickable>();
-                        if (cf != null)
-                        {
-                            //Affichage texte
-                            if (cf.SwitchIsOn)
-                            {
-                                txt = "ATPP_FlickDisable".Translate();
-                                Utils.playVocal("soundDefSkyCloudDeviceDeactivated");
-                            }
-                            else
-                            {
-                                txt = "ATPP_FlickEnable".Translate();
-                                Utils.playVocal("soundDefSkyCloudDeviceActivated");
-                            }
-
-                            MoteMaker.ThrowText(t.TrueCenter() + new Vector3(0.5f, 0f, 0.5f), t.Map, txt, Color.white);
-
-                            cf.DoFlick();
-                            csm.lastRemoteFlickGT = CGT;
-                        }
-
-                        return false;
+                        txt = "ATPP_FlickDisable".Translate();
+                        Utils.playVocal("soundDefSkyCloudDeviceDeactivated");
+                    }
+                    else
+                    {
+                        txt = "ATPP_FlickEnable".Translate();
+                        Utils.playVocal("soundDefSkyCloudDeviceActivated");
                     }
 
-                    return true;
+                    MoteMaker.ThrowText(t.TrueCenter() + new Vector3(0.5f, 0f, 0.5f), t.Map, txt, Color.white);
+
+                    cf.DoFlick();
+                    csm.lastRemoteFlickGT = CGT;
+
+                    return false;
                 }
                 catch (Exception e)
                 {

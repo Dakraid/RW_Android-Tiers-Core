@@ -34,10 +34,8 @@ namespace MOARANDROIDS
                 return false;
 
             victim = Utils.GCATPP.getRandomSkyMindUser();
-            if (victim == null)
-                return false;
 
-            var cso = victim.TryGetComp<CompSurrogateOwner>();
+            var cso = victim?.TryGetComp<CompSurrogateOwner>();
             if (cso == null)
                 return false;
 
@@ -50,12 +48,11 @@ namespace MOARANDROIDS
 
                 //Purge des traits deja possédé par la victime ET incompatibles avec ceux present
                 foreach (var t in Utils.RansomAddedBadTraits)
-                foreach (var t2 in victim.story.traits.allTraits)
-                    if (t2.def == t || t.conflictingTraits != null && t.conflictingTraits.Contains(t2.def))
-                    {
-                        tr.Remove(t2.def);
-                        break;
-                    }
+                foreach (var t2 in victim.story.traits.allTraits.Where(t2 => t2.def == t || t.conflictingTraits != null && t.conflictingTraits.Contains(t2.def)))
+                {
+                    tr.Remove(t2.def);
+                    break;
+                }
 
                 //Selection trait aleatoire ajouté
                 cso.ransomwareTraitAdded = tr.RandomElement();
@@ -81,16 +78,15 @@ namespace MOARANDROIDS
                 SkillRecord sel = null;
                 var v = -1;
                 //Check tu plus gros skill de la victime
-                foreach (var s in victim.skills.skills)
-                    if (s.levelInt >= v)
-                    {
-                        v = s.levelInt;
-                        find = s.def;
-                        sel = s;
-                    }
+                foreach (var s in victim.skills.skills.Where(s => s.levelInt >= v))
+                {
+                    v = s.levelInt;
+                    find = s.def;
+                    sel = s;
+                }
 
                 //APplication effet négatif
-                sel.levelInt = 0;
+                if (sel != null) sel.levelInt = 0;
 
                 //Sauvegarde infos de skill pour restauration
                 cso.ransomwareSkillStolen = find;
@@ -98,8 +94,11 @@ namespace MOARANDROIDS
 
                 fee = v * Settings.ransomwareSilverToPayToRestoreSkillPerLevel;
 
-                msg = "ATPP_LetterFactionRansomwareSkillStolenDesc".Translate(faction.Name, cso.ransomwareSkillStolen.LabelCap, victim.LabelShortCap);
-                ransomMsg = "ATPP_RansomNeedPayRansomCorruptedSKill".Translate(faction.Name, cso.ransomwareSkillStolen.LabelCap, victim.LabelShortCap, fee);
+                if (cso.ransomwareSkillStolen != null)
+                {
+                    msg = "ATPP_LetterFactionRansomwareSkillStolenDesc".Translate(faction.Name, cso.ransomwareSkillStolen.LabelCap, victim.LabelShortCap);
+                    ransomMsg = "ATPP_RansomNeedPayRansomCorruptedSKill".Translate(faction.Name, cso.ransomwareSkillStolen.LabelCap, victim.LabelShortCap, fee);
+                }
             }
 
 

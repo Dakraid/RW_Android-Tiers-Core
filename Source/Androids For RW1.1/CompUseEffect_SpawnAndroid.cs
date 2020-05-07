@@ -19,12 +19,11 @@ namespace MOARANDROIDS
         {
             var pawn = PawnGenerator.GeneratePawn(SpawnerProps.pawnKind, Faction.OfPlayer);
             var flag = pawn != null;
-            if (flag)
-            {
-                GenPlace.TryPlaceThing(pawn, parent.Position, parent.Map, ThingPlaceMode.Near);
-                var sendMessage = SpawnerProps.sendMessage;
-                if (sendMessage) Messages.Message("AndroidSpawnedt".Translate(pawn.Name.ToStringFull), MessageTypeDefOf.NeutralEvent);
-            }
+            if (!flag) return;
+            
+            GenPlace.TryPlaceThing(pawn, parent.Position, parent.Map, ThingPlaceMode.Near);
+            var sendMessage = SpawnerProps.sendMessage;
+            if (sendMessage) Messages.Message("AndroidSpawnedt".Translate(pawn.Name.ToStringFull), MessageTypeDefOf.NeutralEvent);
         }
 
         // Token: 0x06000080 RID: 128 RVA: 0x00005574 File Offset: 0x00003774

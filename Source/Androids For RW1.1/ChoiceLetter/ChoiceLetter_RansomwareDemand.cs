@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using Verse;
 
@@ -20,56 +21,51 @@ namespace MOARANDROIDS
                 }
                 else
                 {
-                    var accept = new DiaOption("RansomDemand_Accept".Translate());
-                    accept.action = delegate
+                    var accept = new DiaOption("RansomDemand_Accept".Translate())
                     {
-                        Utils.anyPlayerColonnyPaySilver(fee);
-
-                        //Check si la faction tient parole
-                        if (Rand.Chance(1.0f - Settings.riskCryptolockerScam))
+                        action = delegate
                         {
-                            var cso = victim.TryGetComp<CompSurrogateOwner>();
+                            Utils.anyPlayerColonnyPaySilver(fee);
 
-                            if (cso.ransomwareTraitAdded != null)
+                            //Check si la faction tient parole
+                            if (Rand.Chance(1.0f - Settings.riskCryptolockerScam))
                             {
-                                if (victim.story.traits.HasTrait(cso.ransomwareTraitAdded))
+                                var cso = victim.TryGetComp<CompSurrogateOwner>();
+
+                                if (cso.ransomwareTraitAdded != null)
                                 {
-                                    Trait ct = null;
-                                    foreach (var t in victim.story.traits.allTraits)
-                                        if (t.def == cso.ransomwareTraitAdded)
-                                        {
-                                            ct = t;
-                                            break;
-                                        }
+                                    if (victim.story.traits.HasTrait(cso.ransomwareTraitAdded))
+                                    {
+                                        var ct = victim.story.traits.allTraits.FirstOrDefault(t => t.def == cso.ransomwareTraitAdded);
 
-                                    if (ct != null)
-                                        victim.story.traits.allTraits.Remove(ct);
+                                        if (ct != null)
+                                            victim.story.traits.allTraits.Remove(ct);
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                foreach (var s in victim.skills.skills)
-                                    if (s.def == cso.ransomwareSkillStolen)
+                                else
+                                {
+                                    foreach (var s in victim.skills.skills.Where(s => s.def == cso.ransomwareSkillStolen))
                                     {
                                         s.levelInt = cso.ransomwareSkillValue;
                                         break;
                                     }
+                                }
+
+                                cso.clearRansomwareVar();
+
+                                Messages.Message("ATPP_RansomwareClearedByFaction".Translate(faction.Name, victim.LabelShortCap), MessageTypeDefOf.PositiveEvent);
+                            }
+                            else
+                            {
+                                //ATPP_LetterFactionScamCryptolocker
+                                Find.LetterStack.ReceiveLetter("ATPP_LetterFactionScam".Translate(), "ATPP_LetterFactionScamRansomwareDesc".Translate(faction.Name),
+                                    LetterDefOf.ThreatBig);
                             }
 
-                            cso.clearRansomwareVar();
-
-                            Messages.Message("ATPP_RansomwareClearedByFaction".Translate(faction.Name, victim.LabelShortCap), MessageTypeDefOf.PositiveEvent);
-                        }
-                        else
-                        {
-                            //ATPP_LetterFactionScamCryptolocker
-                            Find.LetterStack.ReceiveLetter("ATPP_LetterFactionScam".Translate(), "ATPP_LetterFactionScamRansomwareDesc".Translate(faction.Name),
-                                LetterDefOf.ThreatBig);
-                        }
-
-                        Find.LetterStack.RemoveLetter(this);
+                            Find.LetterStack.RemoveLetter(this);
+                        },
+                        resolveTree = true
                     };
-                    accept.resolveTree = true;
                     if (!Utils.anyPlayerColonnyHasEnoughtSilver(fee)) accept.Disable("NeedSilverLaunchable".Translate(fee.ToString()));
                     yield return accept;
                     yield return Option_Reject;

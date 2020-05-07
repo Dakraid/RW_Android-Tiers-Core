@@ -119,7 +119,6 @@ namespace MOARANDROIDS
         public static Graphic getEyeGlowEffect(Color color, string gender, int type, int front)
         {
             var key = new Pair<string, Color>(type + gender + front, color);
-            string path;
 
             Graphic res;
             if (eyeGlowEffectCache.ContainsKey(key))
@@ -128,21 +127,16 @@ namespace MOARANDROIDS
             }
             else
             {
+                string path;
                 if (front == 1)
                 {
-                    if (gender == "M")
-                        path = "Things/Misc/Androids/Effects/Front";
-                    else
-                        path = "Things/Misc/Androids/Effects/FFront";
+                    path = gender == "M" ? "Things/Misc/Androids/Effects/Front" : "Things/Misc/Androids/Effects/FFront";
 
                     eyeGlowEffectCache[key] = GraphicDatabase.Get<Graphic_Single>(path + type, ShaderDatabase.MoteGlow, Vector2.one, color);
                 }
                 else
                 {
-                    if (gender == "M")
-                        path = "Things/Misc/Androids/Effects/Side";
-                    else
-                        path = "Things/Misc/Androids/Effects/FSide";
+                    path = gender == "M" ? "Things/Misc/Androids/Effects/Side" : "Things/Misc/Androids/Effects/FSide";
 
                     eyeGlowEffectCache[key] = GraphicDatabase.Get<Graphic_Single>(path + type, ShaderDatabase.MoteGlow, Vector2.one, color);
                 }

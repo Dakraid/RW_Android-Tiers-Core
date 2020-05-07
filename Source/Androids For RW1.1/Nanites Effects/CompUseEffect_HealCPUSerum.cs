@@ -19,16 +19,10 @@ namespace MOARANDROIDS
             }
 
             if (nb == 0)
-            {
-                if (chance)
-                    Messages.Message("ATPP_NoBrokenStuffFound".Translate(user.LabelShort), user, MessageTypeDefOf.NegativeEvent);
-                else
-                    Messages.Message("ATPP_BrokenStuffRepairFailed".Translate(user.LabelShort), user, MessageTypeDefOf.NegativeEvent);
-            }
+                Messages.Message(chance ? "ATPP_NoBrokenStuffFound".Translate(user.LabelShort) : "ATPP_BrokenStuffRepairFailed".Translate(user.LabelShort), user,
+                    MessageTypeDefOf.NegativeEvent);
             else
-            {
                 Messages.Message("ATPP_BrokenCPURepaired".Translate(user.LabelShort), user, MessageTypeDefOf.PositiveEvent);
-            }
         }
 
         public override void DoEffect(Pawn user)
@@ -46,13 +40,11 @@ namespace MOARANDROIDS
                 return false;
             }
 
-            if (!p.haveAndroidOldAgeHediff(Utils.AndroidOldAgeHediffCPU))
-            {
-                failReason = "ATPP_CannotBeUsedBecauseNoOldAgeIssues".Translate();
-                return false;
-            }
+            if (p.haveAndroidOldAgeHediff(Utils.AndroidOldAgeHediffCPU)) return base.CanBeUsedBy(p, out failReason);
 
-            return base.CanBeUsedBy(p, out failReason);
+            failReason = "ATPP_CannotBeUsedBecauseNoOldAgeIssues".Translate();
+            return false;
+
         }
     }
 }

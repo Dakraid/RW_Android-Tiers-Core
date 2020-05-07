@@ -52,10 +52,7 @@ namespace MOARANDROIDS
             public static bool Listener(Pawn ___pawn)
             {
                 var cso = ___pawn.TryGetComp<CompSurrogateOwner>();
-                if (cso != null && cso.skyCloudHost != null)
-                    return false;
-
-                return true;
+                return cso?.skyCloudHost == null;
             }
         }
     }

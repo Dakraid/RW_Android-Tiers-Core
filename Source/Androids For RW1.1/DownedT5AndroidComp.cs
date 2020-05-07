@@ -18,6 +18,7 @@ namespace MOARANDROIDS
         public override string CompInspectStringExtra()
         {
             if (pawn.Any) return "Transcendant".Translate() + ": " + pawn[0].LabelShort;
+            
             return null;
         }
     }

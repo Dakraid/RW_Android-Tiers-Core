@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -56,15 +57,11 @@ namespace MOARANDROIDS
 
         public override bool DragDrawMeasurements => false;
 
-        public override void DrawMouseAttachments()
-        {
-            base.DrawMouseAttachments();
-        }
-
         public override AcceptanceReport CanDesignateCell(IntVec3 c)
         {
             if (!c.InBounds(Map)) return false;
             if (!SXInCell(c)) return "ATPP_DesignatorNeedSelectSXToHack".Translate();
+
             return true;
         }
 
@@ -175,8 +172,7 @@ namespace MOARANDROIDS
                         target.drafter.Drafted = false;
 
                     lordJob = new LordJob_AssistColony(Faction.OfAncients, fallbackLocation);
-                    if (lordJob != null)
-                        lord = LordMaker.MakeNewLord(Faction.OfAncients, lordJob, Current.Game.CurrentMap);
+                    lord = LordMaker.MakeNewLord(Faction.OfAncients, lordJob, Current.Game.CurrentMap);
 
                     if (clord != null)
                         if (clord.ownedPawns.Contains(target))
@@ -204,13 +200,11 @@ namespace MOARANDROIDS
                         if (clord.ownedPawns.Contains(target))
                             clord.Notify_PawnLost(target, PawnLostCondition.ChangedFaction, null);
 
-                    if (cso != null)
-                        cso.disconnectControlledSurrogate(null);
+                    cso?.disconnectControlledSurrogate(null);
 
                     if (hackType == 4)
                         //Contorle definitif on jerte l'externalController
-                        if (cas != null)
-                            cas.externalController = null;
+                        cas.externalController = null;
 
                     target.Map.attackTargetsCache.UpdateTarget(target);
                     PawnComponentsUtility.AddAndRemoveDynamicComponents(target);
@@ -220,10 +214,7 @@ namespace MOARANDROIDS
                     {
                         csm.Hacked = hackType;
                         csm.hackOrigFaction = prevFaction;
-                        if (wasPrisonner)
-                            csm.hackWasPrisoned = true;
-                        else
-                            csm.hackWasPrisoned = false;
+                        csm.hackWasPrisoned = wasPrisonner;
                         csm.hackEndGT = Find.TickManager.TicksGame + Settings.nbSecDurationTempHack * 60;
                     }
                     else
@@ -261,20 +252,10 @@ namespace MOARANDROIDS
         [DebuggerHidden]
         private bool SXInCell(IntVec3 c)
         {
-            if (!c.Fogged(Map))
-            {
-                var thingList = c.GetThingList(Map);
-                for (var i = 0; i < thingList.Count; i++)
-                    if (thingList[i] is Pawn && CanDesignateThing(thingList[i]).Accepted)
-                        return true;
-            }
+            if (c.Fogged(Map)) return false;
 
-            return false;
-        }
-
-        protected override void FinalizeDesignationFailed()
-        {
-            base.FinalizeDesignationFailed();
+            var thingList = c.GetThingList(Map);
+            return Enumerable.Any(thingList, t => t is Pawn && CanDesignateThing(t).Accepted);
         }
     }
 }

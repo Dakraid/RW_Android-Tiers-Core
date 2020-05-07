@@ -19,34 +19,31 @@ namespace MOARANDROIDS
 
         public static bool PrisonLabor_WorkTimePrefix(Pawn pawn, ref bool __result)
         {
-            if (pawn != null && pawn.IsAndroidTier())
-            {
-                if (pawn.timetable == null)
-                {
-                    __result = true;
-                }
-                else if (pawn.timetable.CurrentAssignment == TimeAssignmentDefOf.Work)
-                {
-                    __result = true;
-                }
-                else if (pawn.timetable.CurrentAssignment == TimeAssignmentDefOf.Anything)
-                {
-                    if (HealthAIUtility.ShouldSeekMedicalRest(pawn) ||
-                        pawn.health.hediffSet.HasTemperatureInjury(TemperatureInjuryStage.Serious) ||
-                        pawn.needs.food.CurCategory > HungerCategory.Hungry)
-                        __result = false;
-                    else
-                        __result = true;
-                }
-                else
-                {
-                    __result = false;
-                }
+            if (pawn == null || !pawn.IsAndroidTier()) return true;
 
-                return false;
+            if (pawn.timetable == null)
+            {
+                __result = true;
+            }
+            else if (pawn.timetable.CurrentAssignment == TimeAssignmentDefOf.Work)
+            {
+                __result = true;
+            }
+            else if (pawn.timetable.CurrentAssignment == TimeAssignmentDefOf.Anything)
+            {
+                if (HealthAIUtility.ShouldSeekMedicalRest(pawn) ||
+                    pawn.health.hediffSet.HasTemperatureInjury(TemperatureInjuryStage.Serious) ||
+                    pawn.needs.food.CurCategory > HungerCategory.Hungry)
+                    __result = false;
+                else
+                    __result = true;
+            }
+            else
+            {
+                __result = false;
             }
 
-            return true;
+            return false;
         }
 
         public static bool PrisonLabor_GetChangePointsPrefix(ref bool __result, Pawn ___pawn)
@@ -84,13 +81,10 @@ namespace MOARANDROIDS
         {
             try
             {
-                if (pair.thing.defName == "VAE_Headgear_Scarf" || Utils.ExceptionAndroidList.Contains(___raceDef.defName))
-                    foreach (var el in ___aps)
-                        if (el.thing.defName == "VAE_Headgear_Scarf")
-                        {
-                            __result = true;
-                            break;
-                        }
+                if (pair.thing.defName != "VAE_Headgear_Scarf" && !Utils.ExceptionAndroidList.Contains(___raceDef.defName)) return;
+
+                if (Enumerable.Any(___aps, el => el.thing.defName == "VAE_Headgear_Scarf"))
+                    __result = true;
             }
             catch (Exception e)
             {
@@ -226,14 +220,10 @@ namespace MOARANDROIDS
                     icon = (Texture2D) baseMat.mainTexture,
                     action = delegate
                     {
-                        var opts = new List<FloatMenuOption>();
-                        FloatMenu floatMenuMap;
-
-                        foreach (var h in DefDatabase<HairDef>.AllDefs)
-                            opts.Add(new FloatMenuOption(h.LabelCap, delegate { Utils.GCATPP.QEEAndroidHair[BUID] = h.defName; }));
+                        var opts = DefDatabase<HairDef>.AllDefs.Select(h => new FloatMenuOption(h.LabelCap, delegate { Utils.GCATPP.QEEAndroidHair[BUID] = h.defName; })).ToList();
                         opts.SortBy(x => x.Label);
 
-                        floatMenuMap = new FloatMenu(opts, "");
+                        var floatMenuMap = new FloatMenu(opts, "");
                         Find.WindowStack.Add(floatMenuMap);
                     }
                 };
@@ -247,14 +237,11 @@ namespace MOARANDROIDS
                     icon = Tex.ColorPicker,
                     action = delegate
                     {
-                        var opts = new List<FloatMenuOption>();
-                        FloatMenu floatMenuMap;
+                        var opts = Utils.ExceptionHairColors.Select(h => new FloatMenuOption(("ATPP_HairColor" + h).Translate(), delegate { Utils.GCATPP.QEEAndroidHairColor[BUID] = h.ToLower(); })).ToList();
 
-                        foreach (var h in Utils.ExceptionHairColors)
-                            opts.Add(new FloatMenuOption(("ATPP_HairColor" + h).Translate(), delegate { Utils.GCATPP.QEEAndroidHairColor[BUID] = h.ToLower(); }));
                         opts.SortBy(x => x.Label);
 
-                        floatMenuMap = new FloatMenu(opts, "");
+                        var floatMenuMap = new FloatMenu(opts, "");
                         Find.WindowStack.Add(floatMenuMap);
                     }
                 };
@@ -268,14 +255,11 @@ namespace MOARANDROIDS
                     icon = Tex.ColorPicker,
                     action = delegate
                     {
-                        var opts = new List<FloatMenuOption>();
-                        FloatMenu floatMenuMap;
+                        var opts = Utils.ExceptionSkinColors.Select(h => new FloatMenuOption(("ATPP_SkinColor" + h).Translate(), delegate { Utils.GCATPP.QEESkinColor[BUID] = h.ToLower(); })).ToList();
 
-                        foreach (var h in Utils.ExceptionSkinColors)
-                            opts.Add(new FloatMenuOption(("ATPP_SkinColor" + h).Translate(), delegate { Utils.GCATPP.QEESkinColor[BUID] = h.ToLower(); }));
                         opts.SortBy(x => x.Label);
 
-                        floatMenuMap = new FloatMenu(opts, "");
+                        var floatMenuMap = new FloatMenu(opts, "");
                         Find.WindowStack.Add(floatMenuMap);
                     }
                 };
@@ -297,10 +281,7 @@ namespace MOARANDROIDS
             var to = (ThingOwner) Traverse.Create(__instance).Field("innerContainer").GetValue();
 
             var genome = to.FirstOrDefault(thing => thing.GetType().Name == "GenomeSequence");
-            if (genome != null)
-                TargetGSequencer = genome.GetUniqueLoadID();
-            else
-                TargetGSequencer = null;
+            TargetGSequencer = genome?.GetUniqueLoadID();
 
             return true;
         }
@@ -309,36 +290,27 @@ namespace MOARANDROIDS
         {
             var BUID = __instance.GetUniqueLoadID();
 
-            if (TargetGSequencer != null && __result)
+            if (TargetGSequencer == null || !__result) return;
+
+            var target = __instance.Map.listerThings.AllThings.FirstOrDefault(el => el != null && el.GetUniqueLoadID() == TargetGSequencer);
+            //Recherche et destruction du sequence de genome TX si succés TryExtractProduct
+
+            if (target == null) return;
+            //Si surrogate on va traficoter le pawnBeingGrown pour être un surrogate
+            var source = (string) Traverse.Create(target).Field("sourceName").GetValue();
+
+            if (source.ToLower().Contains("(surrogate)"))
             {
-                Thing target = null;
-                //Recherche et destruction du sequence de genome TX si succés TryExtractProduct
-                foreach (var el in __instance.Map.listerThings.AllThings)
-                    if (el != null && el.GetUniqueLoadID() == TargetGSequencer)
-                    {
-                        target = el;
-                        break;
-                    }
-
-                if (target != null)
+                var cas = Utils.GCATPP.VatGrowerLastPawnInProgress[BUID].TryGetComp<CompAndroidState>();
+                if (cas != null)
                 {
-                    //Si surrogate on va traficoter le pawnBeingGrown pour être un surrogate
-                    var source = (string) Traverse.Create(target).Field("sourceName").GetValue();
-
-                    if (source.ToLower().Contains("(surrogate)"))
-                    {
-                        var cas = Utils.GCATPP.VatGrowerLastPawnInProgress[BUID].TryGetComp<CompAndroidState>();
-                        if (cas != null)
-                        {
-                            Utils.initBodyAsSurrogate(Utils.GCATPP.VatGrowerLastPawnInProgress[BUID]);
-                            cas.initAsSurrogate();
-                            Utils.setSurrogateName(Utils.GCATPP.VatGrowerLastPawnInProgress[BUID]);
-                        }
-                    }
-
-                    target.Destroy();
+                    Utils.initBodyAsSurrogate(Utils.GCATPP.VatGrowerLastPawnInProgress[BUID]);
+                    cas.initAsSurrogate();
+                    Utils.setSurrogateName(Utils.GCATPP.VatGrowerLastPawnInProgress[BUID]);
                 }
             }
+
+            target.Destroy();
         }
 
         public static void QEE_Building_GrowerBase_get_CraftingProgressPercentPostfix(Building __instance, ref float __result)
@@ -353,36 +325,35 @@ namespace MOARANDROIDS
 
 
                 //Si le GS chargé dans le VAT est un exosquelette d'androide TX alors pas de reduction
-                if (Utils.GCATPP.VatGrowerLastPawnInProgress.ContainsKey(BUID) && Utils.GCATPP.VatGrowerLastPawnInProgress[BUID] != null)
-                {
-                    var cas = Utils.GCATPP.VatGrowerLastPawnInProgress[BUID].TryGetComp<CompAndroidState>();
-                    if (cas != null)
-                    {
-                        if (cas.forcedDamageLevel != 2 && __result <= 0.45f)
-                        {
-                            Traverse.Create(__instance).Field("renderTexture").SetValue(null);
-                            cas.isAndroidWithSkin = true;
-                            cas.forcedDamageLevel = 2;
-                            cas.checkTXWithSkinFacialTextureUpdate();
-                        }
-                        else if (cas.forcedDamageLevel != 1 && __result > 0.45f && __result <= 0.85f)
-                        {
-                            Traverse.Create(__instance).Field("renderTexture").SetValue(null);
-                            cas.isAndroidWithSkin = true;
-                            cas.forcedDamageLevel = 1;
-                            cas.checkTXWithSkinFacialTextureUpdate();
-                        }
-                        else if (cas.forcedDamageLevel != -2 && __result > 0.85f)
-                        {
-                            Traverse.Create(__instance).Field("renderTexture").SetValue(null);
-                            cas.isAndroidWithSkin = true;
-                            cas.forcedDamageLevel = -2;
-                            cas.checkTXWithSkinFacialTextureUpdate();
-                        }
-                    }
+                if (!Utils.GCATPP.VatGrowerLastPawnInProgress.ContainsKey(BUID) || Utils.GCATPP.VatGrowerLastPawnInProgress[BUID] == null) return;
 
-                    __result = 1.0f;
+                var cas = Utils.GCATPP.VatGrowerLastPawnInProgress[BUID].TryGetComp<CompAndroidState>();
+                if (cas != null)
+                {
+                    if (cas.forcedDamageLevel != 2 && __result <= 0.45f)
+                    {
+                        Traverse.Create(__instance).Field("renderTexture").SetValue(null);
+                        cas.isAndroidWithSkin = true;
+                        cas.forcedDamageLevel = 2;
+                        cas.checkTXWithSkinFacialTextureUpdate();
+                    }
+                    else if (cas.forcedDamageLevel != 1 && __result > 0.45f && __result <= 0.85f)
+                    {
+                        Traverse.Create(__instance).Field("renderTexture").SetValue(null);
+                        cas.isAndroidWithSkin = true;
+                        cas.forcedDamageLevel = 1;
+                        cas.checkTXWithSkinFacialTextureUpdate();
+                    }
+                    else if (cas.forcedDamageLevel != -2 && __result > 0.85f)
+                    {
+                        Traverse.Create(__instance).Field("renderTexture").SetValue(null);
+                        cas.isAndroidWithSkin = true;
+                        cas.forcedDamageLevel = -2;
+                        cas.checkTXWithSkinFacialTextureUpdate();
+                    }
                 }
+
+                __result = 1.0f;
             }
             catch (Exception e)
             {

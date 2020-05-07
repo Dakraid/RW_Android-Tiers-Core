@@ -17,10 +17,7 @@ namespace MOARANDROIDS
             [HarmonyPrefix]
             public static bool Listener(Vector3 drawLoc, Mesh bodyMesh, Quaternion quat, bool forPortrait, Pawn ___pawn)
             {
-                if (Utils.ExceptionAndroidWithSkinList.Contains(___pawn.def.defName))
-                    return false;
-
-                return true;
+                return !Utils.ExceptionAndroidWithSkinList.Contains(___pawn.def.defName);
             }
         }
     }

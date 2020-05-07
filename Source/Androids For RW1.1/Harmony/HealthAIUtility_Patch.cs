@@ -19,14 +19,11 @@ namespace MOARANDROIDS
             {
                 try
                 {
-                    if (pawn.Faction == Faction.OfPlayer)
-                    {
-                        var cas = pawn.TryGetComp<CompAndroidState>();
-                        if (cas != null && pawn.health != null && pawn.health.summaryHealth.SummaryHealthPercent >= 0.80f && cas.isSurrogate && cas.surrogateController == null &&
-                            pawn.ownership != null &&
-                            pawn.ownership.OwnedBed != null) //&& ReachabilityUtility.CanReach(pawn, pawn.ownership.OwnedBed, PathEndMode.OnCell, Danger.Deadly))
-                            __result = false;
-                    }
+                    if (pawn.Faction != Faction.OfPlayer) return;
+
+                    var cas = pawn.TryGetComp<CompAndroidState>();
+                    if (cas != null && pawn.health != null && pawn.health.summaryHealth.SummaryHealthPercent >= 0.80f && cas.isSurrogate && cas.surrogateController == null && pawn.ownership?.OwnedBed != null) //&& ReachabilityUtility.CanReach(pawn, pawn.ownership.OwnedBed, PathEndMode.OnCell, Danger.Deadly))
+                        __result = false;
                 }
                 catch (Exception e)
                 {

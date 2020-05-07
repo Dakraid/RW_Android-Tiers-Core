@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using RimWorld;
 using Verse;
 
@@ -34,27 +35,21 @@ namespace MOARANDROIDS
 
         public override bool DragDrawMeasurements => false;
 
-        public override void DrawMouseAttachments()
-        {
-            base.DrawMouseAttachments();
-        }
-
         public override AcceptanceReport CanDesignateCell(IntVec3 c)
         {
             if (!c.InBounds(Map)) return false;
 
 
-            if (!SXInCell(c))
+            if (SXInCell(c)) return true;
+
+            if (fromSkyCloud)
             {
-                if (fromSkyCloud)
-                {
-                    if (!TurretInCell(c))
-                        return "ATPP_DesignatorNeedSelectSX".Translate();
-                }
-                else
-                {
+                if (!TurretInCell(c))
                     return "ATPP_DesignatorNeedSelectSX".Translate();
-                }
+            }
+            else
+            {
+                return "ATPP_DesignatorNeedSelectSX".Translate();
             }
 
             return true;
@@ -72,9 +67,8 @@ namespace MOARANDROIDS
         {
             base.CanDesignateThing(t);
 
-            if (t is Pawn)
+            if (t is Pawn cp)
             {
-                var cp = (Pawn) t;
                 var csm = cp.TryGetComp<CompSkyMind>();
                 var cas = cp.TryGetComp<CompAndroidState>();
 
@@ -92,25 +86,21 @@ namespace MOARANDROIDS
                 return true;
             }
 
-            if (fromSkyCloud && (t.def.thingClass == typeof(Building_Turret) || t.def.thingClass.IsSubclassOf(typeof(Building_Turret))))
-            {
-                var build = (Building) t;
-                var crt = t.TryGetComp<CompRemotelyControlledTurret>();
+            if (!fromSkyCloud || (t.def.thingClass != typeof(Building_Turret) && !t.def.thingClass.IsSubclassOf(typeof(Building_Turret)))) return false;
 
-                if (crt != null && crt.controller == null && !t.IsBrokenDown() && t.TryGetComp<CompPowerTrader>().PowerOn)
-                {
-                    if (!Utils.GCATPP.isConnectedToSkyMind(t))
-                        //Tentative connection au skymind 
-                        if (!Utils.GCATPP.connectUser(t))
-                            return false;
+            var crt = t.TryGetComp<CompRemotelyControlledTurret>();
 
-                    target = t;
-                    kindOfTarget = 2;
-                    return true;
-                }
-            }
+            if (crt == null || crt.controller != null || t.IsBrokenDown() || !t.TryGetComp<CompPowerTrader>().PowerOn) return false;
 
-            return false;
+            if (!Utils.GCATPP.isConnectedToSkyMind(t))
+                //Tentative connection au skymind 
+                if (!Utils.GCATPP.connectUser(t))
+                    return false;
+
+            target = t;
+            kindOfTarget = 2;
+            return true;
+
         }
 
         public override void DesignateMultiCell(IEnumerable<IntVec3> cells)
@@ -132,17 +122,17 @@ namespace MOARANDROIDS
             var cso = controller.TryGetComp<CompSurrogateOwner>();
             if (cso != null)
             {
-                if (kindOfTarget == 1)
+                switch (kindOfTarget)
                 {
-                    cso.controlMode = true;
-                    cso.setControlledSurrogate((Pawn) target);
-                }
-                else if (kindOfTarget == 2)
-                {
-                    if (cso.skyCloudHost != null)
+                    case 1:
+                        cso.controlMode = true;
+                        cso.setControlledSurrogate((Pawn) target);
+                        break;
+                    case 2:
                     {
-                        var csc = cso.skyCloudHost.TryGetComp<CompSkyCloudCore>();
-                        if (csc != null) csc.setRemotelyControlledTurret(controller, (Building) target);
+                        var csc = cso.skyCloudHost?.TryGetComp<CompSkyCloudCore>();
+                        csc?.setRemotelyControlledTurret(controller, (Building) target);
+                        break;
                     }
                 }
             }
@@ -155,35 +145,18 @@ namespace MOARANDROIDS
         [DebuggerHidden]
         private bool SXInCell(IntVec3 c)
         {
-            if (!c.Fogged(Map))
-            {
-                var thingList = c.GetThingList(Map);
-                for (var i = 0; i < thingList.Count; i++)
-                    if (thingList[i] is Pawn && CanDesignateThing(thingList[i]).Accepted)
-                        return true;
-            }
+            if (c.Fogged(Map)) return false;
 
-            return false;
+            var thingList = c.GetThingList(Map);
+            return Enumerable.Any(thingList, t => t is Pawn && CanDesignateThing(t).Accepted);
         }
 
         private bool TurretInCell(IntVec3 c)
         {
-            if (!c.Fogged(Map))
-            {
-                var thingList = c.GetThingList(Map);
-                for (var i = 0; i < thingList.Count; i++)
-                    if (thingList[i] != null && (thingList[i].def.thingClass == typeof(Building_Turret) || thingList[i].def.thingClass.IsSubclassOf(typeof(Building_Turret))) &&
-                        CanDesignateThing(thingList[i]).Accepted)
-                        return true;
-            }
+            if (c.Fogged(Map)) return false;
 
-            return false;
-        }
-
-
-        protected override void FinalizeDesignationFailed()
-        {
-            base.FinalizeDesignationFailed();
+            var thingList = c.GetThingList(Map);
+            return Enumerable.Any(thingList, t => t != null && (t.def.thingClass == typeof(Building_Turret) || t.def.thingClass.IsSubclassOf(typeof(Building_Turret))) && CanDesignateThing(t).Accepted);
         }
     }
 }

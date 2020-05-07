@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using RimWorld;
@@ -116,26 +117,34 @@ namespace MOARANDROIDS
         public override void PostDraw()
         {
             Material avatar = null;
-            Vector3 vector;
 
             if (uploadEndingGT != -1 || showUploadProgress)
                 avatar = Tex.UploadInProgress;
-            else if (Find.DesignatorManager.SelectedDesignator is Designator_AndroidToControl && isSurrogate && surrogateController == null && csm != null && csm.Infected == -1)
-                avatar = Tex.SelectableSX;
-            else if (Find.DesignatorManager.SelectedDesignator is Designator_SurrogateToHack && isSurrogate && parent.Faction != Faction.OfPlayer)
-                avatar = Tex.SelectableSXToHack;
-            else if (isSurrogate && surrogateController != null && !Settings.hideRemotelyControlledDeviceIcon)
-                avatar = Tex.RemotelyControlledNode;
+            else 
+                switch (Find.DesignatorManager.SelectedDesignator)
+                {
+                    case Designator_AndroidToControl _ when isSurrogate && surrogateController == null && csm != null && csm.Infected == -1:
+                        avatar = Tex.SelectableSX;
+                        break;
+                    case Designator_SurrogateToHack _ when isSurrogate && parent.Faction != Faction.OfPlayer:
+                        avatar = Tex.SelectableSXToHack;
+                        break;
+                    default:
+                    {
+                        if (isSurrogate && surrogateController != null && !Settings.hideRemotelyControlledDeviceIcon)
+                            avatar = Tex.RemotelyControlledNode;
+                        break;
+                    }
+                }
 
-            if (avatar != null)
-            {
-                vector = parent.TrueCenter();
-                vector.y = AltitudeLayer.MetaOverlays.AltitudeFor() + 0.28125f;
-                vector.z += 1.4f;
-                vector.x += parent.def.size.x / 2;
+            if (avatar == null) return;
+            
+            var vector = parent.TrueCenter();
+            vector.y = AltitudeLayer.MetaOverlays.AltitudeFor() + 0.28125f;
+            vector.z += 1.4f;
+            vector.x += parent.def.size.x / 2;
 
-                Graphics.DrawMesh(MeshPool.plane08, vector, Quaternion.identity, avatar, 0);
-            }
+            Graphics.DrawMesh(MeshPool.plane08, vector, Quaternion.identity, avatar, 0);
         }
 
         public override void PostDrawExtraSelectionOverlays()
@@ -227,8 +236,7 @@ namespace MOARANDROIDS
                         if (cp.drafter != null)
                             cp.drafter.Drafted = false;
 
-                        if (lordInvolved != null)
-                            lordInvolved.AddPawn(cp);
+                        lordInvolved?.AddPawn(cp);
                     }
                     catch (Exception)
                     {
@@ -255,8 +263,7 @@ namespace MOARANDROIDS
                             var p = (Pawn) parent;
                             //Traverse.Create( st ).Method("SetAsDefender").GetValue((Pawn)parent);
                             var data = (LordToilData_Siege) Traverse.Create(st).Property("Data").GetValue();
-                            p.mindState.duty = new PawnDuty(DutyDefOf.Defend, data.siegeCenter);
-                            p.mindState.duty.radius = data.baseRadius;
+                            p.mindState.duty = new PawnDuty(DutyDefOf.Defend, data.siegeCenter) {radius = data.baseRadius};
                             st.UpdateAllDuties();
                         }
                     }
@@ -315,7 +322,7 @@ namespace MOARANDROIDS
                         {
                             if (uploadRecipient.Faction != cpawn.Faction) uploadRecipient.SetFaction(cpawn.Faction);
 
-                            if (uploadRecipient.guest != null) uploadRecipient.guest.SetGuestStatus(Faction.OfPlayer, true);
+                            uploadRecipient.guest?.SetGuestStatus(Faction.OfPlayer, true);
                         }
 
                         if (!cpawn.Dead)
@@ -354,10 +361,8 @@ namespace MOARANDROIDS
 
                     if (nb == 0)
                     {
-                        if (chance)
-                            Messages.Message("ATPP_NoBrokenStuffFound".Translate(cpawn.LabelShort), cpawn, MessageTypeDefOf.NegativeEvent);
-                        else
-                            Messages.Message("ATPP_BrokenStuffRepairFailed".Translate(cpawn.LabelShort), cpawn, MessageTypeDefOf.NegativeEvent);
+                        Messages.Message(chance ? "ATPP_NoBrokenStuffFound".Translate(cpawn.LabelShort) : "ATPP_BrokenStuffRepairFailed".Translate(cpawn.LabelShort), cpawn,
+                            MessageTypeDefOf.NegativeEvent);
                     }
                     else
                     {
@@ -370,7 +375,8 @@ namespace MOARANDROIDS
                 }
             }
 
-            if (GT % 300 == 0)
+            if (GT % 300 != 0) return;
+            
             {
                 var cp = (Pawn) parent;
 
@@ -410,11 +416,12 @@ namespace MOARANDROIDS
                 checkBlankAndroid();
 
 
-                if (Utils.POWERPP_LOADED)
-                    //Tentative de reco auto
-                    if (!connectedLWPNActive && connectedLWPN != null)
-                        if (Utils.GCATPP.pushLWPNAndroid(connectedLWPN, cp))
-                            connectedLWPNActive = true;
+                if (!Utils.POWERPP_LOADED) return;
+
+                if (connectedLWPNActive || connectedLWPN == null) return;
+                
+                if (Utils.GCATPP.pushLWPNAndroid(connectedLWPN, cp))
+                    connectedLWPNActive = true;
             }
         }
 
@@ -425,12 +432,11 @@ namespace MOARANDROIDS
         {
             var cp = (Pawn) parent;
 
-            if (csm != null && csm.Infected == 4 && !cp.InMentalState)
-            {
-                csm.Infected = -1;
-                var he = cp.health.hediffSet.GetFirstHediffOfDef(Utils.hediffNoHost);
-                if (he == null) cp.health.AddHediff(Utils.hediffNoHost);
-            }
+            if (csm == null || csm.Infected != 4 || cp.InMentalState) return;
+            
+            csm.Infected = -1;
+            var he = cp.health.hediffSet.GetFirstHediffOfDef(Utils.hediffNoHost);
+            if (he == null) cp.health.AddHediff(Utils.hediffNoHost);
         }
 
         public void checkTXWithSkinFacialTextureUpdate()
@@ -440,94 +446,89 @@ namespace MOARANDROIDS
                 var cp = (Pawn) parent;
 
 
-                if (isAndroidWithSkin)
+                if (!isAndroidWithSkin) return;
+                
+                Utils.lastResolveAllGraphicsHeadGraphicPath = null;
+
+                //Changement tete
+                if (!TXHurtedHeadSet && cp.health.summaryHealth.SummaryHealthPercent <= 0.85f && cp.health.summaryHealth.SummaryHealthPercent > 0.45f || forcedDamageLevel == 1)
                 {
-                    Utils.lastResolveAllGraphicsHeadGraphicPath = null;
+                    TXHurtedHeadSet = true;
 
-                    //Changement tete
-                    if (!TXHurtedHeadSet && cp.health.summaryHealth.SummaryHealthPercent <= 0.85f && cp.health.summaryHealth.SummaryHealthPercent > 0.45f || forcedDamageLevel == 1)
+                    if (TXHurtedHeadSet2)
                     {
-                        TXHurtedHeadSet = true;
-
-                        if (TXHurtedHeadSet2)
-                        {
-                            TXHurtedHeadSet2 = false;
-                            if (hair != null)
-                                cp.story.hairDef = hair;
-                            hair = null;
-                        }
-
-                        Utils.changeTXBodyType(cp, 1);
-                        Utils.changeHARCrownType(cp, "Average_Hurted");
-                        cp.Drawer.renderer.graphics.ResolveAllGraphics();
-                        PortraitsCache.SetDirty(cp);
+                        TXHurtedHeadSet2 = false;
+                        if (hair != null)
+                            cp.story.hairDef = hair;
+                        hair = null;
                     }
-                    else if (!TXHurtedHeadSet2 && cp.health.summaryHealth.SummaryHealthPercent <= 0.45f || forcedDamageLevel == 2)
+
+                    Utils.changeTXBodyType(cp, 1);
+                    Utils.changeHARCrownType(cp, "Average_Hurted");
+                    cp.Drawer.renderer.graphics.ResolveAllGraphics();
+                    PortraitsCache.SetDirty(cp);
+                }
+                else if (!TXHurtedHeadSet2 && cp.health.summaryHealth.SummaryHealthPercent <= 0.45f || forcedDamageLevel == 2)
+                {
+                    TXHurtedHeadSet = false;
+                    TXHurtedHeadSet2 = true;
+                    if (hair == null)
+                        hair = cp.story.hairDef;
+                    cp.story.hairDef = DefDatabase<HairDef>.GetNamed("Shaved", false);
+                    Utils.changeTXBodyType(cp, 2);
+                    Utils.changeHARCrownType(cp, "Average_Hurted2");
+                    cp.Drawer.renderer.graphics.ResolveAllGraphics();
+                    PortraitsCache.SetDirty(cp);
+                }
+                else
+                {
+                    if ((TXHurtedHeadSet || !init) && cp.health.summaryHealth.SummaryHealthPercent > 0.85f)
                     {
                         TXHurtedHeadSet = false;
-                        TXHurtedHeadSet2 = true;
-                        if (hair == null)
-                            hair = cp.story.hairDef;
-                        cp.story.hairDef = DefDatabase<HairDef>.GetNamed("Shaved", false);
-                        Utils.changeTXBodyType(cp, 2);
-                        Utils.changeHARCrownType(cp, "Average_Hurted2");
+                        TXHurtedHeadSet2 = false;
+                        if (hair != null)
+                        {
+                            cp.story.hairDef = hair;
+                            hair = null;
+                        }
+
+                        Utils.changeTXBodyType(cp, 0);
+                        Utils.changeHARCrownType(cp, "Average_Normal");
                         cp.Drawer.renderer.graphics.ResolveAllGraphics();
                         PortraitsCache.SetDirty(cp);
                     }
-                    else
+                    else if ((TXHurtedHeadSet2 || !init) && cp.health.summaryHealth.SummaryHealthPercent > 0.45f)
                     {
-                        if ((TXHurtedHeadSet || !init) && cp.health.summaryHealth.SummaryHealthPercent > 0.85f)
-                        {
-                            TXHurtedHeadSet = false;
-                            TXHurtedHeadSet2 = false;
-                            if (hair != null)
-                            {
-                                cp.story.hairDef = hair;
-                                hair = null;
-                            }
+                        TXHurtedHeadSet2 = false;
+                        TXHurtedHeadSet = cp.health.summaryHealth.SummaryHealthPercent <= 0.85f;
 
-                            Utils.changeTXBodyType(cp, 0);
+                        cp.story.hairDef = hair;
+                        hair = null;
+                        if (cp.health.summaryHealth.SummaryHealthPercent <= 0.85f)
+                        {
+                            Utils.changeHARCrownType(cp, "Average_Hurted");
+                            Utils.changeTXBodyType(cp, 1);
+                        }
+                        else
+                        {
                             Utils.changeHARCrownType(cp, "Average_Normal");
-                            cp.Drawer.renderer.graphics.ResolveAllGraphics();
-                            PortraitsCache.SetDirty(cp);
-                        }
-                        else if ((TXHurtedHeadSet2 || !init) && cp.health.summaryHealth.SummaryHealthPercent > 0.45f)
-                        {
-                            TXHurtedHeadSet2 = false;
-                            TXHurtedHeadSet = false;
-
-                            if (cp.health.summaryHealth.SummaryHealthPercent <= 0.85f)
-                                TXHurtedHeadSet = true;
-
-                            cp.story.hairDef = hair;
-                            hair = null;
-                            if (cp.health.summaryHealth.SummaryHealthPercent <= 0.85f)
-                            {
-                                Utils.changeHARCrownType(cp, "Average_Hurted");
-                                Utils.changeTXBodyType(cp, 1);
-                            }
-                            else
-                            {
-                                Utils.changeHARCrownType(cp, "Average_Normal");
-                                Utils.changeTXBodyType(cp, 0);
-                            }
-
-                            cp.Drawer.renderer.graphics.ResolveAllGraphics();
-                            PortraitsCache.SetDirty(cp);
+                            Utils.changeTXBodyType(cp, 0);
                         }
 
-                        //(string)Traverse.Create(p1.story).Field("headGraphicPath").GetValue();
+                        cp.Drawer.renderer.graphics.ResolveAllGraphics();
+                        PortraitsCache.SetDirty(cp);
                     }
 
-                    if (Utils.RIMMSQOL_LOADED && Utils.lastResolveAllGraphicsHeadGraphicPath != null)
-                    {
-                        cp.story.GetType().GetField("headGraphicPath", BindingFlags.NonPublic | BindingFlags.Instance)
-                            .SetValue(cp.story, Utils.lastResolveAllGraphicsHeadGraphicPath);
-                        Utils.lastResolveAllGraphicsHeadGraphicPath = null;
-                        /*cp.Drawer.renderer.graphics.ResolveAllGraphics();
-                        PortraitsCache.SetDirty(cp);*/
-                    }
+                    //(string)Traverse.Create(p1.story).Field("headGraphicPath").GetValue();
                 }
+
+                if (!Utils.RIMMSQOL_LOADED || Utils.lastResolveAllGraphicsHeadGraphicPath == null) return;
+                
+                cp.story.GetType().GetField("headGraphicPath", BindingFlags.NonPublic | BindingFlags.Instance)
+                    ?.SetValue(cp.story, Utils.lastResolveAllGraphicsHeadGraphicPath);
+                Utils.lastResolveAllGraphicsHeadGraphicPath = null;
+                /*cp.Drawer.renderer.graphics.ResolveAllGraphics();
+                        PortraitsCache.SetDirty(cp);*/
             }
             catch (Exception e)
             {
@@ -539,12 +540,11 @@ namespace MOARANDROIDS
         {
             var cp = (Pawn) parent;
 
-            if (!cp.Dead && isBlankAndroid)
-            {
-                var he = cp.health.hediffSet.GetFirstHediffOfDef(Utils.hediffBlankAndroid);
-                if (he == null && cp.health != null)
-                    cp.health.AddHediff(he);
-            }
+            if (cp.Dead || !isBlankAndroid) return;
+            
+            var he = cp.health.hediffSet.GetFirstHediffOfDef(Utils.hediffBlankAndroid);
+            if (he == null)
+                cp.health?.AddHediff(he);
         }
 
         public void checkRusted()
@@ -637,6 +637,8 @@ namespace MOARANDROIDS
                             case AndroidPaintColor.Yellow:
                                 paintRecipeDefname = "ATPP_PaintAndroidFrameworkYellow";
                                 break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
                         }
 
                         var recipe = DefDatabase<RecipeDef>.GetNamed(paintRecipeDefname, false);
@@ -660,12 +662,10 @@ namespace MOARANDROIDS
                     }
                     else
                     {
-                        if (!paintingIsRusted)
-                        {
-                            //Cas aberrant (possede hediff de rusted alors que pas rusted)
-                            var cRusted = cp.health.hediffSet.GetFirstHediffOfDef(Utils.hediffRusted);
-                            if (cRusted != null) cp.health.RemoveHediff(cRusted);
-                        }
+                        if (paintingIsRusted) return;
+                        //Cas aberrant (possede hediff de rusted alors que pas rusted)
+                        var cRusted = cp.health.hediffSet.GetFirstHediffOfDef(Utils.hediffRusted);
+                        if (cRusted != null) cp.health.RemoveHediff(cRusted);
                     }
                 }
             }
@@ -752,7 +752,7 @@ namespace MOARANDROIDS
                     }
 
                     //Suppression de l'effet
-                    if (!solarFlareRunning && solarFlareEffectApplied)
+                    if (solarFlareRunning || !solarFlareEffectApplied) return;
                     {
                         var cpawn = (Pawn) parent;
                         //Ajout heddif
@@ -838,16 +838,14 @@ namespace MOARANDROIDS
                     if (pawn.ownership.OwnedBed.ForPrisoners != pawn.IsPrisoner)
                         pawn.ownership.UnclaimBed();
                 //Starting du délais de rusting
-                if (!dontRust)
-                {
-                    if (paintingRustGT == -2) paintingRustGT = Rand.Range(Settings.minDaysAndroidPaintingCanRust, Settings.maxDaysAndroidPaintingCanRust) * 60000;
+                if (dontRust) return;
+                
+                if (paintingRustGT == -2) paintingRustGT = Rand.Range(Settings.minDaysAndroidPaintingCanRust, Settings.maxDaysAndroidPaintingCanRust) * 60000;
 
-                    if (paintingRustGT == -1 && paintingIsRusted && pawn.health != null)
-                    {
-                        var he = pawn.health.hediffSet.GetFirstHediffOfDef(Utils.hediffRusted);
-                        if (he == null) pawn.health.AddHediff(Utils.hediffRusted);
-                    }
-                }
+                if (paintingRustGT != -1 || !paintingIsRusted || pawn.health == null) return;
+                    
+                var he = pawn.health.hediffSet.GetFirstHediffOfDef(Utils.hediffRusted);
+                if (he == null) pawn.health.AddHediff(Utils.hediffRusted);
             }
             else
             {
@@ -866,21 +864,18 @@ namespace MOARANDROIDS
                     cpawn = surrogateController;
 
                 //Reset du child et adulthood si VX0 organic
-                if (isSurrogate && isOrganic && cpawn.story != null && cpawn.story.adulthood != null)
+                if (!isSurrogate || !isOrganic || cpawn.story == null || cpawn.story.adulthood == null) return;
+                
+                if (cpawn.story.childhood != null)
                 {
-                    if (cpawn.story.childhood != null)
-                    {
-                        Backstory bs = null;
-
-                        BackstoryDatabase.TryGetWithIdentifier("MercenaryRecruit", out bs);
-                        if (bs != null)
-                            cpawn.story.childhood = bs;
-                    }
-
-                    cpawn.story.adulthood = null;
-                    //Reset incapable of
-                    Utils.ResetCachedIncapableOf(cpawn);
+                    BackstoryDatabase.TryGetWithIdentifier("MercenaryRecruit", out var bs);
+                    if (bs != null)
+                        cpawn.story.childhood = bs;
                 }
+
+                cpawn.story.adulthood = null;
+                //Reset incapable of
+                Utils.ResetCachedIncapableOf(cpawn);
             }
         }
 
@@ -899,16 +894,13 @@ namespace MOARANDROIDS
             }
 
             //Si surrogate on notifis le changement de map de ce dernier pour qu'il soit correctement traqué
-            if (isSurrogate)
-            {
-                var pawn = (Pawn) parent;
+            if (!isSurrogate) return;
 
-                var MUID = "caravan";
-                if (map != null)
-                    MUID = map.GetUniqueLoadID();
+            var MUID = "caravan";
+            if (map != null)
+                MUID = map.GetUniqueLoadID();
 
-                Utils.GCATPP.pushSurrogateAndroidNotifyMapChanged((Pawn) parent, MUID);
-            }
+            Utils.GCATPP.pushSurrogateAndroidNotifyMapChanged((Pawn) parent, MUID);
         }
 
 
@@ -924,11 +916,10 @@ namespace MOARANDROIDS
             /*if (isSurrogate)
                 Utils.GCATPP.popSurrogateAndroid((Pawn)parent);*/
 
-            if (isSurrogate && previousMap == null)
-            {
-                var MUID = "caravan";
-                Utils.GCATPP.pushSurrogateAndroidNotifyMapChanged((Pawn) parent, MUID);
-            }
+            if (!isSurrogate || previousMap != null) return;
+            
+            var MUID = "caravan";
+            Utils.GCATPP.pushSurrogateAndroidNotifyMapChanged((Pawn) parent, MUID);
         }
 
         public override void ReceiveCompSignal(string signal)
@@ -999,6 +990,7 @@ namespace MOARANDROIDS
                         {
                             if (batteryExplosionEndingGT != -1)
                                 return;
+
                             Find.WindowStack.Add(new Dialog_Msg("ATPP_UploadMakeAndroidBatteryOverloadConfirm".Translate(),
                                 "ATPP_UploadMakeAndroidBatteryOverloadConfirmDesc".Translate(), delegate
                                 {
@@ -1024,41 +1016,32 @@ namespace MOARANDROIDS
                         defaultDesc = "",
                         action = delegate
                         {
-                            var opts = new List<FloatMenuOption>();
                             FloatMenu floatMenuMap;
 
-                            foreach (var build in parent.Map.listerBuildings.allBuildingsColonist)
-                                if ((build.def.defName == "ARKPPP_LocalWirelessPowerEmitter" || build.def.defName == "ARKPPP_LocalWirelessPortablePowerEmitter")
-                                    && !build.IsBrokenDown()
-                                    && build.TryGetComp<CompPowerTrader>().PowerOn)
+                            var opts = (from build in parent.Map.listerBuildings.allBuildingsColonist
+                                where (build.def.defName == "ARKPPP_LocalWirelessPowerEmitter" || build.def.defName == "ARKPPP_LocalWirelessPortablePowerEmitter") && !build.IsBrokenDown() && build.TryGetComp<CompPowerTrader>().PowerOn
+                                let compLWPNEmitter = Utils.TryGetCompByTypeName(build, "CompLocalWirelessPowerEmitter", "Power++")
+                                where compLWPNEmitter != null
+                                let lib = getConnectedLWPNLabel(build)
+                                select new FloatMenuOption("ARKPPP_WPNListRow".Translate(lib, ((int) Utils.getCurrentAvailableEnergy(build.PowerComp.PowerNet)).ToString()), delegate
                                 {
-                                    var compLWPNEmitter = Utils.TryGetCompByTypeName(build, "CompLocalWirelessPowerEmitter", "Power++");
-                                    if (compLWPNEmitter != null)
+                                    if (connectedLWPN != null)
                                     {
-                                        var lib = getConnectedLWPNLabel(build);
-
-                                        opts.Add(new FloatMenuOption(
-                                            "ARKPPP_WPNListRow".Translate(lib, ((int) Utils.getCurrentAvailableEnergy(build.PowerComp.PowerNet)).ToString()), delegate
-                                            {
-                                                if (connectedLWPN != null)
-                                                {
-                                                    Utils.GCATPP.popLWPNAndroid(connectedLWPN, pawn);
-                                                    connectedLWPNActive = false;
-                                                    connectedLWPN = null;
-                                                }
-
-                                                if (Utils.GCATPP.pushLWPNAndroid(build, pawn))
-                                                {
-                                                    connectedLWPN = build;
-                                                    connectedLWPNActive = true;
-                                                }
-                                                else
-                                                {
-                                                    Messages.Message("ATPP_MessageLWPNNoSlotAvailable".Translate(), MessageTypeDefOf.NegativeEvent);
-                                                }
-                                            }));
+                                        Utils.GCATPP.popLWPNAndroid(connectedLWPN, pawn);
+                                        connectedLWPNActive = false;
+                                        connectedLWPN = null;
                                     }
-                                }
+
+                                    if (Utils.GCATPP.pushLWPNAndroid(build, pawn))
+                                    {
+                                        connectedLWPN = build;
+                                        connectedLWPNActive = true;
+                                    }
+                                    else
+                                    {
+                                        Messages.Message("ATPP_MessageLWPNNoSlotAvailable".Translate(), MessageTypeDefOf.NegativeEvent);
+                                    }
+                                })).ToList();
 
                             //SI pas choix affichage de la raison 
                             if (opts.Count == 0)
@@ -1121,6 +1104,7 @@ namespace MOARANDROIDS
                         {
                             if (!transfertAllowed)
                                 return;
+
                             Utils.ShowFloatMenuAndroidCandidate((Pawn) parent,
                                 delegate(Pawn target)
                                 {
@@ -1207,20 +1191,19 @@ namespace MOARANDROIDS
             {
                 //Si pas un surrogate
 
-                if (Utils.GCATPP.isConnectedToSkyMind(parent) && !isBlankAndroid)
-                {
-                    var cso = parent.TryGetComp<CompSurrogateOwner>();
+                if (!Utils.GCATPP.isConnectedToSkyMind(parent) || isBlankAndroid) yield break;
+                
+                var cso = parent.TryGetComp<CompSurrogateOwner>();
 
-                    //Pas d'organique ou de controlleur de surrogate en corus de session peuvent faire l'operation d'augmentation de points
-                    if (!isOrganic && (cso == null || !cso.isThereSX()))
-                        yield return new Command_Action
-                        {
-                            icon = Tex.SkillUp,
-                            defaultLabel = "ATPP_Skills".Translate(),
-                            defaultDesc = "ATPP_SkillsDesc".Translate(),
-                            action = delegate { Find.WindowStack.Add(new Dialog_SkillUp((Pawn) parent)); }
-                        };
-                }
+                //Pas d'organique ou de controlleur de surrogate en corus de session peuvent faire l'operation d'augmentation de points
+                if (!isOrganic && (cso == null || !cso.isThereSX()))
+                    yield return new Command_Action
+                    {
+                        icon = Tex.SkillUp,
+                        defaultLabel = "ATPP_Skills".Translate(),
+                        defaultDesc = "ATPP_SkillsDesc".Translate(),
+                        action = delegate { Find.WindowStack.Add(new Dialog_SkillUp((Pawn) parent)); }
+                    };
             }
         }
 
@@ -1301,27 +1284,24 @@ namespace MOARANDROIDS
                     if (paintingIsRusted) ret += "ATPP_Rusted".Translate() + "\n";
                 }
 
-                if (isSurrogate)
-                {
-                    if (surrogateController != null)
-                        ret += "ATPP_RemotelyControlledBy".Translate(((Pawn) parent).LabelShortCap) + "\n";
+                if (!isSurrogate) return ret.TrimEnd('\r', '\n') + base.CompInspectStringExtra();
+                
+                if (surrogateController != null)
+                    ret += "ATPP_RemotelyControlledBy".Translate(((Pawn) parent).LabelShortCap) + "\n";
 
-                    if (lastController != null && externalController == null)
-                        ret += "ATPP_PreviousSurrogateControllerIs".Translate(lastController.LabelShortCap) + "\n";
+                if (lastController != null && externalController == null)
+                    ret += "ATPP_PreviousSurrogateControllerIs".Translate(lastController.LabelShortCap) + "\n";
 
 
-                    if (surrogateController != null)
-                    {
-                        var cso = surrogateController.TryGetComp<CompSurrogateOwner>();
-                        if (cso != null && surrogateController.VX3ChipPresent())
-                        {
-                            if (cso.SX == parent)
-                                ret += "ATPP_VX3SurrogateTypePrimary".Translate() + "\n";
-                            else
-                                ret += "ATPP_VX3SurrogateTypeSecondary".Translate() + "\n";
-                        }
-                    }
-                }
+                if (surrogateController == null) return ret.TrimEnd('\r', '\n') + base.CompInspectStringExtra();
+                    
+                var cso = surrogateController.TryGetComp<CompSurrogateOwner>();
+                if (cso == null || !surrogateController.VX3ChipPresent()) return ret.TrimEnd('\r', '\n') + base.CompInspectStringExtra();
+                        
+                if (cso.SX == parent)
+                    ret += "ATPP_VX3SurrogateTypePrimary".Translate() + "\n";
+                else
+                    ret += "ATPP_VX3SurrogateTypeSecondary".Translate() + "\n";
 
                 return ret.TrimEnd('\r', '\n') + base.CompInspectStringExtra();
             }
@@ -1342,11 +1322,10 @@ namespace MOARANDROIDS
             var GC_PPP = Utils.TryGetGameCompByTypeName("GC_PPP");
             var GCPPP = Traverse.Create(GC_PPP);
             var compLWPNEmitter = Utils.TryGetCompByTypeName(LWPNEmitter, "CompLocalWirelessPowerEmitter", "Power++");
-            if (compLWPNEmitter != null)
-            {
-                var LWPNID = (string) Traverse.Create(compLWPNEmitter).Field("LWPNID").GetValue();
-                ret = (string) GCPPP.Method("getLWPNLabel", LWPNID, false).GetValue();
-            }
+            if (compLWPNEmitter == null) return ret;
+            
+            var LWPNID = (string) Traverse.Create(compLWPNEmitter).Field("LWPNID").GetValue();
+            ret = (string) GCPPP.Method("getLWPNLabel", LWPNID, false).GetValue();
 
             return ret;
         }
@@ -1410,38 +1389,37 @@ namespace MOARANDROIDS
             }
 
             //Si hote plus valide alors on arrete le processus et on kill les deux androids
-            if (uploadEndingGT != -1 && (recipientDeadOrNull || cpawn.Dead || !emitterConnected || !recipientConnected))
+            if (uploadEndingGT == -1 || (!recipientDeadOrNull && !cpawn.Dead && emitterConnected && recipientConnected)) return;
+            
+            var reason = "";
+            if (recipientDeadOrNull)
             {
-                var reason = "";
-                if (recipientDeadOrNull)
-                {
-                    reason = "ATPP_LetterInterruptedUploadDescCompHostDead".Translate();
-                    killSelf = true;
-                }
+                reason = "ATPP_LetterInterruptedUploadDescCompHostDead".Translate();
+                killSelf = true;
+            }
 
-                if (cpawn.Dead)
+            if (cpawn.Dead)
+            {
+                reason = "ATPP_LetterInterruptedUploadDescCompSourceDead".Translate();
+                if (uploadRecipient != null && !uploadRecipient.Dead) uploadRecipient.Kill(null);
+            }
+
+            if (reason == "")
+                if (!recipientConnected || !emitterConnected)
                 {
-                    reason = "ATPP_LetterInterruptedUploadDescCompSourceDead".Translate();
+                    reason = "ATPP_LetterInterruptedUploadDescCompDiconnectionError".Translate();
+
+                    killSelf = true;
                     if (uploadRecipient != null && !uploadRecipient.Dead) uploadRecipient.Kill(null);
                 }
 
-                if (reason == "")
-                    if (!recipientConnected || !emitterConnected)
-                    {
-                        reason = "ATPP_LetterInterruptedUploadDescCompDiconnectionError".Translate();
+            resetUploadStuff();
 
-                        killSelf = true;
-                        if (uploadRecipient != null && !uploadRecipient.Dead) uploadRecipient.Kill(null);
-                    }
+            if (killSelf)
+                if (!cpawn.Dead)
+                    cpawn.Kill(null);
 
-                resetUploadStuff();
-
-                if (killSelf)
-                    if (!cpawn.Dead)
-                        cpawn.Kill(null);
-
-                Utils.showFailedLetterMindUpload(reason);
-            }
+            Utils.showFailedLetterMindUpload(reason);
         }
 
         public void initAsSurrogate()

@@ -15,13 +15,10 @@ namespace MOARANDROIDS
             [HarmonyPrefix]
             public static bool Listener(Pawn pawn, ref bool __result, NeedDef ___need)
             {
-                if (pawn.needs.TryGetNeed(___need) == null)
-                {
-                    __result = true;
-                    return false;
-                }
+                if (pawn.needs.TryGetNeed(___need) != null) return true;
 
-                return true;
+                __result = true;
+                return false;
             }
         }
     }

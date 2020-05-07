@@ -15,23 +15,22 @@ namespace MOARANDROIDS
         {
             var flag = billDoer != null;
             var flag2 = flag;
-            if (flag2)
-            {
-                var flag3 = !CheckSurgeryFailAndroid(billDoer, pawn, ingredients, part, null);
-                var flag4 = flag3;
-                if (flag4)
-                {
-                    pawn.health.AddHediff(recipe.addsHediff, part, null);
-                    TaleRecorder.RecordTale(TaleDefOf.DidSurgery, billDoer, pawn);
-                    upper = 60;
-                }
-                else
-                {
-                    upper = 15;
-                }
+            if (!flag2) return;
 
-                RandomCorruption(pawn);
+            var flag3 = !CheckSurgeryFailAndroid(billDoer, pawn, ingredients, part, null);
+            var flag4 = flag3;
+            if (flag4)
+            {
+                pawn.health.AddHediff(recipe.addsHediff, part, null);
+                TaleRecorder.RecordTale(TaleDefOf.DidSurgery, billDoer, pawn);
+                upper = 60;
             }
+            else
+            {
+                upper = 15;
+            }
+
+            RandomCorruption(pawn);
         }
 
 

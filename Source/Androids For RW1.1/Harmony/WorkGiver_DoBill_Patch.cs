@@ -6,6 +6,7 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 
+// TODO: Look into performance issues
 namespace MOARANDROIDS
 {
     internal class WorkGiver_DoBill_Patch
@@ -19,25 +20,15 @@ namespace MOARANDROIDS
             {
                 try
                 {
-                    if (billGiver is Pawn)
-                    {
-                        var patient = (Pawn) billGiver;
-
-                        //On retire les medecine autre que nanokits
-                        if (patient.IsAndroidTier() || patient.IsCyberAnimal())
-                        {
-                            foreach (var el in relevantThings.ToList())
-                                if (!Utils.ExceptionNanoKits.Contains(el.def.defName))
-                                    relevantThings.Remove(el);
-                        }
-                        //On retire les nanokits
-                        else
-                        {
-                            foreach (var el in relevantThings.ToList())
-                                if (Utils.ExceptionNanoKits.Contains(el.def.defName))
-                                    relevantThings.Remove(el);
-                        }
-                    }
+                    if (!(billGiver is Pawn patient)) return;
+                    //On retire les medecine autre que nanokits
+                    if (patient.IsAndroidTier() || patient.IsCyberAnimal())
+                        foreach (var el in relevantThings.ToList().Where(el => !Utils.ExceptionNanoKits.Contains(el.def.defName)))
+                            relevantThings.Remove(el);
+                    //On retire les nanokits
+                    else
+                        foreach (var el in relevantThings.ToList().Where(el => Utils.ExceptionNanoKits.Contains(el.def.defName)))
+                            relevantThings.Remove(el);
                 }
                 catch (Exception e)
                 {
@@ -74,20 +65,18 @@ namespace MOARANDROIDS
                     }
                     else
                     {
-                        if (Utils.CrafterDoctorJob.Contains(__instance.def))
+                        if (!Utils.CrafterDoctorJob.Contains(__instance.def)) return;
+                        //Crafteur on jerte si patient pas un android
+                        if (thing is Pawn && ((Pawn) thing).IsAndroidTier())
                         {
-                            //Crafteur on jerte si patient pas un android
-                            if (thing is Pawn && ((Pawn) thing).IsAndroidTier())
-                            {
-                                var cso = pawn.TryGetComp<CompSurrogateOwner>();
+                            var cso = pawn.TryGetComp<CompSurrogateOwner>();
 
-                                if (cso == null || !cso.repairAndroids)
-                                    __result = null;
-                            }
-                            else
-                            {
+                            if (cso == null || !cso.repairAndroids)
                                 __result = null;
-                            }
+                        }
+                        else
+                        {
+                            __result = null;
                         }
                     }
                 }

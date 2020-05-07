@@ -8,12 +8,11 @@ namespace MOARANDROIDS
         public static void Apply(Pawn user)
         {
             var cas = user.TryGetComp<CompAndroidState>();
-            if (cas != null)
-            {
-                var CGT = Find.TickManager.TicksGame;
-                cas.frameworkNaniteEffectGTStart = CGT;
-                cas.frameworkNaniteEffectGTEnd = CGT + Rand.Range(Settings.minHoursNaniteFramework, Settings.maxHoursNaniteFramework) * 2500;
-            }
+            if (cas == null) return;
+
+            var CGT = Find.TickManager.TicksGame;
+            cas.frameworkNaniteEffectGTStart = CGT;
+            cas.frameworkNaniteEffectGTEnd = CGT + Rand.Range(Settings.minHoursNaniteFramework, Settings.maxHoursNaniteFramework) * 2500;
         }
 
         public override void DoEffect(Pawn user)
@@ -32,13 +31,10 @@ namespace MOARANDROIDS
             }
 
             var cas = p.TryGetComp<CompAndroidState>();
-            if (cas != null && cas.frameworkNaniteEffectGTEnd != -1)
-            {
-                failReason = "";
-                return false;
-            }
+            if (cas == null || cas.frameworkNaniteEffectGTEnd == -1) return base.CanBeUsedBy(p, out failReason);
 
-            return base.CanBeUsedBy(p, out failReason);
+            failReason = "";
+            return false;
         }
     }
 }

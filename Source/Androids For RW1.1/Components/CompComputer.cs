@@ -50,9 +50,10 @@ namespace MOARANDROIDS
                 Utils.GCATPP.pushHackingServer((Building) parent);
             }
 
-            if (respawningAfterLoad)
-                if (powerComp.PowerOn)
-                    StartSustainer();
+            if (!respawningAfterLoad) return;
+            
+            if (powerComp.PowerOn)
+                StartSustainer();
         }
 
         public override void CompTick()
@@ -71,29 +72,36 @@ namespace MOARANDROIDS
         public override void ReceiveCompSignal(string signal)
         {
             var host = (Building) parent;
-            //Arret manuel ou  composant endommagé => arret ambiance
-            if (signal == "FlickedOff" || signal == "ScheduledOff" || signal == "Breakdown" || signal == "PowerTurnedOff")
+            switch (signal)
             {
-                if (isSkillServer)
-                    Utils.GCATPP.popSkillServer(host);
-                if (isSecurityServer)
-                    Utils.GCATPP.popSecurityServer(host);
-                if (isHackingServer)
-                    Utils.GCATPP.popHackingServer(host);
-                //if (signal != "Virused" && signal != "Hacked")
-                StopSustainer();
-            }
-
-            //Redemarrage ambiance
-            if (signal == "PowerTurnedOn")
-            {
-                if (isSkillServer)
-                    Utils.GCATPP.pushSkillServer(host);
-                if (isSecurityServer)
-                    Utils.GCATPP.pushSecurityServer(host);
-                if (isHackingServer)
-                    Utils.GCATPP.pushHackingServer(host);
-                StartSustainer();
+                //Arret manuel ou  composant endommagé => arret ambiance
+                case "FlickedOff":
+                case "ScheduledOff":
+                case "Breakdown":
+                case "PowerTurnedOff":
+                {
+                    if (isSkillServer)
+                        Utils.GCATPP.popSkillServer(host);
+                    if (isSecurityServer)
+                        Utils.GCATPP.popSecurityServer(host);
+                    if (isHackingServer)
+                        Utils.GCATPP.popHackingServer(host);
+                    //if (signal != "Virused" && signal != "Hacked")
+                    StopSustainer();
+                    break;
+                }
+                //Redemarrage ambiance
+                case "PowerTurnedOn":
+                {
+                    if (isSkillServer)
+                        Utils.GCATPP.pushSkillServer(host);
+                    if (isSecurityServer)
+                        Utils.GCATPP.pushSecurityServer(host);
+                    if (isHackingServer)
+                        Utils.GCATPP.pushHackingServer(host);
+                    StartSustainer();
+                    break;
+                }
             }
         }
 
@@ -107,114 +115,98 @@ namespace MOARANDROIDS
 
             var nbp = Utils.GCATPP.getNbHackingPoints();
 
-            bool canVirus, canVirusExplosive, canHack, canTempHack;
-            canVirus = canVirusExplosive = canHack = canTempHack = false;
+            bool canVirusExplosive, canHack, canTempHack;
+            var canVirus = canVirusExplosive = canHack = canTempHack = false;
 
             var powered = !parent.Map.gameConditionManager.ConditionIsActive(GameConditionDefOf.SolarFlare) && !build.IsBrokenDown() && build.TryGetComp<CompPowerTrader>().PowerOn;
 
-            Texture2D tex;
 
+            if (!isHackingServer) yield break;
+            
+            if (nbp - Settings.costPlayerVirus >= 0)
+                canVirus = true && powered;
 
-            if (isHackingServer)
+            var tex = canVirus ? Tex.PlayerVirus : Tex.PlayerVirusDisabled;
+
+            yield return new Command_Action
             {
-                if (nbp - Settings.costPlayerVirus >= 0)
-                    canVirus = true && powered;
-
-                if (canVirus)
-                    tex = Tex.PlayerVirus;
-                else
-                    tex = Tex.PlayerVirusDisabled;
-
-                yield return new Command_Action
+                icon = tex,
+                defaultLabel = "ATPP_UploadVirus".Translate(),
+                defaultDesc = "ATPP_UploadVirusDesc".Translate(),
+                action = delegate
                 {
-                    icon = tex,
-                    defaultLabel = "ATPP_UploadVirus".Translate(),
-                    defaultDesc = "ATPP_UploadVirusDesc".Translate(),
-                    action = delegate
-                    {
-                        if (canVirus)
-                            showFloatMapHackMenu(1);
-                        else
-                            Messages.Message("ATPP_CannotHackNotEnoughtHackingPoints".Translate(Settings.costPlayerVirus), MessageTypeDefOf.NegativeEvent);
-                    }
-                };
+                    if (canVirus)
+                        showFloatMapHackMenu(1);
+                    else
+                        Messages.Message("ATPP_CannotHackNotEnoughtHackingPoints".Translate(Settings.costPlayerVirus), MessageTypeDefOf.NegativeEvent);
+                }
+            };
 
-                if (nbp - Settings.costPlayerExplosiveVirus >= 0)
-                    canVirusExplosive = true && powered;
+            if (nbp - Settings.costPlayerExplosiveVirus >= 0)
+                canVirusExplosive = true && powered;
 
-                if (canVirusExplosive)
-                    tex = Tex.PlayerExplosiveVirus;
-                else
-                    tex = Tex.PlayerExplosiveVirusDisabled;
+            tex = canVirusExplosive ? Tex.PlayerExplosiveVirus : Tex.PlayerExplosiveVirusDisabled;
 
-                yield return new Command_Action
+            yield return new Command_Action
+            {
+                icon = tex,
+                defaultLabel = "ATPP_UploadExplosiveVirus".Translate(),
+                defaultDesc = "ATPP_UploadExplosiveVirusDesc".Translate(),
+                action = delegate
                 {
-                    icon = tex,
-                    defaultLabel = "ATPP_UploadExplosiveVirus".Translate(),
-                    defaultDesc = "ATPP_UploadExplosiveVirusDesc".Translate(),
-                    action = delegate
-                    {
-                        if (canVirusExplosive)
-                            showFloatMapHackMenu(2);
-                        else
-                            Messages.Message("ATPP_CannotHackNotEnoughtHackingPoints".Translate(Settings.costPlayerExplosiveVirus), MessageTypeDefOf.NegativeEvent);
-                    }
-                };
+                    if (canVirusExplosive)
+                        showFloatMapHackMenu(2);
+                    else
+                        Messages.Message("ATPP_CannotHackNotEnoughtHackingPoints".Translate(Settings.costPlayerExplosiveVirus), MessageTypeDefOf.NegativeEvent);
+                }
+            };
 
-                if (nbp - Settings.costPlayerHackTemp >= 0)
-                    canTempHack = true && powered;
+            if (nbp - Settings.costPlayerHackTemp >= 0)
+                canTempHack = true && powered;
 
-                if (canTempHack)
-                    tex = Tex.PlayerHackingTemp;
-                else
-                    tex = Tex.PlayerHackingTempDisabled;
+            tex = canTempHack ? Tex.PlayerHackingTemp : Tex.PlayerHackingTempDisabled;
 
-
-                yield return new Command_Action
+            yield return new Command_Action
+            {
+                icon = tex,
+                defaultLabel = "ATPP_HackTemp".Translate(),
+                defaultDesc = "ATPP_HackTempDesc".Translate(),
+                action = delegate
                 {
-                    icon = tex,
-                    defaultLabel = "ATPP_HackTemp".Translate(),
-                    defaultDesc = "ATPP_HackTempDesc".Translate(),
-                    action = delegate
-                    {
-                        if (canTempHack)
-                            showFloatMapHackMenu(3);
-                        else
-                            Messages.Message("ATPP_CannotHackNotEnoughtHackingPoints".Translate(Settings.costPlayerHackTemp), MessageTypeDefOf.NegativeEvent);
-                    }
-                };
+                    if (canTempHack)
+                        showFloatMapHackMenu(3);
+                    else
+                        Messages.Message("ATPP_CannotHackNotEnoughtHackingPoints".Translate(Settings.costPlayerHackTemp), MessageTypeDefOf.NegativeEvent);
+                }
+            };
 
-                if (nbp - Settings.costPlayerHack >= 0)
-                    canHack = true && powered;
+            if (nbp - Settings.costPlayerHack >= 0)
+                canHack = true && powered;
 
-                if (canHack)
-                    tex = Tex.PlayerHacking;
-                else
-                    tex = Tex.PlayerHackingDisabled;
+            tex = canHack ? Tex.PlayerHacking : Tex.PlayerHackingDisabled;
 
-                yield return new Command_Action
+            yield return new Command_Action
+            {
+                icon = tex,
+                defaultLabel = "ATPP_Hack".Translate(),
+                defaultDesc = "ATPP_HackDesc".Translate(),
+                action = delegate
                 {
-                    icon = tex,
-                    defaultLabel = "ATPP_Hack".Translate(),
-                    defaultDesc = "ATPP_HackDesc".Translate(),
-                    action = delegate
-                    {
-                        if (canHack)
-                            showFloatMapHackMenu(4);
-                        else
-                            Messages.Message("ATPP_CannotHackNotEnoughtHackingPoints".Translate(Settings.costPlayerHack), MessageTypeDefOf.NegativeEvent);
-                    }
-                };
-            }
+                    if (canHack)
+                        showFloatMapHackMenu(4);
+                    else
+                        Messages.Message("ATPP_CannotHackNotEnoughtHackingPoints".Translate(Settings.costPlayerHack), MessageTypeDefOf.NegativeEvent);
+                }
+            };
         }
 
         private void showFloatMapHackMenu(int hackType)
         {
             //Listing map de destination
             var opts = new List<FloatMenuOption>();
-            var lib = "";
             foreach (var m in Find.Maps)
             {
+                var lib = "";
                 if (m == Find.CurrentMap)
                     lib = "ATPP_ThisCurrentMap".Translate(m.Parent.Label);
                 else
@@ -228,7 +220,7 @@ namespace MOARANDROIDS
                 }));
             }
 
-            if (opts.Count != 0)
+            if (opts.Count == 0) return;
             {
                 if (opts.Count == 1)
                 {
@@ -263,12 +255,11 @@ namespace MOARANDROIDS
                 ret += "ATTP_HackingSlotsAdded".Translate(Utils.nbHackingSlotsGeneratedBy((Building) parent)) + "\n";
             }
 
-            if (isSkillServer)
-            {
-                ret += "ATPP_SkillServersSynthesis".Translate(Utils.GCATPP.getNbSkillPoints(), Utils.GCATPP.getNbSkillSlotAvailable()) + "\n";
-                ret += "ATTP_SkillProducedPoints".Translate(Utils.nbSkillPointsGeneratedBy((Building) parent)) + "\n";
-                ret += "ATTP_SkillSlotsAdded".Translate(Utils.nbSkillSlotsGeneratedBy((Building) parent)) + "\n";
-            }
+            if (!isSkillServer) return ret.TrimEnd('\r', '\n') + base.CompInspectStringExtra();
+            
+            ret += "ATPP_SkillServersSynthesis".Translate(Utils.GCATPP.getNbSkillPoints(), Utils.GCATPP.getNbSkillSlotAvailable()) + "\n";
+            ret += "ATTP_SkillProducedPoints".Translate(Utils.nbSkillPointsGeneratedBy((Building) parent)) + "\n";
+            ret += "ATTP_SkillSlotsAdded".Translate(Utils.nbSkillSlotsGeneratedBy((Building) parent)) + "\n";
 
             return ret.TrimEnd('\r', '\n') + base.CompInspectStringExtra();
         }
@@ -288,25 +279,23 @@ namespace MOARANDROIDS
 
         private void StartSustainer()
         {
-            if (sustainer == null && Props.ambiance != "None" && !Settings.disableServersAmbiance)
-            {
-                var info = SoundInfo.InMap(parent);
-                sustainer = ambiance.TrySpawnSustainer(info);
-                //this.sustainer = SoundDefOf.GeyserSpray.TrySpawnSustainer(info);
+            if (sustainer != null || Props.ambiance == "None" || Settings.disableServersAmbiance) return;
+            
+            var info = SoundInfo.InMap(parent);
+            sustainer = ambiance.TrySpawnSustainer(info);
+            //this.sustainer = SoundDefOf.GeyserSpray.TrySpawnSustainer(info);
 
-                //this.sustainerHot = SoundDefOf.GeyserSpray.TrySpawnSustainer(info);
-            }
+            //this.sustainerHot = SoundDefOf.GeyserSpray.TrySpawnSustainer(info);
         }
 
         private void StopSustainer()
         {
-            if (sustainer != null && Props.ambiance != "None")
-            {
-                sustainer.End();
-                sustainer = null;
-                // SoundInfo info = SoundInfo.InMap(this.parent, MaintenanceType.None);
-                //this.ambiance.sustainStopSound.PlayOneShot(info);
-            }
+            if (sustainer == null || Props.ambiance == "None") return;
+            
+            sustainer.End();
+            sustainer = null;
+            // SoundInfo info = SoundInfo.InMap(this.parent, MaintenanceType.None);
+            //this.ambiance.sustainStopSound.PlayOneShot(info);
         }
     }
 }

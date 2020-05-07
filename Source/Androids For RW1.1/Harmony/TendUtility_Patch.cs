@@ -24,13 +24,9 @@ namespace MOARANDROIDS
 
                 try
                 {
-                    float num;
-                    if (doctor != null)
-                        num = doctor.GetStatValue(Utils.statDefAndroidTending);
-                    else
-                        num = 0.75f;
+                    var num = doctor?.GetStatValue(Utils.statDefAndroidTending) ?? 0.75f;
                     num *= medicinePotency;
-                    var building_Bed = patient == null ? null : patient.CurrentBed();
+                    var building_Bed = patient?.CurrentBed();
                     if (building_Bed != null) num += building_Bed.GetStatValue(StatDefOf.MedicalTendQualityOffset);
                     if (doctor == patient && doctor != null) num *= 0.7f;
                     __result = Mathf.Clamp(num, 0f, medicineQualityMax);

@@ -15,27 +15,31 @@ namespace MOARANDROIDS
             [HarmonyPostfix]
             public static void Listener(ref bool __result, RecipeDef __instance)
             {
-                if (Utils.curSelPatientDrawMedOperationsTab != null)
-                    if (Utils.curSelPatientDrawMedOperationsTab is Pawn)
+                switch (Utils.curSelPatientDrawMedOperationsTab)
+                {
+                    case null:
+                        return;
+                    case Pawn _:
                     {
                         var cas = Utils.curSelPatientDrawMedOperationsTab.TryGetComp<CompAndroidState>();
 
-                        if (cas != null)
+                        if (cas == null) return;
+                        //Si androide surrogate on va virer la possibilité d'ajouter des VX chips
+                        if (cas.isSurrogate)
                         {
-                            //Si androide surrogate on va virer la possibilité d'ajouter des VX chips
-                            if (cas.isSurrogate)
-                            {
-                                if (Utils.ExceptionVXNeuralChipSurgery.Contains(__instance.defName))
-                                    __result = false;
-                            }
-                            else
-                            {
-                                //Sinon si pas surrogate et que le recipe en question est à destination des surrogates on le squeeze
-                                if (Utils.ExceptionArtificialBrainsSurgery.Contains(__instance.defName))
-                                    __result = false;
-                            }
+                            if (Utils.ExceptionVXNeuralChipSurgery.Contains(__instance.defName))
+                                __result = false;
                         }
+                        else
+                        {
+                            //Sinon si pas surrogate et que le recipe en question est à destination des surrogates on le squeeze
+                            if (Utils.ExceptionArtificialBrainsSurgery.Contains(__instance.defName))
+                                __result = false;
+                        }
+
+                        break;
                     }
+                }
             }
         }
     }

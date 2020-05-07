@@ -15,24 +15,23 @@ namespace MOARANDROIDS
         {
             var flag = billDoer != null;
             var flag2 = flag;
-            if (flag2)
-            {
-                var flag3 = !CheckSurgeryFailAndroid(billDoer, pawn, ingredients, part, null);
-                var flag4 = flag3;
-                if (flag4)
-                {
-                    pawn.health.AddHediff(recipe.addsHediff, part, null);
-                    TaleRecorder.RecordTale(TaleDefOf.DidSurgery, billDoer, pawn);
-                    FactionChange(pawn);
-                    upper = 20;
-                }
-                else
-                {
-                    upper = 5;
-                }
+            if (!flag2) return;
 
-                RandomCorruption(pawn);
+            var flag3 = !CheckSurgeryFailAndroid(billDoer, pawn, ingredients, part, null);
+            var flag4 = flag3;
+            if (flag4)
+            {
+                pawn.health.AddHediff(recipe.addsHediff, part, null);
+                TaleRecorder.RecordTale(TaleDefOf.DidSurgery, billDoer, pawn);
+                FactionChange(pawn);
+                upper = 20;
             }
+            else
+            {
+                upper = 5;
+            }
+
+            RandomCorruption(pawn);
         }
 
         // Token: 0x0600000E RID: 14 RVA: 0x0000229C File Offset: 0x0000049C
@@ -40,14 +39,13 @@ namespace MOARANDROIDS
         {
             var flag = pawn.Faction != Faction.OfPlayer;
             var flag2 = flag;
-            if (flag2)
-            {
-                pawn.SetFaction(Faction.OfPlayer);
-                string text = "Atlas_FactionChange".Translate(pawn.Name.ToStringShort);
-                text = text.AdjustedFor(pawn);
-                string label = "LetterLabelAtlas_FactionChange".Translate();
-                Find.LetterStack.ReceiveLetter(label, text, LetterDefOf.PositiveEvent, pawn);
-            }
+            if (!flag2) return;
+
+            pawn.SetFaction(Faction.OfPlayer);
+            string text = "Atlas_FactionChange".Translate(pawn.Name.ToStringShort);
+            text = text.AdjustedFor(pawn);
+            string label = "LetterLabelAtlas_FactionChange".Translate();
+            Find.LetterStack.ReceiveLetter(label, text, LetterDefOf.PositiveEvent, pawn);
         }
 
         private void RandomCorruption(Pawn pawn)

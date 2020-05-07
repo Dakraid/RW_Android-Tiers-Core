@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 using RimWorld;
 using UnityEngine;
@@ -24,16 +25,16 @@ namespace MOARANDROIDS
 
                     List<ColonistBar.Entry> toDel = null;
                     //Suppresssion de la barre du haut des surrogates non actifs
-                    foreach (var e in ___cachedEntries)
-                        if (e.pawn.IsSurrogateAndroid(false, true))
-                        {
-                            if (toDel == null)
-                                toDel = new List<ColonistBar.Entry>();
+                    foreach (var e in ___cachedEntries.Where(e => e.pawn.IsSurrogateAndroid(false, true)))
+                    {
+                        if (toDel == null)
+                            toDel = new List<ColonistBar.Entry>();
 
-                            toDel.Add(e);
-                        }
+                        toDel.Add(e);
+                    }
 
-                    if (toDel != null)
+                    if (toDel == null) return;
+
                     {
                         foreach (var e in toDel) ___cachedEntries.Remove(e);
 

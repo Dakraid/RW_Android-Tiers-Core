@@ -21,7 +21,6 @@ namespace MOARANDROIDS
         public override void PostDraw()
         {
             Material avatar = null;
-            Vector3 vector;
 
             Designator_AndroidToControl desi = null;
             var isConnected = csm != null && csm.connected;
@@ -35,15 +34,14 @@ namespace MOARANDROIDS
                 if (controller != null)
                     avatar = Tex.RemotelyControlledNode;
 
-            if (avatar != null)
-            {
-                vector = parent.TrueCenter();
-                vector.y = AltitudeLayer.MetaOverlays.AltitudeFor() + 0.28125f;
-                vector.z += 1.4f;
-                vector.x += parent.def.size.x / 2;
+            if (avatar == null) return;
+            
+            var vector = parent.TrueCenter();
+            vector.y = AltitudeLayer.MetaOverlays.AltitudeFor() + 0.28125f;
+            vector.z += 1.4f;
+            vector.x += parent.def.size.x / 2;
 
-                Graphics.DrawMesh(MeshPool.plane08, vector, Quaternion.identity, avatar, 0);
-            }
+            Graphics.DrawMesh(MeshPool.plane08, vector, Quaternion.identity, avatar, 0);
         }
 
         public override void PostDestroy(DestroyMode mode, Map previousMap)
@@ -70,41 +68,17 @@ namespace MOARANDROIDS
             csm = parent.TryGetComp<CompSkyMind>();
         }
 
-        public override void CompTick()
-        {
-            base.CompTick();
-            var GT = Find.TickManager.TicksGame;
-        }
-
-        public override void ReceiveCompSignal(string signal)
-        {
-            var host = (Building) parent;
-            if (signal == "FlickedOff" || signal == "ScheduledOff" || signal == "Breakdown" || signal == "PowerTurnedOff" || signal == "SkyMindNetworkUserDisconnected")
-                //Deconnection le cas echeant du controller
-                if (controller != null)
-                {
-                }
-        }
-
         private void disconnectConnectedMind()
         {
-            if (controller != null)
-            {
-                var cso = controller.TryGetComp<CompSurrogateOwner>();
-                if (cso != null)
-                    if (cso.skyCloudHost != null)
-                    {
-                        var csc = cso.skyCloudHost.TryGetComp<CompSkyCloudCore>();
-                        if (csc != null) csc.stopRemotelyControlledTurret(controller);
-                    }
-            }
+            var cso = controller?.TryGetComp<CompSurrogateOwner>();
+            if (cso?.skyCloudHost == null) return;
+                
+            var csc = cso.skyCloudHost.TryGetComp<CompSkyCloudCore>();
+            csc?.stopRemotelyControlledTurret(controller);
         }
 
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
         {
-            var build = (Building) parent;
-            Texture2D tex;
-
             if (controller != null)
                 //Boutton permettant deconnection de la tourelle du pawn controller
                 yield return new Command_Action
@@ -124,11 +98,6 @@ namespace MOARANDROIDS
                 ret += "ATPP_RemotelyControlledBy".Translate(controller.LabelShortCap) + "\n";
 
             return ret.TrimEnd('\r', '\n') + base.CompInspectStringExtra();
-        }
-
-        public override void PostDeSpawn(Map map)
-        {
-            base.PostDeSpawn(map);
         }
     }
 }

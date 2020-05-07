@@ -45,10 +45,7 @@ namespace MOARANDROIDS
 
 
                 nb = nbSurrogates / 2;
-                if (nb != 0)
-                    nb = Rand.Range(1, nb + 1);
-                else
-                    nb = 1;
+                nb = nb != 0 ? Rand.Range(1, nb + 1) : 1;
 
                 letter = LetterDefOf.ThreatSmall;
                 //Obtention des victimes
@@ -68,8 +65,7 @@ namespace MOARANDROIDS
                     if (cas.surrogateController != null)
                     {
                         var cso = cas.surrogateController.TryGetComp<CompSurrogateOwner>();
-                        if (cso != null)
-                            cso.disconnectControlledSurrogate(null);
+                        cso?.disconnectControlledSurrogate(null);
                     }
 
                     var he = v.health.hediffSet.GetFirstHediffOfDef(Utils.hediffNoHost);
@@ -93,7 +89,6 @@ namespace MOARANDROIDS
                 attackType = Rand.Range(1, 4);
 
                 var nb = 0;
-                LordJob_AssaultColony lordJob;
                 Lord lord = null;
 
                 if (attackType != 3)
@@ -101,15 +96,11 @@ namespace MOARANDROIDS
                     //Attaque virale douce
                     //Obtention des victimes (qui peut allez de 1 victime a N/2 victimes
                     nb = nbSurrogates / 2;
-                    if (nb != 0)
-                        nb = Rand.Range(1, nb + 1);
-                    else
-                        nb = 1;
+                    nb = nb != 0 ? Rand.Range(1, nb + 1) : 1;
 
-                    lordJob = new LordJob_AssaultColony(Faction.OfAncientsHostile, false, false, false, false, false);
+                    var lordJob = new LordJob_AssaultColony(Faction.OfAncientsHostile, false, false, false, false, false);
 
-                    if (lordJob != null)
-                        lord = LordMaker.MakeNewLord(Faction.OfAncientsHostile, lordJob, Current.Game.CurrentMap);
+                    lord = LordMaker.MakeNewLord(Faction.OfAncientsHostile, lordJob, Current.Game.CurrentMap);
                 }
                 else
                 {
@@ -201,35 +192,31 @@ namespace MOARANDROIDS
                             break;
                     }
 
-                    if (attackType == 1 || attackType == 2)
-                    {
-                        //On va attribuer aleatoirement des poids d'attaque aux surrogate
-                        var shooting = v.skills.GetSkill(SkillDefOf.Shooting);
-                        if (shooting != null && !shooting.TotallyDisabled) shooting.levelInt = Rand.Range(3, 19);
-                        var melee = v.skills.GetSkill(SkillDefOf.Melee);
-                        if (melee != null && !melee.TotallyDisabled) melee.levelInt = Rand.Range(3, 19);
-                    }
+                    if (attackType != 1 && attackType != 2) continue;
+                    //On va attribuer aleatoirement des poids d'attaque aux surrogate
+                    var shooting = v.skills.GetSkill(SkillDefOf.Shooting);
+                    if (shooting != null && !shooting.TotallyDisabled) shooting.levelInt = Rand.Range(3, 19);
+                    var melee = v.skills.GetSkill(SkillDefOf.Melee);
+                    if (melee != null && !melee.TotallyDisabled) melee.levelInt = Rand.Range(3, 19);
                 }
             }
 
             Find.LetterStack.ReceiveLetter(title, msg, letter, victims);
 
 
-            if (attackType == 3)
-            {
-                //Déduction faction ennemis au hasard
-                var faction = Find.FactionManager.RandomEnemyFaction();
+            if (attackType != 3) return true;
+            //Déduction faction ennemis au hasard
+            var faction = Find.FactionManager.RandomEnemyFaction();
 
-                var ransom = (ChoiceLetter_RansomDemand) LetterMaker.MakeLetter(DefDatabase<LetterDef>.GetNamed("ATPP_CLPayCryptoRansom"));
-                ransom.label = "ATPP_CryptolockerNeedPayRansomTitle".Translate();
-                ransom.text = "ATPP_CryptolockerNeedPayRansom".Translate(faction.Name, fee);
-                ransom.faction = faction;
-                ransom.radioMode = true;
-                ransom.fee = fee;
-                ransom.cryptolockedThings = cryptolockedThings;
-                ransom.StartTimeout(60000);
-                Find.LetterStack.ReceiveLetter(ransom);
-            }
+            var ransom = (ChoiceLetter_RansomDemand) LetterMaker.MakeLetter(DefDatabase<LetterDef>.GetNamed("ATPP_CLPayCryptoRansom"));
+            ransom.label = "ATPP_CryptolockerNeedPayRansomTitle".Translate();
+            ransom.text = "ATPP_CryptolockerNeedPayRansom".Translate(faction.Name, fee);
+            ransom.faction = faction;
+            ransom.radioMode = true;
+            ransom.fee = fee;
+            ransom.cryptolockedThings = cryptolockedThings;
+            ransom.StartTimeout(60000);
+            Find.LetterStack.ReceiveLetter(ransom);
 
             return true;
         }

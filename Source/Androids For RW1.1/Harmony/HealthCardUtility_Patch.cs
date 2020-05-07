@@ -18,8 +18,7 @@ namespace MOARANDROIDS
             {
                 Utils.curSelPatientDrawMedOperationsTab = pawn;
                 var cso = pawn.TryGetComp<CompSurrogateOwner>();
-                if (cso != null && cso.skyCloudHost != null) return false;
-                return true;
+                return cso?.skyCloudHost == null;
             }
 
             [HarmonyPostfix]

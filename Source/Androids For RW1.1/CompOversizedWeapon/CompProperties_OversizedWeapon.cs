@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Verse;
 
+// TODO: Look into performance issues
 namespace MOARANDROIDS
 {
     public class CompProperties_OversizedWeapon : CompProperties

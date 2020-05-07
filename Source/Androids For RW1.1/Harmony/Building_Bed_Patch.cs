@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -15,55 +16,51 @@ namespace MOARANDROIDS
         {
             private static void addInactiveSurrogates(ref List<Pawn> lst, Map map, bool M7)
             {
-                foreach (var p in map.mapPawns.AllPawns)
-                    if (p.Faction == Faction.OfPlayer)
-                    {
-                        var cas = p.TryGetComp<CompAndroidState>();
-
-                        if (cas != null && cas.isSurrogate && cas.surrogateController == null && !cas.isOrganic && (!M7 || p.def.defName == Utils.M7)) lst.Add(p);
-                    }
+                lst.AddRange(from p in map.mapPawns.AllPawns where p.Faction == Faction.OfPlayer let cas = p.TryGetComp<CompAndroidState>() where cas != null && cas.isSurrogate && cas.surrogateController == null && !cas.isOrganic && (!M7 || p.def.defName == Utils.M7) select p);
             }
 
             [HarmonyPostfix]
             public static void Listener(ref IEnumerable<Pawn> __result, CompAssignableToPawn __instance)
             {
-                var orig = __result;
+                IEnumerable<Pawn> pawns = __result as Pawn[] ?? __result.ToArray();
+                var orig = pawns;
                 try
                 {
                     var bed = (Building_Bed) __instance.parent;
 
-                    if (bed.def.defName == "ATPP_AndroidPod")
+                    switch (bed.def.defName)
                     {
-                        var lst = new List<Pawn>();
-                        foreach (var el in __result)
-                            if (el.def.defName != Utils.M7 && el.IsAndroidTier())
-                                lst.Add(el);
+                        case "ATPP_AndroidPod":
+                        {
+                            var lst = pawns.Where(el => el.def.defName != Utils.M7 && el.IsAndroidTier()).ToList();
 
-                        //Si option masquant les surrogates activé alors ajout de ces derniers à la fin
-                        if (Settings.hideInactiveSurrogates)
-                            addInactiveSurrogates(ref lst, bed.Map, false);
+                            //Si option masquant les surrogates activé alors ajout de ces derniers à la fin
+                            if (Settings.hideInactiveSurrogates)
+                                addInactiveSurrogates(ref lst, bed.Map, false);
 
-                        __result = lst;
-                    }
-                    else if (bed.def.defName == "ATPP_AndroidPodMech")
-                    {
-                        var lst = new List<Pawn>();
-                        foreach (var el in __result)
-                            if (el.def.defName == Utils.M7)
-                                lst.Add(el);
-                        //Si option masquant les surrogates activé alors ajout de ces derniers à la fin
-                        if (Settings.hideInactiveSurrogates)
-                            addInactiveSurrogates(ref lst, bed.Map, false);
+                            __result = lst;
+                            break;
+                        }
+                        case "ATPP_AndroidPodMech":
+                        {
+                            var lst = pawns.Where(el => el.def.defName == Utils.M7).ToList();
+                            //Si option masquant les surrogates activé alors ajout de ces derniers à la fin
+                            if (Settings.hideInactiveSurrogates)
+                                addInactiveSurrogates(ref lst, bed.Map, false);
 
-                        __result = lst;
-                    }
-                    else if (bed.def.defName != "SleepingSpot")
-                    {
-                        var lst = new List<Pawn>();
-                        foreach (var el in __result)
-                            if (!el.IsAndroidTier())
-                                lst.Add(el);
-                        __result = lst;
+                            __result = lst;
+                            break;
+                        }
+                        default:
+                        {
+                            if (bed.def.defName != "SleepingSpot")
+                            {
+                                var lst = pawns.Where(el => !el.IsAndroidTier()).ToList();
+                                __result = lst;
+                            }
+
+                            break;
+                        }
                     }
                 }
                 catch (Exception e)

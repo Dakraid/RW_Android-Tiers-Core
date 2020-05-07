@@ -3,6 +3,7 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 
+// TODO: Look into performance issues
 namespace MOARANDROIDS
 {
     internal class JobGiver_GetJoy_Patch

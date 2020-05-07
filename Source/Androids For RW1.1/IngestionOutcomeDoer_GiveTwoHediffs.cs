@@ -6,11 +6,11 @@ namespace MOARANDROIDS
 {
     internal class IngestionOutcomeDoer_GiveTwoHediffs : IngestionOutcomeDoer
     {
-        private bool divideByBodySize;
+        private bool divideByBodySize = false;
 
-        public HediffDef hediffDef_Android;
+        public HediffDef hediffDef_Android = null;
 
-        public HediffDef hediffDef_Human;
+        public HediffDef hediffDef_Human = null;
 
         public float severity = -1f;
 
@@ -19,11 +19,7 @@ namespace MOARANDROIDS
             if (pawn.IsAndroid() == false)
             {
                 var hediff = HediffMaker.MakeHediff(hediffDef_Human, pawn);
-                float num;
-                if (severity > 0f)
-                    num = severity;
-                else
-                    num = hediffDef_Human.initialSeverity;
+                var num = severity > 0f ? severity : hediffDef_Human.initialSeverity;
                 if (divideByBodySize) num /= pawn.BodySize;
                 hediff.Severity = num;
                 pawn.health.AddHediff(hediff, null, null);
@@ -31,11 +27,7 @@ namespace MOARANDROIDS
             else
             {
                 var hediff = HediffMaker.MakeHediff(hediffDef_Android, pawn);
-                float num;
-                if (severity > 0f)
-                    num = severity;
-                else
-                    num = hediffDef_Android.initialSeverity;
+                var num = severity > 0f ? severity : hediffDef_Android.initialSeverity;
                 if (divideByBodySize) num /= pawn.BodySize;
                 hediff.Severity = num;
                 pawn.health.AddHediff(hediff, null, null);
@@ -44,9 +36,10 @@ namespace MOARANDROIDS
 
         public override IEnumerable<StatDrawEntry> SpecialDisplayStats(ThingDef parentDef)
         {
-            if (parentDef.IsDrug && chance >= 1f)
-                foreach (var s in hediffDef_Human.SpecialDisplayStats(StatRequest.ForEmpty()))
-                    yield return s;
+            if (!parentDef.IsDrug || !(chance >= 1f)) yield break;
+
+            foreach (var s in hediffDef_Human.SpecialDisplayStats(StatRequest.ForEmpty()))
+                yield return s;
         }
     }
 }

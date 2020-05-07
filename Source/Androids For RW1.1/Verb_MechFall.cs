@@ -12,10 +12,11 @@ namespace MOARANDROIDS
         protected override bool TryCastShot()
         {
             if (currentTarget.HasThing && currentTarget.Thing.Map != caster.Map) return false;
+
             var mechfall = (MechFall) GenSpawn.Spawn(ThingDefOf.MechFallBeam, currentTarget.Cell, caster.Map);
             mechfall.duration = 450;
             mechfall.instigator = caster;
-            mechfall.weaponDef = EquipmentSource == null ? null : EquipmentSource.def;
+            mechfall.weaponDef = EquipmentSource?.def;
             mechfall.StartStrike();
             if (EquipmentSource != null && !EquipmentSource.Destroyed) EquipmentSource.Destroy();
             return true;

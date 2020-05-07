@@ -214,43 +214,56 @@ namespace MOARANDROIDS
         public override void PostDraw()
         {
             Material avatar = null;
-            Vector3 vector;
 
             if (Utils.antennaSelected() && connected)
                 avatar = Tex.ConnectedUser;
 
-            if (infected == 1)
-                avatar = Tex.virus;
-            else if (infected == 2)
-                avatar = Tex.explosiveVirus;
-            else if (infected == 3)
-                avatar = Tex.cryptolocker;
-            else if (infected == 4)
-                avatar = Tex.virusLite;
-            else if (hacked == 1)
-                avatar = Tex.Virused;
-            else if (hacked == 2)
-                avatar = Tex.ExplosiveVirused;
-            else if (hacked == 3)
-                avatar = Tex.HackedTemp;
-
-            if (avatar != null)
+            switch (infected)
             {
-                vector = parent.TrueCenter();
-                vector.y = AltitudeLayer.MetaOverlays.AltitudeFor() + 0.28125f;
-                vector.z += 1.4f;
-                vector.x += parent.def.size.x / 2;
+                case 1:
+                    avatar = Tex.virus;
+                    break;
+                case 2:
+                    avatar = Tex.explosiveVirus;
+                    break;
+                case 3:
+                    avatar = Tex.cryptolocker;
+                    break;
+                case 4:
+                    avatar = Tex.virusLite;
+                    break;
+                default:
+                    switch (hacked)
+                    {
+                        case 1:
+                            avatar = Tex.Virused;
+                            break;
+                        case 2:
+                            avatar = Tex.ExplosiveVirused;
+                            break;
+                        case 3:
+                            avatar = Tex.HackedTemp;
+                            break;
+                    }
 
-                Graphics.DrawMesh(MeshPool.plane08, vector, Quaternion.identity, avatar, 0);
+                    break;
             }
+
+            if (avatar == null) return;
+            
+            var vector = parent.TrueCenter();
+            vector.y = AltitudeLayer.MetaOverlays.AltitudeFor() + 0.28125f;
+            vector.z += 1.4f;
+            vector.x += parent.def.size.x / 2;
+
+            Graphics.DrawMesh(MeshPool.plane08, vector, Quaternion.identity, avatar, 0);
         }
 
 
         public bool canBeConnectedToSkyMind()
         {
-            if (parent is Pawn)
+            if (parent is Pawn pawn)
             {
-                var pawn = (Pawn) parent;
                 return pawn.VXChipPresent() || pawn.IsAndroidTier();
             }
 
@@ -266,21 +279,23 @@ namespace MOARANDROIDS
             if (infected != -1 || parent.Faction != Faction.OfPlayer && casx != null && casx.isSurrogate)
                 yield break;
 
-            if (parent is Pawn)
+            switch (parent)
             {
-                var pawn = (Pawn) parent;
-
                 //Si ni un humain ou robot pucé ET pas un android Tier alors pas de possibilité de connection au SkyMind
-                if (!pawn.VXChipPresent() && !pawn.IsAndroidTier()) yield break;
-
+                case Pawn pawn when !pawn.VXChipPresent() && !pawn.IsAndroidTier():
+                    yield break;
                 //Les M7Mech standard ne sont pas controlables
-                var cas = parent.TryGetComp<CompAndroidState>();
-                if (cas != null && !cas.isSurrogate && parent.def.defName == "M7Mech")
+                case Pawn pawn:
+                {
+                    var cas = parent.TryGetComp<CompAndroidState>();
+                    if (cas != null && !cas.isSurrogate && pawn.def.defName == "M7Mech")
+                        yield break;
+                    break;
+                }
+                //Si batiment et il n'y a pas de skyCloud placé on masque les controles sur les batiments
+                case Building _ when !Utils.GCATPP.isThereSkyCloudCore():
                     yield break;
             }
-
-            //Si batiment et il n'y a pas de skyCloud placé on masque les controles sur les batiments
-            if (parent is Building && !Utils.GCATPP.isThereSkyCloudCore()) yield break;
 
             yield return new Command_Toggle
             {
@@ -367,8 +382,7 @@ namespace MOARANDROIDS
                 cp.jobs.ClearQueuedJobs();
             }
 
-            if (cp.mindState != null)
-                cp.mindState.Reset(true);
+            cp.mindState?.Reset(true);
 
             PawnComponentsUtility.AddAndRemoveDynamicComponents(cp);
             hacked = -1;
@@ -379,23 +393,17 @@ namespace MOARANDROIDS
 
             foreach (var p in cp.Map.mapPawns.AllPawnsSpawned)
             {
-                if (p.mindState == null)
-                    continue;
+                var aim = p.mindState?.enemyTarget;
 
-                var aim = p.mindState.enemyTarget;
+                if (aim == null || !(aim is Pawn pawnTarget)) continue;
+                //Log.Message("=>" + aim.def.defName);
 
-                if (aim != null && aim is Pawn)
-                {
-                    //Log.Message("=>" + aim.def.defName);
+                if (pawnTarget != cp) continue;
 
-                    var pawnTarget = (Pawn) aim;
-                    if (pawnTarget == cp)
-                        if (p.jobs != null)
-                        {
-                            p.jobs.StopAll();
-                            p.jobs.ClearQueuedJobs();
-                        }
-                }
+                if (p.jobs == null) continue;
+
+                p.jobs.StopAll();
+                p.jobs.ClearQueuedJobs();
             }
 
             Find.ColonistBar.MarkColonistsDirty();
@@ -408,23 +416,24 @@ namespace MOARANDROIDS
             if (parent.Map == null)
                 return base.CompInspectStringExtra();
 
-            if (infected == 1 && infectedEndGT != -1) ret += "ATPP_TempInfection".Translate((infectedEndGT - Find.TickManager.TicksGame).ToStringTicksToPeriodVerbose()) + "\n";
-
-            if (infected == 3) ret += "ATPP_CryptoLockedSurrogate".Translate() + "\n";
-
-            if (infected == 2) ret += "ATPP_ExplosiveVirus".Translate((int) Math.Max(0, infectedExplodeGT - Find.TickManager.TicksGame).TicksToSeconds()) + "\n";
+            switch (infected)
+            {
+                case 1 when infectedEndGT != -1:
+                    ret += "ATPP_TempInfection".Translate((infectedEndGT - Find.TickManager.TicksGame).ToStringTicksToPeriodVerbose()) + "\n";
+                    break;
+                case 3:
+                    ret += "ATPP_CryptoLockedSurrogate".Translate() + "\n";
+                    break;
+                case 2:
+                    ret += "ATPP_ExplosiveVirus".Translate((int) Math.Max(0, infectedExplodeGT - Find.TickManager.TicksGame).TicksToSeconds()) + "\n";
+                    break;
+            }
 
             if (hacked == 3) ret += "ATPP_TempHackingLosingControlIn".Translate((int) Math.Max(0, hackEndGT - Find.TickManager.TicksGame).TicksToSeconds()) + "\n";
 
             if (Utils.GCATPP.isConnectedToSkyMind(parent)) ret += "ATPP_SkyMindDetected".Translate() + "\n";
 
             return ret.TrimEnd('\r', '\n') + base.CompInspectStringExtra();
-        }
-
-        public void resetInternalState()
-        {
-            infected = -1;
-            infectedExplodeGT = -1;
         }
     }
 }

@@ -34,10 +34,15 @@ namespace MOARANDROIDS
                 Utils.initBodyAsSurrogate(blankAndroid, false);
 
                 var sn = "";
-                if (blankAndroid.def.defName == Utils.T3)
-                    sn = "T3";
-                else if (blankAndroid.def.defName == Utils.T4)
-                    sn = "T4";
+                switch (blankAndroid.def.defName)
+                {
+                    case Utils.T3:
+                        sn = "T3";
+                        break;
+                    case Utils.T4:
+                        sn = "T4";
+                        break;
+                }
 
                 blankAndroid.Name = new NameTriple("", sn, "");
 

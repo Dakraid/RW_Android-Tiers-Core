@@ -4,6 +4,7 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 
+// TODO: Look into performance issues
 namespace MOARANDROIDS
 {
     public class JobDriver_GoReloadBattery : JobDriver
@@ -12,6 +13,7 @@ namespace MOARANDROIDS
         {
             if (pawn.Downed)
                 return false;
+            
             pawn.Map.pawnDestinationReservationManager.Reserve(pawn, job, job.targetA.Cell);
             return true;
         }
@@ -22,8 +24,6 @@ namespace MOARANDROIDS
             //Check si TargetIndex.A est un Bed si oui alors juste un Toil_Bed.GotoBed suivant d'un LayDownCustomFood
             if (TargetThingA is Building_Bed)
             {
-                var pod = (Building_Bed) TargetThingA;
-
                 yield return Toils_Bed.GotoBed(TargetIndex.A);
                 //yield return Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.OnCell);
                 yield return Toils_LayDownPower.LayDown(TargetIndex.A, true, false, false);
@@ -33,8 +33,8 @@ namespace MOARANDROIDS
                 var gotoCell = Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.OnCell);
                 var nothing = new Toil();
                 yield return gotoCell;
-                var setSkin = new Toil();
-                setSkin.initAction = delegate { pawn.Rotation = Rot4.South; };
+
+                var setSkin = new Toil {initAction = delegate { pawn.Rotation = Rot4.South; }};
                 yield return setSkin;
                 yield return nothing;
                 yield return Toils_General.Wait(50);

@@ -13,11 +13,8 @@ namespace MOARANDROIDS
 
         private void CheckShouldSpawn()
         {
-            if (true)
-            {
-                SpawnDude();
-                parent.Destroy();
-            }
+            SpawnDude();
+            parent.Destroy();
         }
 
         public void SpawnDude()

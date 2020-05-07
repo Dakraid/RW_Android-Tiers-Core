@@ -13,7 +13,7 @@ namespace MOARANDROIDS
             public static void Listener(CompPowerTrader __instance, ref float ___powerOutputInt)
             {
                 var rs = __instance.parent.TryGetComp<CompReloadStation>();
-                if (rs != null) rs.refreshPowerConsumed();
+                rs?.refreshPowerConsumed();
             }
         }
     }

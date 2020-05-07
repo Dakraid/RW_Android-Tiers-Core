@@ -8,11 +8,8 @@ namespace MOARANDROIDS
         protected override bool Satisfied(Pawn pawn)
         {
             //QUe les SM7 controlés peuvent se recharger
-            if (!pawn.Downed && pawn.def.defName == Utils.M7 && pawn.IsSurrogateAndroid(true))
-                //Min 30% pour aller se recharger en auto
-                if (pawn.needs.food != null && pawn.needs.food.CurLevelPercentage < 0.3f)
-                    return true;
-            return false;
+            if (pawn.Downed || pawn.def.defName != Utils.M7 || !pawn.IsSurrogateAndroid(true)) return false;
+            return pawn.needs.food != null && pawn.needs.food.CurLevelPercentage < 0.3f;
         }
     }
 }

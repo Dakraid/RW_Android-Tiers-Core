@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using Verse;
 
@@ -44,27 +45,14 @@ namespace MOARANDROIDS
 
 
                 nb = nbDevices / 2;
-                if (nb != 0)
-                    nb = Rand.Range(1, nb + 1);
-                else
-                    nb = 1;
+                nb = nb != 0 ? Rand.Range(1, nb + 1) : 1;
 
                 letter = LetterDefOf.ThreatSmall;
                 //Obtention des victimes
                 victims = Utils.GCATPP.getRandomDevices(nb);
                 if (victims.Count == 0) return false;
 
-                foreach (var v in victims)
-                {
-                    var csm = v.TryGetComp<CompSkyMind>();
-                    var cas = v.TryGetComp<CompAndroidState>();
-                    if (cas == null)
-                        continue;
-
-                    csm.Infected = 4;
-
-                    //Piratage temporaire
-                }
+                foreach (CompSkyMind csm in from v in victims let csm = v.TryGetComp<CompSkyMind>() let cas = v.TryGetComp<CompAndroidState>() where cas != null select csm) csm.Infected = 4;
 
 
                 title = "ATPP_IncidentDeviceHackingVirus".Translate();
@@ -97,10 +85,7 @@ namespace MOARANDROIDS
                 //Attaque virale douce
                 //Obtention des victimes (qui peut allez de 1 victime a N/2 victimes
                 nb = nbDevices / 2;
-                if (nb != 0)
-                    nb = Rand.Range(1, nb + 1);
-                else
-                    nb = 1;
+                nb = nb != 0 ? Rand.Range(1, nb + 1) : 1;
 
                 msg = "ATPP_IncidentDeviceHackingHardDesc".Translate(nb) + "\n";
 
@@ -134,33 +119,30 @@ namespace MOARANDROIDS
                     csm.Infected = attackType;
 
                     //Virus cryptolocker
-                    if (attackType == 3)
-                    {
-                        cryptolockedThings.Add(v.GetUniqueLoadID());
-                        fee += (int) (v.def.BaseMarketValue * 0.25f);
-                    }
+                    if (attackType != 3) continue;
+
+                    cryptolockedThings.Add(v.GetUniqueLoadID());
+                    fee += (int) (v.def.BaseMarketValue * 0.25f);
                 }
             }
 
             Find.LetterStack.ReceiveLetter(title, msg, letter, victims);
 
 
-            if (attackType == 3)
-            {
-                //Déduction faction ennemis au hasard
-                var faction = Find.FactionManager.RandomEnemyFaction();
+            if (attackType != 3) return true;
+            //Déduction faction ennemis au hasard
+            var faction = Find.FactionManager.RandomEnemyFaction();
 
-                var ransom = (ChoiceLetter_RansomDemand) LetterMaker.MakeLetter(DefDatabase<LetterDef>.GetNamed("ATPP_CLPayCryptoRansom"));
-                ransom.label = "ATPP_CryptolockerNeedPayRansomTitle".Translate();
-                ransom.text = "ATPP_CryptolockerNeedPayRansom".Translate(faction.Name, fee);
-                ransom.faction = faction;
-                ransom.radioMode = true;
-                ransom.fee = fee;
-                ransom.cryptolockedThings = cryptolockedThings;
-                ransom.deviceType = true;
-                ransom.StartTimeout(60000);
-                Find.LetterStack.ReceiveLetter(ransom);
-            }
+            var ransom = (ChoiceLetter_RansomDemand) LetterMaker.MakeLetter(DefDatabase<LetterDef>.GetNamed("ATPP_CLPayCryptoRansom"));
+            ransom.label = "ATPP_CryptolockerNeedPayRansomTitle".Translate();
+            ransom.text = "ATPP_CryptolockerNeedPayRansom".Translate(faction.Name, fee);
+            ransom.faction = faction;
+            ransom.radioMode = true;
+            ransom.fee = fee;
+            ransom.cryptolockedThings = cryptolockedThings;
+            ransom.deviceType = true;
+            ransom.StartTimeout(60000);
+            Find.LetterStack.ReceiveLetter(ransom);
 
             return true;
         }

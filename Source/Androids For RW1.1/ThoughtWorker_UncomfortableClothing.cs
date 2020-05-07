@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using System.Linq;
+using RimWorld;
 using Verse;
 
 namespace MOARANDROIDS
@@ -12,19 +13,15 @@ namespace MOARANDROIDS
             string text = null;
             var num = 0;
             var wornApparel = p.apparel.WornApparel;
-            for (var i = 0; i < wornApparel.Count; i++)
-                if (wornApparel[i].Stuff == ThingDefOf.SteelWool)
-                {
-                    if (text == null) text = wornApparel[i].def.label;
-                    num++;
-                }
+            foreach (var apparel in wornApparel.Where(apparel => apparel.Stuff == ThingDefOf.SteelWool))
+            {
+                if (text == null) text = apparel.def.label;
+                num++;
+            }
 
             if (num == 0) return ThoughtState.Inactive;
-            if (p.IsAndroid() == false)
-            {
-                if (num >= 5) return ThoughtState.ActiveAtStage(4, text);
-                return ThoughtState.ActiveAtStage(num - 1, text);
-            }
+
+            if (p.IsAndroid() == false) return num >= 5 ? ThoughtState.ActiveAtStage(4, text) : ThoughtState.ActiveAtStage(num - 1, text);
 
             return ThoughtState.Inactive;
         }

@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -21,41 +22,57 @@ namespace MOARANDROIDS
 
                     var cas = ___pawn.TryGetComp<CompAndroidState>();
 
-                    if (cas != null)
-                    {
-                        var pc = (AndroidPaintColor) cas.customColor;
-                        if (Settings.androidsCanRust && cas.paintingIsRusted)
+                    if (cas == null) return;
+
+                    var pc = (AndroidPaintColor) cas.customColor;
+                    if (Settings.androidsCanRust && cas.paintingIsRusted)
+                        __result = Utils.androidCustomColorRust;
+                    else if (pc != AndroidPaintColor.None && pc != AndroidPaintColor.Default)
+                        switch (pc)
                         {
-                            __result = Utils.androidCustomColorRust;
-                        }
-                        else if (pc != AndroidPaintColor.None && pc != AndroidPaintColor.Default)
-                        {
-                            if (pc == AndroidPaintColor.Green)
+                            case AndroidPaintColor.Green:
                                 __result = Utils.androidCustomColorGreen;
-                            else if (pc == AndroidPaintColor.Black)
+                                break;
+                            case AndroidPaintColor.Black:
                                 __result = Utils.androidCustomColorBlack;
-                            else if (pc == AndroidPaintColor.Gray)
+                                break;
+                            case AndroidPaintColor.Gray:
                                 __result = Utils.androidCustomColorGray;
-                            else if (pc == AndroidPaintColor.White)
+                                break;
+                            case AndroidPaintColor.White:
                                 __result = Utils.androidCustomColorWhite;
-                            else if (pc == AndroidPaintColor.Blue)
+                                break;
+                            case AndroidPaintColor.Blue:
                                 __result = Utils.androidCustomColorBlue;
-                            else if (pc == AndroidPaintColor.Cyan)
+                                break;
+                            case AndroidPaintColor.Cyan:
                                 __result = Utils.androidCustomColorCyan;
-                            else if (pc == AndroidPaintColor.Red)
+                                break;
+                            case AndroidPaintColor.Red:
                                 __result = Utils.androidCustomColorRed;
-                            else if (pc == AndroidPaintColor.Orange)
+                                break;
+                            case AndroidPaintColor.Orange:
                                 __result = Utils.androidCustomColorOrange;
-                            else if (pc == AndroidPaintColor.Yellow)
+                                break;
+                            case AndroidPaintColor.Yellow:
                                 __result = Utils.androidCustomColorYellow;
-                            else if (pc == AndroidPaintColor.Purple)
+                                break;
+                            case AndroidPaintColor.Purple:
                                 __result = Utils.androidCustomColorPurple;
-                            else if (pc == AndroidPaintColor.Pink)
+                                break;
+                            case AndroidPaintColor.Pink:
                                 __result = Utils.androidCustomColorPink;
-                            else if (pc == AndroidPaintColor.Khaki)
+                                break;
+                            case AndroidPaintColor.Khaki:
                                 __result = Utils.androidCustomColorKhaki;
+                                break;
+                            case AndroidPaintColor.None:
+                                break;
+                            case AndroidPaintColor.Default:
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
                         }
-                    }
                 }
             }
         }

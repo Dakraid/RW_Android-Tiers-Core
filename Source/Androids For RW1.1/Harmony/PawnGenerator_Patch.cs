@@ -149,212 +149,218 @@ namespace MOARANDROIDS
                     {
                         SkillRecord sr = null;
 
-                        if (__result.def.defName == Utils.T1)
+                        switch (__result.def.defName)
                         {
-                            sr = __result.skills.GetSkill(SkillDefOf.Animals);
-                            if (sr != null)
+                            case Utils.T1:
                             {
-                                sr.levelInt = Settings.defaultSkillT1Animals;
-                                sr.xpSinceLastLevel = 0;
-                                sr.xpSinceMidnight = 0;
-                            }
+                                sr = __result.skills.GetSkill(SkillDefOf.Animals);
+                                if (sr != null)
+                                {
+                                    sr.levelInt = Settings.defaultSkillT1Animals;
+                                    sr.xpSinceLastLevel = 0;
+                                    sr.xpSinceMidnight = 0;
+                                }
 
-                            sr = __result.skills.GetSkill(SkillDefOf.Artistic);
-                            if (sr != null)
-                            {
-                                sr.levelInt = Settings.defaultSkillT1Artistic;
-                                sr.xpSinceLastLevel = 0;
-                                sr.xpSinceMidnight = 0;
-                            }
+                                sr = __result.skills.GetSkill(SkillDefOf.Artistic);
+                                if (sr != null)
+                                {
+                                    sr.levelInt = Settings.defaultSkillT1Artistic;
+                                    sr.xpSinceLastLevel = 0;
+                                    sr.xpSinceMidnight = 0;
+                                }
 
-                            sr = __result.skills.GetSkill(SkillDefOf.Construction);
-                            if (sr != null)
-                            {
-                                sr.levelInt = Settings.defaultSkillT1Construction;
-                                sr.xpSinceLastLevel = 0;
-                                sr.xpSinceMidnight = 0;
-                            }
+                                sr = __result.skills.GetSkill(SkillDefOf.Construction);
+                                if (sr != null)
+                                {
+                                    sr.levelInt = Settings.defaultSkillT1Construction;
+                                    sr.xpSinceLastLevel = 0;
+                                    sr.xpSinceMidnight = 0;
+                                }
 
-                            sr = __result.skills.GetSkill(SkillDefOf.Cooking);
-                            if (sr != null)
-                            {
-                                sr.levelInt = Settings.defaultSkillT1Cooking;
-                                sr.xpSinceLastLevel = 0;
-                                sr.xpSinceMidnight = 0;
-                            }
+                                sr = __result.skills.GetSkill(SkillDefOf.Cooking);
+                                if (sr != null)
+                                {
+                                    sr.levelInt = Settings.defaultSkillT1Cooking;
+                                    sr.xpSinceLastLevel = 0;
+                                    sr.xpSinceMidnight = 0;
+                                }
 
-                            sr = __result.skills.GetSkill(SkillDefOf.Crafting);
-                            if (sr != null)
-                            {
-                                sr.levelInt = Settings.defaultSkillT1Crafting;
-                                sr.xpSinceLastLevel = 0;
-                                sr.xpSinceMidnight = 0;
-                            }
+                                sr = __result.skills.GetSkill(SkillDefOf.Crafting);
+                                if (sr != null)
+                                {
+                                    sr.levelInt = Settings.defaultSkillT1Crafting;
+                                    sr.xpSinceLastLevel = 0;
+                                    sr.xpSinceMidnight = 0;
+                                }
 
-                            sr = __result.skills.GetSkill(SkillDefOf.Intellectual);
-                            if (sr != null)
-                            {
-                                sr.levelInt = Settings.defaultSkillT1Intellectual;
-                                sr.xpSinceLastLevel = 0;
-                                sr.xpSinceMidnight = 0;
-                            }
+                                sr = __result.skills.GetSkill(SkillDefOf.Intellectual);
+                                if (sr != null)
+                                {
+                                    sr.levelInt = Settings.defaultSkillT1Intellectual;
+                                    sr.xpSinceLastLevel = 0;
+                                    sr.xpSinceMidnight = 0;
+                                }
 
-                            sr = __result.skills.GetSkill(SkillDefOf.Medicine);
-                            if (sr != null)
-                            {
-                                sr.levelInt = Settings.defaultSkillT1Medical;
-                                sr.xpSinceLastLevel = 0;
-                                sr.xpSinceMidnight = 0;
-                            }
+                                sr = __result.skills.GetSkill(SkillDefOf.Medicine);
+                                if (sr != null)
+                                {
+                                    sr.levelInt = Settings.defaultSkillT1Medical;
+                                    sr.xpSinceLastLevel = 0;
+                                    sr.xpSinceMidnight = 0;
+                                }
 
-                            sr = __result.skills.GetSkill(SkillDefOf.Melee);
-                            if (sr != null)
-                            {
-                                sr.levelInt = Settings.defaultSkillT1Melee;
-                                sr.xpSinceLastLevel = 0;
-                                sr.xpSinceMidnight = 0;
-                            }
+                                sr = __result.skills.GetSkill(SkillDefOf.Melee);
+                                if (sr != null)
+                                {
+                                    sr.levelInt = Settings.defaultSkillT1Melee;
+                                    sr.xpSinceLastLevel = 0;
+                                    sr.xpSinceMidnight = 0;
+                                }
 
-                            sr = __result.skills.GetSkill(SkillDefOf.Mining);
-                            if (sr != null)
-                            {
-                                sr.levelInt = Settings.defaultSkillT1Mining;
-                                sr.xpSinceLastLevel = 0;
-                                sr.xpSinceMidnight = 0;
-                            }
+                                sr = __result.skills.GetSkill(SkillDefOf.Mining);
+                                if (sr != null)
+                                {
+                                    sr.levelInt = Settings.defaultSkillT1Mining;
+                                    sr.xpSinceLastLevel = 0;
+                                    sr.xpSinceMidnight = 0;
+                                }
 
-                            sr = __result.skills.GetSkill(SkillDefOf.Plants);
-                            if (sr != null)
-                            {
-                                sr.levelInt = Settings.defaultSkillT1Plants;
-                                sr.xpSinceLastLevel = 0;
-                                sr.xpSinceMidnight = 0;
-                            }
+                                sr = __result.skills.GetSkill(SkillDefOf.Plants);
+                                if (sr != null)
+                                {
+                                    sr.levelInt = Settings.defaultSkillT1Plants;
+                                    sr.xpSinceLastLevel = 0;
+                                    sr.xpSinceMidnight = 0;
+                                }
 
-                            sr = __result.skills.GetSkill(SkillDefOf.Shooting);
-                            if (sr != null)
-                            {
-                                sr.levelInt = Settings.defaultSkillT1Shoot;
-                                sr.xpSinceLastLevel = 0;
-                                sr.xpSinceMidnight = 0;
-                            }
+                                sr = __result.skills.GetSkill(SkillDefOf.Shooting);
+                                if (sr != null)
+                                {
+                                    sr.levelInt = Settings.defaultSkillT1Shoot;
+                                    sr.xpSinceLastLevel = 0;
+                                    sr.xpSinceMidnight = 0;
+                                }
 
-                            sr = __result.skills.GetSkill(SkillDefOf.Social);
-                            if (sr != null)
-                            {
-                                sr.levelInt = Settings.defaultSkillT1Social;
-                                sr.xpSinceLastLevel = 0;
-                                sr.xpSinceMidnight = 0;
-                            }
-                        }
-                        else if (__result.def.defName == Utils.T2)
-                        {
-                            sr = __result.skills.GetSkill(SkillDefOf.Animals);
-                            if (sr != null)
-                            {
-                                sr.levelInt = Settings.defaultSkillT2Animals;
-                                sr.xpSinceLastLevel = 0;
-                                sr.xpSinceMidnight = 0;
-                            }
+                                sr = __result.skills.GetSkill(SkillDefOf.Social);
+                                if (sr != null)
+                                {
+                                    sr.levelInt = Settings.defaultSkillT1Social;
+                                    sr.xpSinceLastLevel = 0;
+                                    sr.xpSinceMidnight = 0;
+                                }
 
-                            sr = __result.skills.GetSkill(SkillDefOf.Artistic);
-                            if (sr != null)
-                            {
-                                sr.levelInt = Settings.defaultSkillT2Artistic;
-                                sr.xpSinceLastLevel = 0;
-                                sr.xpSinceMidnight = 0;
+                                break;
                             }
-
-                            sr = __result.skills.GetSkill(SkillDefOf.Construction);
-                            if (sr != null)
+                            case Utils.T2:
                             {
-                                sr.levelInt = Settings.defaultSkillT2Construction;
-                                sr.xpSinceLastLevel = 0;
-                                sr.xpSinceMidnight = 0;
-                            }
+                                sr = __result.skills.GetSkill(SkillDefOf.Animals);
+                                if (sr != null)
+                                {
+                                    sr.levelInt = Settings.defaultSkillT2Animals;
+                                    sr.xpSinceLastLevel = 0;
+                                    sr.xpSinceMidnight = 0;
+                                }
 
-                            sr = __result.skills.GetSkill(SkillDefOf.Cooking);
-                            if (sr != null)
-                            {
-                                sr.levelInt = Settings.defaultSkillT2Cooking;
-                                sr.xpSinceLastLevel = 0;
-                                sr.xpSinceMidnight = 0;
-                            }
+                                sr = __result.skills.GetSkill(SkillDefOf.Artistic);
+                                if (sr != null)
+                                {
+                                    sr.levelInt = Settings.defaultSkillT2Artistic;
+                                    sr.xpSinceLastLevel = 0;
+                                    sr.xpSinceMidnight = 0;
+                                }
 
-                            sr = __result.skills.GetSkill(SkillDefOf.Crafting);
-                            if (sr != null)
-                            {
-                                sr.levelInt = Settings.defaultSkillT2Crafting;
-                                sr.xpSinceLastLevel = 0;
-                                sr.xpSinceMidnight = 0;
-                            }
+                                sr = __result.skills.GetSkill(SkillDefOf.Construction);
+                                if (sr != null)
+                                {
+                                    sr.levelInt = Settings.defaultSkillT2Construction;
+                                    sr.xpSinceLastLevel = 0;
+                                    sr.xpSinceMidnight = 0;
+                                }
 
-                            sr = __result.skills.GetSkill(SkillDefOf.Intellectual);
-                            if (sr != null)
-                            {
-                                sr.levelInt = Settings.defaultSkillT2Intellectual;
-                                sr.xpSinceLastLevel = 0;
-                                sr.xpSinceMidnight = 0;
-                            }
+                                sr = __result.skills.GetSkill(SkillDefOf.Cooking);
+                                if (sr != null)
+                                {
+                                    sr.levelInt = Settings.defaultSkillT2Cooking;
+                                    sr.xpSinceLastLevel = 0;
+                                    sr.xpSinceMidnight = 0;
+                                }
 
-                            sr = __result.skills.GetSkill(SkillDefOf.Medicine);
-                            if (sr != null)
-                            {
-                                sr.levelInt = Settings.defaultSkillT2Medical;
-                                sr.xpSinceLastLevel = 0;
-                                sr.xpSinceMidnight = 0;
-                            }
+                                sr = __result.skills.GetSkill(SkillDefOf.Crafting);
+                                if (sr != null)
+                                {
+                                    sr.levelInt = Settings.defaultSkillT2Crafting;
+                                    sr.xpSinceLastLevel = 0;
+                                    sr.xpSinceMidnight = 0;
+                                }
 
-                            sr = __result.skills.GetSkill(SkillDefOf.Melee);
-                            if (sr != null)
-                            {
-                                sr.levelInt = Settings.defaultSkillT2Melee;
-                                sr.xpSinceLastLevel = 0;
-                                sr.xpSinceMidnight = 0;
-                            }
+                                sr = __result.skills.GetSkill(SkillDefOf.Intellectual);
+                                if (sr != null)
+                                {
+                                    sr.levelInt = Settings.defaultSkillT2Intellectual;
+                                    sr.xpSinceLastLevel = 0;
+                                    sr.xpSinceMidnight = 0;
+                                }
 
-                            sr = __result.skills.GetSkill(SkillDefOf.Mining);
-                            if (sr != null)
-                            {
-                                sr.levelInt = Settings.defaultSkillT2Mining;
-                                sr.xpSinceLastLevel = 0;
-                                sr.xpSinceMidnight = 0;
-                            }
+                                sr = __result.skills.GetSkill(SkillDefOf.Medicine);
+                                if (sr != null)
+                                {
+                                    sr.levelInt = Settings.defaultSkillT2Medical;
+                                    sr.xpSinceLastLevel = 0;
+                                    sr.xpSinceMidnight = 0;
+                                }
 
-                            sr = __result.skills.GetSkill(SkillDefOf.Plants);
-                            if (sr != null)
-                            {
-                                sr.levelInt = Settings.defaultSkillT2Plants;
-                                sr.xpSinceLastLevel = 0;
-                                sr.xpSinceMidnight = 0;
-                            }
+                                sr = __result.skills.GetSkill(SkillDefOf.Melee);
+                                if (sr != null)
+                                {
+                                    sr.levelInt = Settings.defaultSkillT2Melee;
+                                    sr.xpSinceLastLevel = 0;
+                                    sr.xpSinceMidnight = 0;
+                                }
 
-                            sr = __result.skills.GetSkill(SkillDefOf.Shooting);
-                            if (sr != null)
-                            {
-                                sr.levelInt = Settings.defaultSkillT2Shoot;
-                                sr.xpSinceLastLevel = 0;
-                                sr.xpSinceMidnight = 0;
-                            }
+                                sr = __result.skills.GetSkill(SkillDefOf.Mining);
+                                if (sr != null)
+                                {
+                                    sr.levelInt = Settings.defaultSkillT2Mining;
+                                    sr.xpSinceLastLevel = 0;
+                                    sr.xpSinceMidnight = 0;
+                                }
 
-                            sr = __result.skills.GetSkill(SkillDefOf.Social);
-                            if (sr != null)
-                            {
-                                sr.levelInt = Settings.defaultSkillT2Social;
-                                sr.xpSinceLastLevel = 0;
-                                sr.xpSinceMidnight = 0;
+                                sr = __result.skills.GetSkill(SkillDefOf.Plants);
+                                if (sr != null)
+                                {
+                                    sr.levelInt = Settings.defaultSkillT2Plants;
+                                    sr.xpSinceLastLevel = 0;
+                                    sr.xpSinceMidnight = 0;
+                                }
+
+                                sr = __result.skills.GetSkill(SkillDefOf.Shooting);
+                                if (sr != null)
+                                {
+                                    sr.levelInt = Settings.defaultSkillT2Shoot;
+                                    sr.xpSinceLastLevel = 0;
+                                    sr.xpSinceMidnight = 0;
+                                }
+
+                                sr = __result.skills.GetSkill(SkillDefOf.Social);
+                                if (sr != null)
+                                {
+                                    sr.levelInt = Settings.defaultSkillT2Social;
+                                    sr.xpSinceLastLevel = 0;
+                                    sr.xpSinceMidnight = 0;
+                                }
+
+                                break;
                             }
                         }
                     }
 
 
                     //If TX3/4 then force not damaged head
-                    if (__result.def.defName == Utils.TX3 || __result.def.defName == Utils.TX4)
-                    {
-                        Utils.changeHARCrownType(__result, "Average_Normal");
+                    if (__result.def.defName != Utils.TX3 && __result.def.defName != Utils.TX4) return;
 
-                        __result.Drawer.renderer.graphics.ResolveAllGraphics();
-                    }
+                    Utils.changeHARCrownType(__result, "Average_Normal");
+
+                    __result.Drawer.renderer.graphics.ResolveAllGraphics();
                 }
                 catch (Exception ex)
                 {

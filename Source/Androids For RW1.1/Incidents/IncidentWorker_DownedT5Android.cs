@@ -12,8 +12,7 @@ namespace MOARANDROIDS
 
         protected override bool CanFireNowSub(IncidentParms parms)
         {
-            var x = new List<SitePartDef>();
-            x.Add(SitePartDefOf.DownedT5Android);
+            var x = new List<SitePartDef> {SitePartDefOf.DownedT5Android};
             return base.CanFireNowSub(parms) && TryFindTile(out var num) && SiteMakerHelper.TryFindRandomFactionFor(x, out var faction);
         }
 
@@ -26,6 +25,7 @@ namespace MOARANDROIDS
         {
             if (!TryFindFactions(out var faction, out var faction2)) return false;
             if (!TileFinder.TryFindNewSiteTile(out var tile, 8, 30)) return false;
+
             var site = SiteMaker.MakeSite(SitePartDefOf.DownedT5Android, tile, faction2);
             site.Tile = tile;
             var randomInRange = TimeoutDaysRange.RandomInRange;
@@ -58,13 +58,7 @@ namespace MOARANDROIDS
         private bool AnyQuestExistsFrom(Faction faction)
         {
             var sites = Find.WorldObjects.Sites;
-            for (var i = 0; i < sites.Count; i++)
-            {
-                var component = sites[i].GetComponent<DefeatAllEnemiesQuestComp>();
-                if (component != null && component.Active && component.requestingFaction == faction) return true;
-            }
-
-            return false;
+            return sites.Select(site => site.GetComponent<DefeatAllEnemiesQuestComp>()).Any(component => component != null && component.Active && component.requestingFaction == faction);
         }
 
         private bool CommonHumanlikeEnemyFactionExists(Faction f1, Faction f2)
@@ -74,11 +68,11 @@ namespace MOARANDROIDS
 
         private Faction CommonHumanlikeEnemyFaction(Faction f1, Faction f2)
         {
-            if ((from x in Find.FactionManager.AllFactions
+            return (from x in Find.FactionManager.AllFactions
                 where x != f1 && x != f2 && !x.def.hidden && x.def.humanlikeFaction && !x.defeated && x.HostileTo(f1) && x.HostileTo(f2)
-                select x).TryRandomElement(out var result))
-                return result;
-            return null;
+                select x).TryRandomElement(out var result)
+                ? result
+                : null;
         }
     }
 }

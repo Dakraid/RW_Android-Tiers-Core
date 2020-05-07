@@ -16,7 +16,7 @@ namespace MOARANDROIDS
         {
             var crt = __instance.TryGetComp<CompRemotelyControlledTurret>();
             //Si pas de controlleur alors on ne peut pas controller la tourelle
-            if (crt == null || crt.controller == null)
+            if (crt?.controller == null)
                 return;
 
             var mannable = (CompMannable) mannableComp.GetValue(__instance);
@@ -33,7 +33,7 @@ namespace MOARANDROIDS
         {
             var crt = __instance.TryGetComp<CompRemotelyControlledTurret>();
             //Si pas de controlleur alors on ne peut pas controller la tourelle
-            if (crt == null || crt.controller == null)
+            if (crt?.controller == null)
                 return;
 
             CompSurrogateOwner csc = null;

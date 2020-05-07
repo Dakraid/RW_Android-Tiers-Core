@@ -72,28 +72,33 @@ namespace MOARANDROIDS
             {
                 try
                 {
-                    if (Utils.ExceptionAndroidList.Contains(pawn.def.defName) || pawn.IsCyberAnimal())
-                    {
-                        Func<Pawn, MedicalCareCategory> getPayload = MedicalCareSelectButton_GetMedicalCare;
-                        var menuGenerator = new Func<Pawn, IEnumerable<Widgets.DropdownMenuElement<MedicalCareCategory>>>(MedicalCareSelectButton_GenerateMenu);
-                        Texture2D buttonIcon;
-                        var index = (int) pawn.playerSettings.medCare;
-                        if (index == 0)
-                            buttonIcon = Tex.NoCare;
-                        else if (index == 1)
-                            buttonIcon = Tex.NoMed;
-                        else if (index == 2)
-                            buttonIcon = Tex.NanoKitBasic;
-                        else if (index == 3)
-                            buttonIcon = Tex.NanoKitIntermediate;
-                        else
-                            buttonIcon = Tex.NanoKitAdvanced;
+                    if (!Utils.ExceptionAndroidList.Contains(pawn.def.defName) && !pawn.IsCyberAnimal()) return true;
 
-                        Widgets.Dropdown(rect, pawn, getPayload, menuGenerator, null, buttonIcon, null, null, null, true);
-                        return false;
+                    Func<Pawn, MedicalCareCategory> getPayload = MedicalCareSelectButton_GetMedicalCare;
+                    var menuGenerator = new Func<Pawn, IEnumerable<Widgets.DropdownMenuElement<MedicalCareCategory>>>(MedicalCareSelectButton_GenerateMenu);
+                    Texture2D buttonIcon;
+                    var index = (int) pawn.playerSettings.medCare;
+                    switch (index)
+                    {
+                        case 0:
+                            buttonIcon = Tex.NoCare;
+                            break;
+                        case 1:
+                            buttonIcon = Tex.NoMed;
+                            break;
+                        case 2:
+                            buttonIcon = Tex.NanoKitBasic;
+                            break;
+                        case 3:
+                            buttonIcon = Tex.NanoKitIntermediate;
+                            break;
+                        default:
+                            buttonIcon = Tex.NanoKitAdvanced;
+                            break;
                     }
 
-                    return true;
+                    Widgets.Dropdown(rect, pawn, getPayload, menuGenerator, null, buttonIcon, null, null, null, true);
+                    return false;
                 }
                 catch (Exception e)
                 {
@@ -133,69 +138,61 @@ namespace MOARANDROIDS
                 var obj = Find.Selector.SelectedObjects;
                 try
                 {
-                    if (obj.Count == 1 && obj[0] is Pawn)
+                    if (obj.Count != 1 || !(obj[0] is Pawn)) return true;
+
+                    var pawn = (Pawn) obj[0];
+
+                    if (!Utils.ExceptionAndroidList.Contains(pawn.def.defName) && !pawn.IsCyberAnimal()) return true;
+
+                    var rect2 = new Rect(rect.x, rect.y, rect.width / 5f, rect.height);
+                    for (var i = 0; i < 5; i++)
                     {
-                        var pawn = (Pawn) obj[0];
+                        var mc = (MedicalCareCategory) i;
+                        Widgets.DrawHighlightIfMouseover(rect2);
+                        Texture2D tex;
+                        string text;
 
-                        if (Utils.ExceptionAndroidList.Contains(pawn.def.defName) || pawn.IsCyberAnimal())
+                        switch (i)
                         {
-                            var rect2 = new Rect(rect.x, rect.y, rect.width / 5f, rect.height);
-                            for (var i = 0; i < 5; i++)
-                            {
-                                var mc = (MedicalCareCategory) i;
-                                Widgets.DrawHighlightIfMouseover(rect2);
-                                Texture2D tex;
-                                string text;
-
-                                if (i == 0)
-                                {
-                                    tex = Tex.NoCare;
-                                    text = "ATPP_NanoKitsNoCare".Translate();
-                                }
-                                else if (i == 1)
-                                {
-                                    tex = Tex.NoMed;
-                                    text = "ATPP_NanoKitsNoKitJustVisit".Translate();
-                                }
-                                else if (i == 2)
-                                {
-                                    tex = Tex.NanoKitBasic;
-                                    text = "ATPP_NanoKitsBasic".Translate();
-                                }
-                                else if (i == 3)
-                                {
-                                    tex = Tex.NanoKitIntermediate;
-                                    text = "ATPP_NanoKitsIntermediate".Translate();
-                                }
-                                else
-                                {
-                                    tex = Tex.NanoKitAdvanced;
-                                    text = "ATPP_NanoKitsAdvanced".Translate();
-                                }
-
-                                GUI.DrawTexture(rect2, tex);
-                                var draggableResult = Widgets.ButtonInvisibleDraggable(rect2);
-                                if (draggableResult == Widgets.DraggableResult.Dragged) medicalCarePainting = true;
-                                if (medicalCarePainting && Mouse.IsOver(rect2) && medCare != mc || draggableResult.AnyPressed())
-                                {
-                                    medCare = mc;
-                                    SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                                }
-
-                                if (medCare == mc) Widgets.DrawBox(rect2, 3);
-                                TooltipHandler.TipRegion(rect2, () => text, 632165 + i * 17);
-                                rect2.x += rect2.width;
-                            }
-
-                            if (!Input.GetMouseButton(0)) medicalCarePainting = false;
-
-                            return false;
+                            case 0:
+                                tex = Tex.NoCare;
+                                text = "ATPP_NanoKitsNoCare".Translate();
+                                break;
+                            case 1:
+                                tex = Tex.NoMed;
+                                text = "ATPP_NanoKitsNoKitJustVisit".Translate();
+                                break;
+                            case 2:
+                                tex = Tex.NanoKitBasic;
+                                text = "ATPP_NanoKitsBasic".Translate();
+                                break;
+                            case 3:
+                                tex = Tex.NanoKitIntermediate;
+                                text = "ATPP_NanoKitsIntermediate".Translate();
+                                break;
+                            default:
+                                tex = Tex.NanoKitAdvanced;
+                                text = "ATPP_NanoKitsAdvanced".Translate();
+                                break;
                         }
 
-                        return true;
+                        GUI.DrawTexture(rect2, tex);
+                        var draggableResult = Widgets.ButtonInvisibleDraggable(rect2);
+                        if (draggableResult == Widgets.DraggableResult.Dragged) medicalCarePainting = true;
+                        if (medicalCarePainting && Mouse.IsOver(rect2) && medCare != mc || draggableResult.AnyPressed())
+                        {
+                            medCare = mc;
+                            SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                        }
+
+                        if (medCare == mc) Widgets.DrawBox(rect2, 3);
+                        TooltipHandler.TipRegion(rect2, () => text, 632165 + i * 17);
+                        rect2.x += rect2.width;
                     }
 
-                    return true;
+                    if (!Input.GetMouseButton(0)) medicalCarePainting = false;
+
+                    return false;
                 }
                 catch (Exception e)
                 {

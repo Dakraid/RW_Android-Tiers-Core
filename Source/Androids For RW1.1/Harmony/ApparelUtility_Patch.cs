@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -32,26 +33,19 @@ namespace MOARANDROIDS
 
                     var councernFeet = apparel.apparel.bodyPartGroups.Contains(DefDatabase<BodyPartGroupDef>.GetNamed("Feet", false));
                     var councernHanbd = apparel.apparel.bodyPartGroups.Contains(DefDatabase<BodyPartGroupDef>.GetNamed("Hands", false));
-                    if (councernHanbd || councernFeet)
+                    if (!councernHanbd && !councernFeet) return;
+
+                    if (councernFeet)
                     {
-                        if (councernFeet)
-                        {
-                            foreach (var el in p.health.hediffSet.hediffs)
-                                if (Utils.ExceptionBionicHaveFeet.Contains(el.def.defName))
-                                {
-                                    __result = true;
-                                    return;
-                                }
-                        }
-                        else
-                        {
-                            foreach (var el in p.health.hediffSet.hediffs)
-                                if (Utils.ExceptionBionicHaveHand.Contains(el.def.defName))
-                                {
-                                    __result = true;
-                                    return;
-                                }
-                        }
+                        if (!Enumerable.Any(p.health.hediffSet.hediffs, el => Utils.ExceptionBionicHaveFeet.Contains(el.def.defName))) return;
+
+                        __result = true;
+                    }
+                    else
+                    {
+                        if (!Enumerable.Any(p.health.hediffSet.hediffs, el => Utils.ExceptionBionicHaveHand.Contains(el.def.defName))) return;
+
+                        __result = true;
                     }
                 }
                 catch (Exception ex)

@@ -12,8 +12,7 @@ namespace MOARANDROIDS
             if (!Utils.GCATPP.isConnectedToSkyMind(p)) return false;
 
             var num = Utils.GCATPP.getNbAssistingMinds();
-            if (num > 0) return ThoughtState.ActiveAtStage(0);
-            return false;
+            return num > 0 ? ThoughtState.ActiveAtStage(0) : false;
         }
     }
 }

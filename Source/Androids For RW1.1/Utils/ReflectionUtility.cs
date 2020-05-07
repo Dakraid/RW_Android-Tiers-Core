@@ -42,11 +42,10 @@ namespace Androids
                             foreach (var fieldInfo in type.GetFields())
                             {
                                 var flag4 = !fieldInfo.IsLiteral;
-                                if (flag4)
-                                {
-                                    var value = fieldInfo.GetValue(sourceObject);
-                                    fieldInfo.SetValue(obj, value);
-                                }
+                                if (!flag4) continue;
+
+                                var value = fieldInfo.GetValue(sourceObject);
+                                fieldInfo.SetValue(obj, value);
                             }
 
                             result = obj;

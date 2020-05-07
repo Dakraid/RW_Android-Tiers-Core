@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using System.Linq;
+using RimWorld;
 using Verse;
 
 namespace MOARANDROIDS
@@ -32,15 +33,9 @@ namespace MOARANDROIDS
 
         public int getCurrentAndroidPowerConsumed()
         {
-            var ret = 0;
-
             var bed = (Building_Bed) parent;
 
-            foreach (var cp in bed.CurOccupants)
-                //Il sagit d'un android 
-                if (cp != null && Utils.ExceptionAndroidList.Contains(cp.def.defName))
-                    ret += Utils.getConsumedPowerByAndroid(cp.def.defName);
-            return ret;
+            return bed.CurOccupants.Where(cp => cp != null && Utils.ExceptionAndroidList.Contains(cp.def.defName)).Sum(cp => Utils.getConsumedPowerByAndroid(cp.def.defName));
         }
     }
 }

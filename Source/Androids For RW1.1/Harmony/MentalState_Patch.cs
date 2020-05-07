@@ -16,19 +16,17 @@ namespace MOARANDROIDS
             [HarmonyPostfix]
             public static void Listener(MentalState __instance)
             {
-                if (__instance.pawn.IsSurrogateAndroid())
-                {
-                    var csm = __instance.pawn.TryGetComp<CompSkyMind>();
-                    if (csm == null)
-                        return;
+                if (!__instance.pawn.IsSurrogateAndroid()) return;
 
-                    if (csm.Infected == 4)
-                    {
-                        csm.Infected = -1;
-                        var he = __instance.pawn.health.hediffSet.GetFirstHediffOfDef(Utils.hediffNoHost);
-                        if (he == null) __instance.pawn.health.AddHediff(Utils.hediffNoHost);
-                    }
-                }
+                var csm = __instance.pawn.TryGetComp<CompSkyMind>();
+                if (csm == null)
+                    return;
+
+                if (csm.Infected != 4) return;
+
+                csm.Infected = -1;
+                var he = __instance.pawn.health.hediffSet.GetFirstHediffOfDef(Utils.hediffNoHost);
+                if (he == null) __instance.pawn.health.AddHediff(Utils.hediffNoHost);
             }
         }
 
@@ -42,25 +40,14 @@ namespace MOARANDROIDS
             public static void Listener(MentalStateDef stateDef, string reason, bool forceWake, bool causedByMood, Pawn otherPawn, bool transitionSilently, Pawn ___pawn,
                 MentalStateHandler __instance, ref bool __result)
             {
-                if (__result && ___pawn.IsSurrogateAndroid())
-                {
-                    var cas = ___pawn.TryGetComp<CompAndroidState>();
+                if (!__result || !___pawn.IsSurrogateAndroid()) return;
 
-                    if (cas == null || cas.surrogateController == null)
-                        return;
+                var cas = ___pawn.TryGetComp<CompAndroidState>();
+                var cso = cas?.surrogateController?.TryGetComp<CompSurrogateOwner>();
+                var csc = cso?.skyCloudHost?.TryGetComp<CompSkyCloudCore>();
 
-                    var cso = cas.surrogateController.TryGetComp<CompSurrogateOwner>();
-                    if (cso.skyCloudHost != null)
-                    {
-                        var csc = cso.skyCloudHost.TryGetComp<CompSkyCloudCore>();
-                        if (csc == null)
-                            return;
-
-
-                        //Ajout a une liste de minds boudant avec timeout
-                        csc.setMentalBreak(cas.surrogateController);
-                    }
-                }
+                //Ajout a une liste de minds boudant avec timeout
+                csc?.setMentalBreak(cas.surrogateController);
             }
         }
     }

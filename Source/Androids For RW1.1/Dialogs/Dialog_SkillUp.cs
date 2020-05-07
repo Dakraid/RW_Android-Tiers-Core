@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -45,9 +46,8 @@ namespace MOARANDROIDS
             };
 
             var i = 0;
-            foreach (var csd in sd)
+            foreach (var sr in sd.Select(csd => android.skills.GetSkill(csd)))
             {
-                var sr = android.skills.GetSkill(csd);
                 if (sr != null && !sr.TotallyDisabled)
                 {
                     passionsState[i] = (int) sr.passion;
@@ -103,71 +103,70 @@ namespace MOARANDROIDS
                 var p = points[i];
                 var comp = "";
                 sr = android.skills.GetSkill(sd[i]);
-                if (sr != null && !sr.TotallyDisabled)
+                if (sr == null || sr.TotallyDisabled) continue;
+                
+                if (points[i] != 0)
+                    comp = "+" + points[i];
+
+                if (comp != "")
+                    GUI.color = Color.green;
+                list.Label(libs[i] + " " + sr.levelInt + "/20 " + comp);
+                GUI.color = Color.white;
+
+                p = (int) list.Slider(p, 0, 20);
+
+                //Check possibilité action
+                if (p + sr.levelInt < 20 && p + getNbPointsWantedToBuy(i) <= nbPointsBuyable)
+                    //On peut les acheter 
+                    points[i] = p;
+
+                //Partie gestion des passions
+                if (passionsState[i] == -1)
                 {
-                    if (points[i] != 0)
-                        comp = "+" + points[i];
+                    list.ButtonImage(Tex.PassionDisabled, 24, 24);
+                }
+                else
+                {
+                    var tex = Tex.NoPassion;
+                    var max = false;
 
-                    if (comp != "")
-                        GUI.color = Color.green;
-                    list.Label(libs[i] + " " + sr.levelInt + "/20 " + comp);
-                    if (comp != null)
-                        GUI.color = Color.white;
-
-                    p = (int) list.Slider(p, 0, 20);
-
-                    //Check possibilité action
-                    if (p + sr.levelInt < 20 && p + getNbPointsWantedToBuy(i) <= nbPointsBuyable)
-                        //On peut les acheter 
-                        points[i] = p;
-
-                    //Partie gestion des passions
-                    if (passionsState[i] == -1)
+                    switch (passionsState[i])
                     {
-                        list.ButtonImage(Tex.PassionDisabled, 24, 24);
-                    }
-                    else
-                    {
-                        var tex = Tex.NoPassion;
-                        var max = false;
-
-                        if (passionsState[i] == (int) Passion.Minor)
-                        {
+                        case (int) Passion.Minor:
                             tex = Tex.MinorPassion;
-                        }
-                        else if (passionsState[i] == (int) Passion.Major)
-                        {
+                            break;
+                        case (int) Passion.Major:
                             tex = Tex.MajorPassion;
                             max = true;
-                        }
+                            break;
+                    }
 
-                        if (list.ButtonImage(tex, 24, 24))
+                    if (list.ButtonImage(tex, 24, 24))
+                    {
+                        if (!max)
                         {
-                            if (!max)
-                            {
-                                //Check player a les moyens 
-                                var locNbWantedPoints = getNbPointsWantedToBuy();
-                                var locAvailablePoints = nbPointsBuyable - locNbWantedPoints;
+                            //Check player a les moyens 
+                            var locNbWantedPoints = getNbPointsWantedToBuy();
+                            var locAvailablePoints = nbPointsBuyable - locNbWantedPoints;
 
-                                if (locAvailablePoints - pointsNeededToIncreasePassion >= 0)
-                                {
-                                    passionsState[i]++;
-                                }
-                                else
-                                {
-                                    passionsState[i] = (int) sr.passion;
-                                    Messages.Message("ATPP_NotEnoughtSkillPoints".Translate(pointsNeededToIncreasePassion), MessageTypeDefOf.NegativeEvent);
-                                }
+                            if (locAvailablePoints - pointsNeededToIncreasePassion >= 0)
+                            {
+                                passionsState[i]++;
                             }
                             else
                             {
                                 passionsState[i] = (int) sr.passion;
+                                Messages.Message("ATPP_NotEnoughtSkillPoints".Translate(pointsNeededToIncreasePassion), MessageTypeDefOf.NegativeEvent);
                             }
                         }
+                        else
+                        {
+                            passionsState[i] = (int) sr.passion;
+                        }
                     }
-
-                    list.GapLine();
                 }
+
+                list.GapLine();
             }
 
 
@@ -187,10 +186,7 @@ namespace MOARANDROIDS
             GUI.color = Color.white;
 
             //Validation
-            if (nbWantedPoints != 0)
-                GUI.color = Color.green;
-            else
-                GUI.color = Color.gray;
+            GUI.color = nbWantedPoints != 0 ? Color.green : Color.gray;
 
             if (Widgets.ButtonText(new Rect(0, inRect.height - 45f, inRect.width, 35f), "OK".Translate(), true, false))
             {
@@ -239,15 +235,17 @@ namespace MOARANDROIDS
             {
                 if (indexToAvoid == i)
                     continue;
+
                 ret += points[i];
             }
 
             for (var i = 0; i != passionsState.Count; i++)
             {
                 var sr = android.skills.GetSkill(sd[i]);
-                if (sr != null && !sr.TotallyDisabled)
-                    if (passionsState[i] != (int) sr.passion)
-                        ret += (passionsState[i] - (int) sr.passion) * pointsNeededToIncreasePassion;
+                if (sr == null || sr.TotallyDisabled) continue;
+
+                if (passionsState[i] != (int) sr.passion)
+                    ret += (passionsState[i] - (int) sr.passion) * pointsNeededToIncreasePassion;
             }
 
             return ret;

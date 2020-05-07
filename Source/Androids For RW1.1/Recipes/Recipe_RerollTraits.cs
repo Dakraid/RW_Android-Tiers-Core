@@ -12,44 +12,30 @@ namespace MOARANDROIDS
 
         public override IEnumerable<BodyPartRecord> GetPartsToApplyOn(Pawn pawn, RecipeDef recipe)
         {
-            for (var i = 0; i < recipe.appliedOnFixedBodyParts.Count; i++)
-            {
-                var part = recipe.appliedOnFixedBodyParts[i];
-                var bpList = pawn.RaceProps.body.AllParts;
-                for (var j = 0; j < bpList.Count; j++)
-                {
-                    var record = bpList[j];
-                    if (record.def == part)
-                        if (pawn.health.hediffSet.GetNotMissingParts().Contains(record))
-                            if (!pawn.health.hediffSet.PartOrAnyAncestorHasDirectlyAddedParts(record))
-                                if (!pawn.health.hediffSet.hediffs.Any(x => x.Part == record && x.def == recipe.addsHediff))
-                                    yield return record;
-                }
-            }
+            return from part in recipe.appliedOnFixedBodyParts let bpList = pawn.RaceProps.body.AllParts let part1 = part from record in from record in bpList where record.def == part1 where pawn.health.hediffSet.GetNotMissingParts().Contains(record) where !pawn.health.hediffSet.PartOrAnyAncestorHasDirectlyAddedParts(record) let record1 = record where !pawn.health.hediffSet.hediffs.Any(x => x.Part == record1 && x.def == recipe.addsHediff) select record select record;
         }
 
         public override void ApplyOnPawn(Pawn pawn, BodyPartRecord part, Pawn billDoer, List<Thing> ingredients, Bill bill)
         {
             var flag = billDoer != null;
             var flag2 = flag;
-            if (flag2)
-            {
-                var flag3 = !CheckSurgeryFailAndroid(billDoer, pawn, ingredients, part, null);
-                var flag4 = flag3;
-                if (flag4)
-                {
-                    pawn.health.AddHediff(recipe.addsHediff, part, null);
-                    TaleRecorder.RecordTale(TaleDefOf.DidSurgery, billDoer, pawn);
-                    RerollTraits(pawn, pawn.story.traits.allTraits);
-                    upper = 40;
-                }
-                else
-                {
-                    upper = 10;
-                }
+            if (!flag2) return;
 
-                RandomCorruption(pawn);
+            var flag3 = !CheckSurgeryFailAndroid(billDoer, pawn, ingredients, part, null);
+            var flag4 = flag3;
+            if (flag4)
+            {
+                pawn.health.AddHediff(recipe.addsHediff, part, null);
+                TaleRecorder.RecordTale(TaleDefOf.DidSurgery, billDoer, pawn);
+                RerollTraits(pawn, pawn.story.traits.allTraits);
+                upper = 40;
             }
+            else
+            {
+                upper = 10;
+            }
+
+            RandomCorruption(pawn);
         }
 
         private void RerollTraits(Pawn pawn, List<Trait> traits)

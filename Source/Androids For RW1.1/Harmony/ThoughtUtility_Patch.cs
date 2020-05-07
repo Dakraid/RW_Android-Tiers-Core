@@ -13,9 +13,7 @@ namespace MOARANDROIDS
             [HarmonyPrefix]
             public static bool Listener(Pawn victim, PawnExecutionKind kind)
             {
-                if (victim.IsBasicAndroidTier())
-                    return false;
-                return true;
+                return !victim.IsBasicAndroidTier();
             }
         }
 
@@ -25,9 +23,7 @@ namespace MOARANDROIDS
             [HarmonyPrefix]
             public static bool Listener(Pawn victim)
             {
-                if (victim.IsBasicAndroidTier())
-                    return false;
-                return true;
+                return !victim.IsBasicAndroidTier();
             }
         }
 
@@ -38,13 +34,12 @@ namespace MOARANDROIDS
             [HarmonyPostfix]
             public static void Listener(Pawn pawn, ThoughtDef def, ref bool __result)
             {
-                if (pawn.IsBasicAndroidTier())
-                {
-                    if (def == ThoughtDefOf.DeadMansApparel || def == ThoughtDefOf.HumanLeatherApparelSad)
-                        __result = false;
-                    if (def == ThoughtDefOf.HumanLeatherApparelHappy)
-                        __result = true;
-                }
+                if (!pawn.IsBasicAndroidTier()) return;
+
+                if (def == ThoughtDefOf.DeadMansApparel || def == ThoughtDefOf.HumanLeatherApparelSad)
+                    __result = false;
+                if (def == ThoughtDefOf.HumanLeatherApparelHappy)
+                    __result = true;
             }
         }
     }

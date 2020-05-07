@@ -19,37 +19,33 @@ namespace MOARANDROIDS
             {
                 //If the Def got a AndroidTweaker do stuff, otherwise do not bother.
                 var tweaker = thingDef.GetModExtension<AndroidTweaker>();
-                if (tweaker != null)
+                if (tweaker == null) continue;
+
+                var corpseDef = thingDef?.race?.corpseDef;
+                if (corpseDef == null) continue;
+                //Removes corpse rotting.
+                if (tweaker.tweakCorpseRot)
                 {
-                    var corpseDef = thingDef?.race?.corpseDef;
-                    if (corpseDef != null)
-                    {
-                        //Removes corpse rotting.
-                        if (tweaker.tweakCorpseRot)
-                        {
-                            corpseDef.comps.RemoveAll(compProperties => compProperties is CompProperties_Rottable);
-                            corpseDef.comps.RemoveAll(compProperties => compProperties is CompProperties_SpawnerFilth);
-                        }
+                    corpseDef.comps.RemoveAll(compProperties => compProperties is CompProperties_Rottable);
+                    corpseDef.comps.RemoveAll(compProperties => compProperties is CompProperties_SpawnerFilth);
+                }
 
-                        //Modifies the butchering products by importing the costs from a recipe.
-                        var recipeDef = tweaker.recipeDef;
-                        if (tweaker.tweakCorpseButcherProducts && recipeDef != null)
-                        {
-                            corpseDef.butcherProducts.Clear();
+                //Modifies the butchering products by importing the costs from a recipe.
+                var recipeDef = tweaker.recipeDef;
+                if (!tweaker.tweakCorpseButcherProducts || recipeDef == null) continue;
 
-                            foreach (var ingredient in recipeDef.ingredients)
-                            {
-                                var finalCount = 0f;
-                                var ingredientThingDef = ingredient.filter.AnyAllowedDef;
-                                var requiredCount = ingredient.CountRequiredOfFor(ingredientThingDef, recipeDef);
+                corpseDef.butcherProducts.Clear();
 
-                                if (tweaker.corpseButcherRoundUp)
-                                    finalCount = (float) Math.Ceiling(requiredCount * tweaker.corpseButcherProductsRatio);
-                                else
-                                    finalCount = (float) Math.Floor(requiredCount * tweaker.corpseButcherProductsRatio);
-                            }
-                        }
-                    }
+                foreach (var ingredient in recipeDef.ingredients)
+                {
+                    var finalCount = 0f;
+                    var ingredientThingDef = ingredient.filter.AnyAllowedDef;
+                    var requiredCount = ingredient.CountRequiredOfFor(ingredientThingDef, recipeDef);
+
+                    if (tweaker.corpseButcherRoundUp)
+                        finalCount = (float) Math.Ceiling(requiredCount * tweaker.corpseButcherProductsRatio);
+                    else
+                        finalCount = (float) Math.Floor(requiredCount * tweaker.corpseButcherProductsRatio);
                 }
             }
         }

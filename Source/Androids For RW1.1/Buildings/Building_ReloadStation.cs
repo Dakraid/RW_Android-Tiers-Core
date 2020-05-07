@@ -27,9 +27,7 @@ namespace MOARANDROIDS
             var rs = this.TryGetComp<CompReloadStation>();
             var nb = rs.getNbAndroidReloading(true);
 
-            if (nb >= 8) return new FloatMenuOption("ATPP_CannotUseEveryPlaceUsed".Translate(), null);
-
-            return null;
+            return nb >= 8 ? new FloatMenuOption("ATPP_CannotUseEveryPlaceUsed".Translate(), null) : null;
         }
 
         public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Pawn myPawn)

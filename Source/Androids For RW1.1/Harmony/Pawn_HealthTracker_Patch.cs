@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using HarmonyLib;
 using RimWorld;
 using RimWorld.Planet;
@@ -18,93 +19,88 @@ namespace MOARANDROIDS
                 try
                 {
                     //Si il sagit d'une VX0 alors passation du pawn en mode surrogate
-                    if (hediff.def.defName == "ATPP_HediffVX0Chip" && (___pawn.Faction == Faction.OfPlayer || ___pawn.IsPrisoner))
+                    if (hediff.def.defName != "ATPP_HediffVX0Chip" || (___pawn.Faction != Faction.OfPlayer && !___pawn.IsPrisoner)) return;
+
+                    var cas = ___pawn.TryGetComp<CompAndroidState>();
+                    if (cas == null || cas.isSurrogate)
+                        return;
+
+                    if (___pawn.Faction.IsPlayer && !Utils.preventVX0Thought)
                     {
-                        var cas = ___pawn.TryGetComp<CompAndroidState>();
-                        if (cas == null || cas.isSurrogate)
-                            return;
+                        //Simulation mort surrogate organic
+                        PawnDiedOrDownedThoughtsUtility.TryGiveThoughts(___pawn, null, PawnDiedOrDownedThoughtsKind.Died);
 
-                        if (___pawn.Faction.IsPlayer && !Utils.preventVX0Thought)
+                        var spouse = ___pawn.GetSpouse();
+                        if (spouse != null && !spouse.Dead && spouse.needs.mood != null)
                         {
-                            //Simulation mort surrogate organic
-                            PawnDiedOrDownedThoughtsUtility.TryGiveThoughts(___pawn, null, PawnDiedOrDownedThoughtsKind.Died);
-
-                            var spouse = ___pawn.GetSpouse();
-                            if (spouse != null && !spouse.Dead && spouse.needs.mood != null)
-                            {
-                                var memories = spouse.needs.mood.thoughts.memories;
-                                memories.RemoveMemoriesOfDef(ThoughtDefOf.GotMarried);
-                                memories.RemoveMemoriesOfDef(ThoughtDefOf.HoneymoonPhase);
-                            }
-
-                            Traverse.Create(___pawn.relations).Method("AffectBondedAnimalsOnMyDeath").GetValue();
-
-                            ___pawn.health.NotifyPlayerOfKilled(null, null, null);
-                        }
-                        else
-                        {
-                            //Si pas de la faction du player alors on va changer sa faction dans simuler de mort
-                            if (!___pawn.Faction.IsPlayer)
-                                ___pawn.SetFaction(Faction.OfPlayer);
+                            var memories = spouse.needs.mood.thoughts.memories;
+                            memories.RemoveMemoriesOfDef(ThoughtDefOf.GotMarried);
+                            memories.RemoveMemoriesOfDef(ThoughtDefOf.HoneymoonPhase);
                         }
 
-                        cas.initAsSurrogate();
+                        Traverse.Create(___pawn.relations).Method("AffectBondedAnimalsOnMyDeath").GetValue();
 
-                        //SKills vierges
-                        ___pawn.skills = new Pawn_SkillTracker(___pawn);
-                        ___pawn.needs = new Pawn_NeedsTracker(___pawn);
-
-                        //Effacement des relations
-                        ___pawn.relations = new Pawn_RelationsTracker(___pawn);
-
-                        //TOuts les SX sont simple minded et ont aucuns autres traits
-                        var td = DefDatabase<TraitDef>.GetNamed("SimpleMindedAndroid", false);
-                        Trait t = null;
-                        if (td != null)
-                            t = new Trait(td);
-
-                        ___pawn.story.traits.allTraits.Clear();
-                        if (t != null)
-                            ___pawn.story.traits.allTraits.Add(t);
-                        Utils.notifTraitsChanged(___pawn);
-
-                        if (!___pawn.IsAndroidTier())
-                        {
-                            //Reset du child et adulthood
-                            if (!Settings.keepPuppetBackstory && ___pawn.story.childhood != null)
-                            {
-                                Backstory bs = null;
-
-                                BackstoryDatabase.TryGetWithIdentifier("MercenaryRecruit", out bs);
-                                if (bs != null)
-                                    ___pawn.story.childhood = bs;
-                            }
-
-                            ___pawn.story.adulthood = null;
-                        }
-
-
-                        //Reset incapable of
-                        Utils.ResetCachedIncapableOf(___pawn);
-
-                        //Définition nouveau nom
-                        ___pawn.Name = new NameTriple("", "S" + 0 + "-" + Utils.GCATPP.getNextSXID(0), "");
-                        Utils.GCATPP.incNextSXID(0);
-
-                        if (!Utils.preventVX0Thought)
-                            //Ajout du thought de PUPPET
-                            foreach (var current in PawnsFinder.AllMapsCaravansAndTravelingTransportPods_Alive_FreeColonistsAndPrisoners)
-                                current.needs.mood.thoughts.memories.TryGainMemory(ThoughtMaker.MakeThought(Utils.thoughtDefVX0Puppet, 0));
-
-                        if (___pawn.IsPrisoner)
-                            if (___pawn.guest != null)
-                                ___pawn.guest.SetGuestStatus(Faction.OfPlayer);
-                        if (___pawn.workSettings == null)
-                        {
-                            ___pawn.workSettings = new Pawn_WorkSettings(___pawn);
-                            ___pawn.workSettings.EnableAndInitializeIfNotAlreadyInitialized();
-                        }
+                        ___pawn.health.NotifyPlayerOfKilled(null, null, null);
                     }
+                    else
+                    {
+                        //Si pas de la faction du player alors on va changer sa faction dans simuler de mort
+                        if (!___pawn.Faction.IsPlayer)
+                            ___pawn.SetFaction(Faction.OfPlayer);
+                    }
+
+                    cas.initAsSurrogate();
+
+                    //SKills vierges
+                    ___pawn.skills = new Pawn_SkillTracker(___pawn);
+                    ___pawn.needs = new Pawn_NeedsTracker(___pawn);
+
+                    //Effacement des relations
+                    ___pawn.relations = new Pawn_RelationsTracker(___pawn);
+
+                    //TOuts les SX sont simple minded et ont aucuns autres traits
+                    var td = DefDatabase<TraitDef>.GetNamed("SimpleMindedAndroid", false);
+                    Trait t = null;
+                    if (td != null)
+                        t = new Trait(td);
+
+                    ___pawn.story.traits.allTraits.Clear();
+                    if (t != null)
+                        ___pawn.story.traits.allTraits.Add(t);
+                    Utils.notifTraitsChanged(___pawn);
+
+                    if (!___pawn.IsAndroidTier())
+                    {
+                        //Reset du child et adulthood
+                        if (!Settings.keepPuppetBackstory && ___pawn.story.childhood != null)
+                        {
+                            BackstoryDatabase.TryGetWithIdentifier("MercenaryRecruit", out var bs);
+                            if (bs != null)
+                                ___pawn.story.childhood = bs;
+                        }
+
+                        ___pawn.story.adulthood = null;
+                    }
+
+
+                    //Reset incapable of
+                    Utils.ResetCachedIncapableOf(___pawn);
+
+                    //Définition nouveau nom
+                    ___pawn.Name = new NameTriple("", "S" + 0 + "-" + Utils.GCATPP.getNextSXID(0), "");
+                    Utils.GCATPP.incNextSXID(0);
+
+                    if (!Utils.preventVX0Thought)
+                        //Ajout du thought de PUPPET
+                        foreach (var current in PawnsFinder.AllMapsCaravansAndTravelingTransportPods_Alive_FreeColonistsAndPrisoners)
+                            current.needs.mood.thoughts.memories.TryGainMemory(ThoughtMaker.MakeThought(Utils.thoughtDefVX0Puppet, 0));
+
+                    if (___pawn.IsPrisoner) ___pawn.guest?.SetGuestStatus(Faction.OfPlayer);
+
+                    if (___pawn.workSettings != null) return;
+
+                    ___pawn.workSettings = new Pawn_WorkSettings(___pawn);
+                    ___pawn.workSettings.EnableAndInitializeIfNotAlreadyInitialized();
                 }
                 catch (Exception ex)
                 {
@@ -135,52 +131,50 @@ namespace MOARANDROIDS
                     }
 
                     //gére le cas des empilements de chips afin de restituer celles déjà présentes
-                    if (Utils.ExceptionNeuralChip.Contains(hediff.def.defName))
+                    if (!Utils.ExceptionNeuralChip.Contains(hediff.def.defName)) return true;
+
+                    var cas = ___pawn.TryGetComp<CompAndroidState>();
+
+                    //Interdiction ajouté VX puces dans un surrogate, on restitue la puce et on se barre
+                    if (cas != null && cas.isSurrogate)
                     {
-                        var cas = ___pawn.TryGetComp<CompAndroidState>();
-
-                        //Interdiction ajouté VX puces dans un surrogate, on restitue la puce et on se barre
-                        if (cas != null && cas.isSurrogate)
+                        IntVec3 pos1;
+                        Map map1;
+                        if (Utils.lastInstallImplantBillDoer != null && Utils.lastInstallImplantBillDoer.Map == ___pawn.Map)
                         {
-                            IntVec3 pos1;
-                            Map map1;
-                            if (Utils.lastInstallImplantBillDoer != null && Utils.lastInstallImplantBillDoer.Map == ___pawn.Map)
-                            {
-                                pos1 = Utils.lastInstallImplantBillDoer.Position;
-                                map1 = Utils.lastInstallImplantBillDoer.Map;
-                            }
-                            else
-                            {
-                                pos1 = ___pawn.Position;
-                                map1 = ___pawn.Map;
-                            }
-
-                            GenSpawn.Spawn(hediff.def.spawnThingOnRemoved, pos1, map1);
-                            return false;
+                            pos1 = Utils.lastInstallImplantBillDoer.Position;
+                            map1 = Utils.lastInstallImplantBillDoer.Map;
+                        }
+                        else
+                        {
+                            pos1 = ___pawn.Position;
+                            map1 = ___pawn.Map;
                         }
 
-                        var he = ___pawn.HaveNotStackableVXChip();
-                        //Avant l'ajout de la VXChip le colon possédés déjà une puce on va la restaurer au joueur
-                        if (he != null)
-                        {
-                            ___pawn.health.RemoveHediff(he);
-
-                            IntVec3 pos;
-                            Map map;
-                            if (Utils.lastInstallImplantBillDoer != null && Utils.lastInstallImplantBillDoer.Map == ___pawn.Map)
-                            {
-                                pos = Utils.lastInstallImplantBillDoer.Position;
-                                map = Utils.lastInstallImplantBillDoer.Map;
-                            }
-                            else
-                            {
-                                pos = ___pawn.Position;
-                                map = ___pawn.Map;
-                            }
-
-                            GenSpawn.Spawn(he.def.spawnThingOnRemoved, pos, map);
-                        }
+                        GenSpawn.Spawn(hediff.def.spawnThingOnRemoved, pos1, map1);
+                        return false;
                     }
+
+                    var he = ___pawn.HaveNotStackableVXChip();
+                    //Avant l'ajout de la VXChip le colon possédés déjà une puce on va la restaurer au joueur
+                    if (he == null) return true;
+
+                    ___pawn.health.RemoveHediff(he);
+
+                    IntVec3 pos;
+                    Map map;
+                    if (Utils.lastInstallImplantBillDoer != null && Utils.lastInstallImplantBillDoer.Map == ___pawn.Map)
+                    {
+                        pos = Utils.lastInstallImplantBillDoer.Position;
+                        map = Utils.lastInstallImplantBillDoer.Map;
+                    }
+                    else
+                    {
+                        pos = ___pawn.Position;
+                        map = ___pawn.Map;
+                    }
+
+                    GenSpawn.Spawn(he.def.spawnThingOnRemoved, pos, map);
 
                     return true;
                 }
@@ -199,15 +193,14 @@ namespace MOARANDROIDS
             public static void Listener(Hediff hediff, Pawn ___pawn)
             {
                 //Si il sagit d'une VX0 
-                if (hediff.def.defName == "ATPP_HediffVX0Chip")
-                {
-                    var cas = ___pawn.TryGetComp<CompAndroidState>();
-                    if (cas == null)
-                        return;
+                if (hediff.def.defName != "ATPP_HediffVX0Chip") return;
 
-                    //Mort de l'hote
-                    ___pawn.Kill(null);
-                }
+                var cas = ___pawn.TryGetComp<CompAndroidState>();
+                if (cas == null)
+                    return;
+
+                //Mort de l'hote
+                ___pawn.Kill(null);
             }
         }
 
@@ -221,17 +214,15 @@ namespace MOARANDROIDS
                 try
                 {
                     // Deconnexion of Is surrogate android used et que appartenant au joueur ====>>>> POUR eviter les problemes de reminescence fantome de surrogates d'autres factions dans des Lord qui reste a cause du fait que le MakeDown les enleves de la liste mais le disconnect va essayer de relancer un CONNECT (dans le cadre des surrogates externes)
-                    if (___pawn.IsSurrogateAndroid(true) && ___pawn.Faction.IsPlayer)
-                    {
-                        //Obtention controlleur
-                        var cas = ___pawn.TryGetComp<CompAndroidState>();
-                        if (cas == null)
-                            return;
+                    if (!___pawn.IsSurrogateAndroid(true) || !___pawn.Faction.IsPlayer) return;
+                    //Obtention controlleur
+                    var cas = ___pawn.TryGetComp<CompAndroidState>();
+                    if (cas == null)
+                        return;
 
-                        //Arret du mode de control chez le controller
-                        var cso = cas.surrogateController.TryGetComp<CompSurrogateOwner>();
-                        cso.stopControlledSurrogate(null);
-                    }
+                    //Arret du mode de control chez le controller
+                    var cso = cas.surrogateController.TryGetComp<CompSurrogateOwner>();
+                    cso.stopControlledSurrogate(null);
                 }
                 catch (Exception e)
                 {
@@ -254,14 +245,11 @@ namespace MOARANDROIDS
                         return false;
 
                     //Si surrogate
-                    if (___pawn.IsSurrogateAndroid() && !___pawn.IsPrisoner)
-                    {
-                        Find.LetterStack.ReceiveLetter("ATPP_LetterSurrogateDisabled".Translate(___pawn.LabelShortCap),
-                            "ATPP_LetterSurrogateDisabledDesc".Translate(___pawn.LabelShortCap), LetterDefOf.Death, ___pawn);
-                        return false;
-                    }
+                    if (!___pawn.IsSurrogateAndroid() || ___pawn.IsPrisoner) return true;
 
-                    return true;
+                    Find.LetterStack.ReceiveLetter("ATPP_LetterSurrogateDisabled".Translate(___pawn.LabelShortCap),
+                        "ATPP_LetterSurrogateDisabledDesc".Translate(___pawn.LabelShortCap), LetterDefOf.Death, ___pawn);
+                    return false;
                 }
                 catch (Exception e)
                 {
@@ -287,22 +275,13 @@ namespace MOARANDROIDS
                     if (!Utils.PSYCHOLOGY_LOADED)
                         return;
 
-                    Hediff find = null;
                     //Si Android et heddiff faisant partis des hediff blacklistés
-                    if (__instance.pawn.IsAndroidTier() && Utils.BlacklistedHediffsForAndroids.Contains(def.defName))
-                    {
-                        //Recherche d'un dummyHediff deja ajouté
-                        for (var i = 0; i < __instance.hediffs.Count; i++)
-                            if (__instance.hediffs[i].def == def && (!mustBeVisible || __instance.hediffs[i].Visible))
-                            {
-                                find = __instance.hediffs[i];
-                                break;
-                            }
+                    if (!__instance.pawn.IsAndroidTier() || !Utils.BlacklistedHediffsForAndroids.Contains(def.defName)) return;
+                    //Recherche d'un dummyHediff deja ajouté
+                    var find = __instance.hediffs.FirstOrDefault(hediff => hediff.def == def && (!mustBeVisible || hediff.Visible)) ?? __instance.pawn.health.AddHediff(DefDatabase<HediffDef>.GetNamed("ATPP_DummyHediff"));
 
-                        if (find == null) find = __instance.pawn.health.AddHediff(DefDatabase<HediffDef>.GetNamed("ATPP_DummyHediff"));
-                        //Log.Message("DummyHediff");
-                        __result = find;
-                    }
+                    //Log.Message("DummyHediff");
+                    __result = find;
                 }
                 catch (Exception e)
                 {

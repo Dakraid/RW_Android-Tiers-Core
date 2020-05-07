@@ -9,17 +9,14 @@ namespace MOARANDROIDS
         protected override bool Satisfied(Pawn pawn)
         {
             if (pawn.CurJob == null || !pawn.GetPosture().Laying() || pawn.def.defName == "M7Mech" && !pawn.IsSurrogateAndroid()) return false;
-            if (!pawn.Downed)
-            {
-                if (RestUtility.DisturbancePreventsLyingDown(pawn)) return false;
-                if (!pawn.CurJob.restUntilHealed || !HealthAIUtility.ShouldSeekMedicalRest(pawn))
-                {
-                    if (!pawn.jobs.curDriver.asleep) return false;
-                    if (!pawn.CurJob.playerForced && RestUtility.TimetablePreventsLayDown(pawn)) return false;
-                }
-            }
 
-            return true;
+            if (pawn.Downed) return true;
+            if (RestUtility.DisturbancePreventsLyingDown(pawn)) return false;
+
+            if (pawn.CurJob.restUntilHealed && HealthAIUtility.ShouldSeekMedicalRest(pawn)) return true;
+            if (!pawn.jobs.curDriver.asleep) return false;
+
+            return pawn.CurJob.playerForced || !RestUtility.TimetablePreventsLayDown(pawn);
         }
     }
 }

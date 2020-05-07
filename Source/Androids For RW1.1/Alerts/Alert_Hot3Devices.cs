@@ -18,15 +18,13 @@ namespace MOARANDROIDS
             List<Thing> build = null;
 
             var maps = Find.Maps;
-            for (var i = 0; i < maps.Count; i++)
+            foreach (var map in maps)
                 if (build == null)
-                    build = Utils.GCATPP.getHeatSensitiveDevicesByHotLevel(maps[i], 3);
+                    build = Utils.GCATPP.getHeatSensitiveDevicesByHotLevel(map, 3);
                 else
                     build.AddRange(build);
 
-            if (build != null)
-                return AlertReport.CulpritsAre(build);
-            return false;
+            return build != null ? AlertReport.CulpritsAre(build) : false;
         }
     }
 }

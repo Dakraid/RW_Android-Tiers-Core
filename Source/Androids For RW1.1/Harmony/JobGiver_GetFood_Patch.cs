@@ -4,6 +4,7 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 
+// TODO: Look into performance issues
 namespace MOARANDROIDS
 {
     internal class JobGiver_GetFood_Patch
@@ -97,59 +98,57 @@ namespace MOARANDROIDS
                 try
                 {
                     //Si android alors OK
-                    if (Utils.ExceptionAndroidCanReloadWithPowerList.Contains(pawn.def.defName))
+                    if (!Utils.ExceptionAndroidCanReloadWithPowerList.Contains(pawn.def.defName)) return;
+                    //Check si l'android utilise sa batterie le cas non echeant on arrete l'override ET on l'arret aussi si l'android dans une caravane !!
+                    var ca = pawn.TryGetComp<CompAndroidState>();
+                    if (ca == null || !pawn.Spawned || !ca.UseBattery || pawn.Drafted)
+                        return;
+
+                    //SI recharge LWPN en cours valide alors on annule la recharge par nourrite ou elec traditionelle
+                    if (Utils.POWERPP_LOADED && ca.connectedLWPNActive && ca.connectedLWPN != null)
                     {
-                        //Check si l'android utilise sa batterie le cas non echeant on arrete l'override ET on l'arret aussi si l'android dans une caravane !!
-                        var ca = pawn.TryGetComp<CompAndroidState>();
-                        if (ca == null || !pawn.Spawned || !ca.UseBattery || pawn.Drafted)
-                            return;
-
-                        //SI recharge LWPN en cours valide alors on annule la recharge par nourrite ou elec traditionelle
-                        if (Utils.POWERPP_LOADED && ca.connectedLWPNActive && ca.connectedLWPN != null)
-                        {
-                            __result = null;
-                            return;
-                        }
-
-
-                        Building_Bed pod = null;
-                        //Check disponibilité d'un POD alimenté
-                        try
-                        {
-                            pod = Utils.getAvailableAndroidPodForCharging(pawn, pawn.def.defName == "M7Mech");
-                        }
-                        catch (Exception)
-                        {
-                        }
-
-                        if (pod != null)
-                        {
-                            __result = new Job(DefDatabase<JobDef>.GetNamed("ATPP_GoReloadBattery"), new LocalTargetInfo(pod));
-                            return;
-                        }
-
-                        //Log.Message("Android want EAT !!! ");
-                        //Recherche reload station disponible sur la map 
-                        var rsb = Utils.GCATPP.getFreeReloadStation(pawn.Map, pawn);
-                        if (rsb == null)
-                        {
-                            __result = null;
-                            //Log.Message("No ReloadStation found !!");
-                            return;
-                        }
-
-                        //Obtention place disponible sur la RS
-                        var rs = rsb.TryGetComp<CompReloadStation>();
-
-                        if (rs == null)
-                        {
-                            __result = null;
-                            //Log.Message("No Place available on ReloadStation");
-                            return;
-                        }
-
-                        __result = new Job(DefDatabase<JobDef>.GetNamed("ATPP_GoReloadBattery"), new LocalTargetInfo(rs.getFreeReloadPlacePos(pawn)), new LocalTargetInfo(rsb));
+                        __result = null;
+                        return;
                     }
+
+
+                    Building_Bed pod = null;
+                    //Check disponibilité d'un POD alimenté
+                    try
+                    {
+                        pod = Utils.getAvailableAndroidPodForCharging(pawn, pawn.def.defName == "M7Mech");
+                    }
+                    catch (Exception)
+                    {
+                    }
+
+                    if (pod != null)
+                    {
+                        __result = new Job(DefDatabase<JobDef>.GetNamed("ATPP_GoReloadBattery"), new LocalTargetInfo(pod));
+                        return;
+                    }
+
+                    //Log.Message("Android want EAT !!! ");
+                    //Recherche reload station disponible sur la map 
+                    var rsb = Utils.GCATPP.getFreeReloadStation(pawn.Map, pawn);
+                    if (rsb == null)
+                    {
+                        __result = null;
+                        //Log.Message("No ReloadStation found !!");
+                        return;
+                    }
+
+                    //Obtention place disponible sur la RS
+                    var rs = rsb.TryGetComp<CompReloadStation>();
+
+                    if (rs == null)
+                    {
+                        __result = null;
+                        //Log.Message("No Place available on ReloadStation");
+                        return;
+                    }
+
+                    __result = new Job(DefDatabase<JobDef>.GetNamed("ATPP_GoReloadBattery"), new LocalTargetInfo(rs.getFreeReloadPlacePos(pawn)), new LocalTargetInfo(rsb));
                 }
                 catch (Exception e)
                 {

@@ -11,20 +11,7 @@ namespace MOARANDROIDS
         // Token: 0x06001252 RID: 4690 RVA: 0x0008CB84 File Offset: 0x0008AF84
         public override IEnumerable<BodyPartRecord> GetPartsToApplyOn(Pawn pawn, RecipeDef recipe)
         {
-            for (var i = 0; i < recipe.appliedOnFixedBodyParts.Count; i++)
-            {
-                var part = recipe.appliedOnFixedBodyParts[i];
-                var bpList = pawn.RaceProps.body.AllParts;
-                for (var j = 0; j < bpList.Count; j++)
-                {
-                    var record = bpList[j];
-                    if (record.def == part)
-                        if (pawn.health.hediffSet.GetNotMissingParts().Contains(record))
-                            if (!pawn.health.hediffSet.PartOrAnyAncestorHasDirectlyAddedParts(record))
-                                if (!pawn.health.hediffSet.hediffs.Any(x => x.Part == record && x.def == recipe.addsHediff))
-                                    yield return record;
-                }
-            }
+            return from part in recipe.appliedOnFixedBodyParts let bpList = pawn.RaceProps.body.AllParts let part1 = part from record in from record in bpList where record.def == part1 where pawn.health.hediffSet.GetNotMissingParts().Contains(record) where !pawn.health.hediffSet.PartOrAnyAncestorHasDirectlyAddedParts(record) let record1 = record where !pawn.health.hediffSet.hediffs.Any(x => x.Part == record1 && x.def == recipe.addsHediff) select record select record;
         }
 
         // Token: 0x06001253 RID: 4691 RVA: 0x0008CBB0 File Offset: 0x0008AFB0
@@ -33,6 +20,7 @@ namespace MOARANDROIDS
             if (billDoer != null)
             {
                 if (CheckSurgeryFailAndroid(billDoer, pawn, ingredients, part, bill)) return;
+
                 TaleRecorder.RecordTale(TaleDefOf.DidSurgery, billDoer, pawn);
             }
 

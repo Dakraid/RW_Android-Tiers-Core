@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -15,25 +16,15 @@ namespace MOARANDROIDS
             public static void Listener(MapPawns __instance, ref bool __result, List<Pawn> ___pawnsSpawned)
             {
                 //Si retour pas true alors check s'il y a de la correction a faire
-                if (!__result)
-                {
-                    var ofPlayer = Faction.OfPlayer;
-                    for (var i = 0; i < ___pawnsSpawned.Count; i++)
-                    {
-                        if (___pawnsSpawned[i] == null)
-                            continue;
+                if (__result) return;
 
-                        var cas = ___pawnsSpawned[i].TryGetComp<CompAndroidState>();
+                if (!(from pawn in ___pawnsSpawned
+                    where pawn != null
+                    let cas = pawn.TryGetComp<CompAndroidState>()
+                    where !pawn.Dead && pawn.Faction != null && pawn.Faction.IsPlayer && cas != null && cas.isSurrogate && cas.externalController == null
+                    select pawn).Any()) return;
 
-                        //Si pawn non décédé mais est un surrogate inactif
-                        if (!___pawnsSpawned[i].Dead && ___pawnsSpawned[i].Faction != null && ___pawnsSpawned[i].Faction.IsPlayer && cas != null && cas.isSurrogate &&
-                            cas.externalController == null)
-                        {
-                            __result = true;
-                            return;
-                        }
-                    }
-                }
+                __result = true;
             }
         }
 
@@ -51,8 +42,7 @@ namespace MOARANDROIDS
                     if (!Settings.hideInactiveSurrogates)
                         return true;
 
-                    List<Pawn> list;
-                    if (!___freeHumanlikesOfFactionResult.TryGetValue(Faction.OfPlayer, out list))
+                    if (!___freeHumanlikesOfFactionResult.TryGetValue(Faction.OfPlayer, out var list))
                     {
                         list = new List<Pawn>();
                         ___freeHumanlikesOfFactionResult.Add(Faction.OfPlayer, list);
@@ -60,10 +50,10 @@ namespace MOARANDROIDS
 
                     list.Clear();
                     var allPawns = __instance.AllPawns;
-                    for (var i = 0; i < allPawns.Count; i++)
-                        if (allPawns[i].Faction == Faction.OfPlayer && allPawns[i].HostFaction == null && allPawns[i].RaceProps.Humanlike &&
-                            !allPawns[i].IsSurrogateAndroid(false, true))
-                            list.Add(allPawns[i]);
+                    foreach (var pawn in allPawns)
+                        if (pawn.Faction == Faction.OfPlayer && pawn.HostFaction == null && pawn.RaceProps.Humanlike &&
+                            !pawn.IsSurrogateAndroid(false, true))
+                            list.Add(pawn);
 
                     __result = list;
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using RimWorld;
@@ -29,15 +30,15 @@ namespace BlueLeakTest
             foreach (var code in instructions)
             {
                 yield return code;
-                if (code.opcode == OpCodes.Ldsfld && code.operand == bleedingIconField)
-                {
-                    Log.Message("Patching");
-                    yield return new CodeInstruction(OpCodes.Ldarg_1); //TextureAndColor, Pawn on stack
-                    yield return new CodeInstruction(OpCodes.Call, iconHelper); //Consume 2, leave TextureAndColor
-                }
+
+                if (code.opcode != OpCodes.Ldsfld || (FieldInfo) code.operand != bleedingIconField) continue;
+
+                Log.Message("Patching");
+                yield return new CodeInstruction(OpCodes.Ldarg_1); //TextureAndColor, Pawn on stack
+                yield return new CodeInstruction(OpCodes.Call, iconHelper); //Consume 2, leave TextureAndColor
 
                 //Removed at Atlas' request
-                /*	if(code.opcode == OpCodes.Callvirt && code.operand == labelColorGetter) {
+                /*  if(code.opcode == OpCodes.Callvirt && code.operand == labelColorGetter) {
                         yield return new CodeInstruction(OpCodes.Ldarg_1);  //Color, Pawn on stack
                         yield return new CodeInstruction(OpCodes.Call, labelHelper); //Consume 2, leave Color
                     }   */
@@ -46,16 +47,12 @@ namespace BlueLeakTest
 
         public static Texture2D TransformIconColorBlueIfFemale(Texture2D original, Pawn pawn)
         {
-            if (pawn.IsAndroid())
-                return leakingIcon;
-            return original;
+            return pawn.IsAndroid() ? leakingIcon : original;
         }
 
         public static Color TransformLabelColorRedToBlueIfFemale(Color original, Pawn pawn)
         {
-            if (pawn.IsAndroid())
-                return Color.cyan;
-            return original;
+            return pawn.IsAndroid() ? Color.cyan : original;
         }
     }
 }

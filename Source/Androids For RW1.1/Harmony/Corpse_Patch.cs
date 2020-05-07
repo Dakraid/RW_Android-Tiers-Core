@@ -20,18 +20,14 @@ namespace MOARANDROIDS
                 Utils.lastButcheredPawnIsAndroid = false;
 
                 //Si Surrogate T4 butcherisé alors on supprime le IA-Core des produits 
-                if (__instance.InnerPawn != null && __instance.InnerPawn.def.defName == Utils.T4 && __instance.InnerPawn.TryGetComp<CompAndroidState>() != null && __result != null)
-                {
-                    var cas = __instance.InnerPawn.TryGetComp<CompAndroidState>();
-                    if (cas.isSurrogate)
-                    {
-                        var res = new List<Thing>();
-                        foreach (var r in __result.ToList())
-                            if (r.def != null && r.def.defName != "AIPersonaCore")
-                                res.Add(r);
-                        __result = res;
-                    }
-                }
+                if (__instance.InnerPawn == null || __instance.InnerPawn.def.defName != Utils.T4 || __instance.InnerPawn.TryGetComp<CompAndroidState>() == null ||
+                    __result == null) return;
+
+                var cas = __instance.InnerPawn.TryGetComp<CompAndroidState>();
+                if (!cas.isSurrogate) return;
+
+                var res = __result.ToList().Where(r => r.def != null && r.def.defName != "AIPersonaCore").ToList();
+                __result = res;
             }
         }
 

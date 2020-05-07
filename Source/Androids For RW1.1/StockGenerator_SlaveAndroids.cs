@@ -8,21 +8,21 @@ namespace MOARANDROIDS
 {
     public class StockGenerator_SlaveAndroids : StockGenerator
     {
-        private PawnKindDef pawnKind;
-        private bool randomisePawnKind;
+        private PawnKindDef pawnKind = null;
+        private bool randomisePawnKind = false;
 
         private readonly bool respectPopulationIntent = false;
 
         public override IEnumerable<Thing> GenerateThings(int forTile, Faction faction = null)
         {
             if (respectPopulationIntent && Rand.Value > StorytellerUtilityPopulation.PopulationIntent) yield break;
+
             var count = countRange.RandomInRange;
             for (var i = 0; i < count; i++)
             {
-                Faction androidFaction;
                 if (!(from fac in Find.FactionManager.AllFactionsVisible
                     where fac != Faction.OfPlayer && fac.def.humanlikeFaction
-                    select fac).TryRandomElement(out androidFaction))
+                    select fac).TryRandomElement(out var androidFaction))
                     yield break;
 
                 var rnd = new Random();

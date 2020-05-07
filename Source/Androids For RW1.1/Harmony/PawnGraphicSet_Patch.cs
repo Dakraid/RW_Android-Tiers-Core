@@ -35,11 +35,10 @@ namespace MOARANDROIDS
             [HarmonyPostfix]
             public static void Postfix(Pawn ___pawn)
             {
-                if (Utils.insideResolveApparelGraphicsLastBodyTypeDef != null)
-                {
-                    ___pawn.story.bodyType = Utils.insideResolveApparelGraphicsLastBodyTypeDef;
-                    Utils.insideResolveApparelGraphicsLastBodyTypeDef = null;
-                }
+                if (Utils.insideResolveApparelGraphicsLastBodyTypeDef == null) return;
+
+                ___pawn.story.bodyType = Utils.insideResolveApparelGraphicsLastBodyTypeDef;
+                Utils.insideResolveApparelGraphicsLastBodyTypeDef = null;
             }
         }
 
@@ -49,11 +48,10 @@ namespace MOARANDROIDS
             [HarmonyPostfix]
             public static void Postfix(PawnGraphicSet __instance)
             {
-                if (Utils.RIMMSQOL_LOADED && Utils.ExceptionAndroidWithSkinList.Contains(__instance.pawn.def.defName))
-                {
-                    Utils.lastResolveAllGraphicsHeadGraphicPath = __instance.pawn.story.HeadGraphicPath;
-                    __instance.pawn.story.GetType().GetField("headGraphicPath", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(__instance.pawn.story, null);
-                }
+                if (!Utils.RIMMSQOL_LOADED || !Utils.ExceptionAndroidWithSkinList.Contains(__instance.pawn.def.defName)) return;
+
+                Utils.lastResolveAllGraphicsHeadGraphicPath = __instance.pawn.story.HeadGraphicPath;
+                __instance.pawn.story.GetType().GetField("headGraphicPath", BindingFlags.NonPublic | BindingFlags.Instance)?.SetValue(__instance.pawn.story, null);
             }
         }
     }

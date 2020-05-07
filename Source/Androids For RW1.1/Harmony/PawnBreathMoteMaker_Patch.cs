@@ -13,9 +13,7 @@ namespace MOARANDROIDS
             [HarmonyPrefix]
             public static bool Listener(Pawn ___pawn)
             {
-                if (___pawn.IsAndroidTier())
-                    return false;
-                return true;
+                return !___pawn.IsAndroidTier();
             }
         }
     }

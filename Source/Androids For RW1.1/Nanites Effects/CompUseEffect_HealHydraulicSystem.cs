@@ -19,10 +19,8 @@ namespace MOARANDROIDS
 
             if (nb == 0)
             {
-                if (chance)
-                    Messages.Message("ATPP_NoBrokenStuffFound".Translate(user.LabelShort), user, MessageTypeDefOf.NegativeEvent);
-                else
-                    Messages.Message("ATPP_BrokenStuffRepairFailed".Translate(user.LabelShort), user, MessageTypeDefOf.NegativeEvent);
+                Messages.Message(chance ? "ATPP_NoBrokenStuffFound".Translate(user.LabelShort) : "ATPP_BrokenStuffRepairFailed".Translate(user.LabelShort), user,
+                    MessageTypeDefOf.NegativeEvent);
             }
             else
             {
@@ -45,13 +43,10 @@ namespace MOARANDROIDS
                 return false;
             }
 
-            if (!p.haveAndroidOldAgeHediff(Utils.AndroidOldAgeHediffHydraulic))
-            {
-                failReason = "ATPP_CannotBeUsedBecauseNoOldAgeIssues".Translate();
-                return false;
-            }
+            if (p.haveAndroidOldAgeHediff(Utils.AndroidOldAgeHediffHydraulic)) return base.CanBeUsedBy(p, out failReason);
 
-            return base.CanBeUsedBy(p, out failReason);
+            failReason = "ATPP_CannotBeUsedBecauseNoOldAgeIssues".Translate();
+            return false;
         }
     }
 }

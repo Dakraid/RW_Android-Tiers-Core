@@ -77,9 +77,9 @@ namespace MOARANDROIDS
                 }
 
                 //Fin recharche ou pod non alimenté ou non operationel
-                if (actor.needs.food.CurLevelPercentage >= 1.0f
-                    || building_Bed.Destroyed || building_Bed.IsBrokenDown()
-                    || !building_Bed.TryGetComp<CompPowerTrader>().PowerOn)
+                if (building_Bed != null && (actor.needs.food.CurLevelPercentage >= 1.0f
+                                             || building_Bed.Destroyed || building_Bed.IsBrokenDown()
+                                             || !building_Bed.TryGetComp<CompPowerTrader>().PowerOn))
                     actor.jobs.EndCurrentJob(JobCondition.Succeeded);
             };
             layDown.defaultCompleteMode = ToilCompleteMode.Never;

@@ -22,23 +22,22 @@ namespace MOARANDROIDS
 
                     //Si surrogate on le deconnecte et on clear le controlleur (SI pas faisant suite à un piratage)
                     var cas = __instance.TryGetComp<CompAndroidState>();
-                    if (cas != null && cas.isSurrogate && cas.externalController != null && newFaction != null && newFaction.IsPlayer &&
-                        !(Find.DesignatorManager.SelectedDesignator != null && Find.DesignatorManager.SelectedDesignator is Designator_SurrogateToHack))
+                    if (cas == null || !cas.isSurrogate || cas.externalController == null || newFaction == null || !newFaction.IsPlayer ||
+                        Find.DesignatorManager.SelectedDesignator != null && Find.DesignatorManager.SelectedDesignator is Designator_SurrogateToHack) return;
+
+                    if (cas.surrogateController != null)
                     {
-                        if (cas.surrogateController != null)
-                        {
-                            //On affiche une notif
-                            Find.LetterStack.ReceiveLetter("ATPP_LetterTraitorOffline".Translate(), "ATPP_LetterTraitorOfflineDesc".Translate(__instance.LabelShortCap),
-                                LetterDefOf.NegativeEvent);
+                        //On affiche une notif
+                        Find.LetterStack.ReceiveLetter("ATPP_LetterTraitorOffline".Translate(), "ATPP_LetterTraitorOfflineDesc".Translate(__instance.LabelShortCap),
+                            LetterDefOf.NegativeEvent);
 
-                            //Le cas echeant on le deconnecte
-                            if (cas.surrogateController.TryGetComp<CompSurrogateOwner>() != null)
-                                cas.surrogateController.TryGetComp<CompSurrogateOwner>().disconnectControlledSurrogate(null);
-                        }
-
-                        //On vire l'external controller
-                        cas.externalController = null;
+                        //Le cas echeant on le deconnecte
+                        if (cas.surrogateController.TryGetComp<CompSurrogateOwner>() != null)
+                            cas.surrogateController.TryGetComp<CompSurrogateOwner>().disconnectControlledSurrogate(null);
                     }
+
+                    //On vire l'external controller
+                    cas.externalController = null;
                 }
                 catch (Exception e)
                 {
@@ -127,10 +126,7 @@ namespace MOARANDROIDS
             [HarmonyPostfix]
             public static void Listener(Pawn butcher, float efficiency, Pawn __instance)
             {
-                if (__instance.IsAndroidTier())
-                    Utils.lastButcheredPawnIsAndroid = true;
-                else
-                    Utils.lastButcheredPawnIsAndroid = false;
+                Utils.lastButcheredPawnIsAndroid = __instance.IsAndroidTier();
             }
         }
 
@@ -183,16 +179,16 @@ namespace MOARANDROIDS
                     }
 
                     //Si animal posséder par player
-                    if (__instance.IsPoweredAnimalAndroids())
+                    if (!__instance.IsPoweredAnimalAndroids()) return;
+
                     {
                         CompAndroidState cas = null;
                         cas = __instance.TryGetComp<CompAndroidState>();
-                        if (cas != null)
-                        {
-                            var tmp = cas.CompGetGizmosExtra();
-                            if (tmp != null)
-                                __result = __result.Concat(tmp);
-                        }
+                        if (cas == null) return;
+
+                        var tmp = cas.CompGetGizmosExtra();
+                        if (tmp != null)
+                            __result = __result.Concat(tmp);
                     }
                 }
                 catch (Exception e)

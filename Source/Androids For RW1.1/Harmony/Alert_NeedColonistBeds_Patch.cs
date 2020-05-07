@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -16,19 +17,16 @@ namespace MOARANDROIDS
                 try
                 {
                     if (!map.IsPlayerHome) return false;
+
                     var num = 0;
                     var num2 = 0;
                     var allBuildingsColonist = map.listerBuildings.allBuildingsColonist;
-                    for (var i = 0; i < allBuildingsColonist.Count; i++)
+                    foreach (var building_Bed in allBuildingsColonist.Select(building => building as Building_Bed).Where(building_Bed => building_Bed != null && !building_Bed.ForPrisoners && !building_Bed.Medical && building_Bed.def.building.bed_humanlike))
                     {
-                        var building_Bed = allBuildingsColonist[i] as Building_Bed;
-                        if (building_Bed != null && !building_Bed.ForPrisoners && !building_Bed.Medical && building_Bed.def.building.bed_humanlike)
-                        {
-                            if (building_Bed.SleepingSlotsCount == 1)
-                                num++;
-                            else
-                                num2++;
-                        }
+                        if (building_Bed.SleepingSlotsCount == 1)
+                            num++;
+                        else
+                            num2++;
                     }
 
                     var num3 = 0;

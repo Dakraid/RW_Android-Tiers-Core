@@ -21,6 +21,7 @@ namespace MOARANDROIDS
         {
             addedHediffs.Clear();
             if (!TryApply(pawn, addedHediffs)) return;
+
             if (averageSeverityPerDayBeforeGeneration != 0f)
             {
                 var num = (pawn.ageTracker.AgeBiologicalYearsFloat - gotAtAge) * 60f;
@@ -30,7 +31,8 @@ namespace MOARANDROIDS
                     return;
                 }
 
-                for (var i = 0; i < addedHediffs.Count; i++) SimulateSeverityChange(pawn, addedHediffs[i], num, tryNotToKillPawn);
+                foreach (var hediff in addedHediffs)
+                    SimulateSeverityChange(pawn, hediff, num, tryNotToKillPawn);
             }
 
             addedHediffs.Clear();
@@ -51,6 +53,7 @@ namespace MOARANDROIDS
         private void AvoidLifeThreateningStages(ref float severity, List<HediffStage> stages)
         {
             if (stages.NullOrEmpty()) return;
+
             var num = -1;
             for (var i = 0; i < stages.Count; i++)
                 if (stages[i].lifeThreatening)
@@ -59,13 +62,7 @@ namespace MOARANDROIDS
                     break;
                 }
 
-            if (num >= 0)
-            {
-                if (num == 0)
-                    severity = Mathf.Min(severity, stages[num].minSeverity);
-                else
-                    severity = Mathf.Min(severity, (stages[num].minSeverity + stages[num - 1].minSeverity) / 2f);
-            }
+            if (num >= 0) severity = num == 0 ? Mathf.Min(severity, stages[num].minSeverity) : Mathf.Min(severity, (stages[num].minSeverity + stages[num - 1].minSeverity) / 2f);
         }
 
         // Token: 0x06004373 RID: 17267 RVA: 0x001E8960 File Offset: 0x001E6D60
@@ -84,13 +81,10 @@ namespace MOARANDROIDS
         public override bool OnHediffAdded(Pawn pawn, Hediff hediff)
         {
             //Remove any disease from affecting.
-            if (hediff.def.makesSickThought || hediff.def == RimWorld.HediffDefOf.FoodPoisoning || hediff.def == RimWorld.HediffDefOf.CryptosleepSickness)
-            {
-                pawn.health.RemoveHediff(hediff);
-                return false;
-            }
+            if (!hediff.def.makesSickThought && hediff.def != RimWorld.HediffDefOf.FoodPoisoning && hediff.def != RimWorld.HediffDefOf.CryptosleepSickness) return true;
 
-            return true;
+            pawn.health.RemoveHediff(hediff);
+            return false;
         }
     }
 }

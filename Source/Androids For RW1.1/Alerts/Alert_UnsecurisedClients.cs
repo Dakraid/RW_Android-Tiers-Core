@@ -20,14 +20,11 @@ namespace MOARANDROIDS
             var nbClient = Utils.GCATPP.getNbThingsConnected();
             var nbUnsecurised = nbClient - nbSecurisedSlot;
 
-            if (nbUnsecurised > 0)
-            {
-                defaultLabel = "ATPP_AlertUnsecurisedClients".Translate(nbUnsecurised);
-                defaultExplanation = "ATPP_AlertUnsecurisedClientsDesc".Translate(nbUnsecurised);
-                return true;
-            }
-
-            return false;
+            if (nbUnsecurised <= 0) return false;
+            
+            defaultLabel = "ATPP_AlertUnsecurisedClients".Translate(nbUnsecurised);
+            defaultExplanation = "ATPP_AlertUnsecurisedClientsDesc".Translate(nbUnsecurised);
+            return true;
         }
     }
 }
