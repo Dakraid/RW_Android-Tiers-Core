@@ -10,21 +10,21 @@ namespace MOARANDROIDS
         private const float DialogWidth = 500f;
         private const float DialogHeight = 300f;
 
-        public override Vector2 InitialSize
-        {
-            get
-            {
-                float height = DialogHeight;
-                if (title != null) height += TitleHeight;
-                return new Vector2(DialogWidth, height);
-            }
-        }
-
         public Dialog_Msg(string title, string text, Action confirmedAct = null, bool destructive = false)
             : base(text, "Confirm".Translate(), confirmedAct, "GoBack".Translate(), null, title, destructive)
         {
             closeOnCancel = false;
             closeOnAccept = false;
+        }
+
+        public override Vector2 InitialSize
+        {
+            get
+            {
+                var height = DialogHeight;
+                if (title != null) height += TitleHeight;
+                return new Vector2(DialogWidth, height);
+            }
         }
 
         public override void DoWindowContents(Rect inRect)

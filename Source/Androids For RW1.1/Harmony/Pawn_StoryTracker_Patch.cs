@@ -1,12 +1,7 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
-using HarmonyLib;
+﻿using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
 using UnityEngine;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -16,29 +11,28 @@ namespace MOARANDROIDS
         public class SkinColor_Patch
         {
             [HarmonyPostfix]
-            public static void Listener( ref Color __result, Pawn ___pawn)
+            public static void Listener(ref Color __result, Pawn ___pawn)
             {
-                if ( Utils.ExceptionAndroidWithoutSkinList.Contains(___pawn.def.defName)) {
-                    if ((___pawn.IsSurrogateAndroid()))
-                    {
+                if (Utils.ExceptionAndroidWithoutSkinList.Contains(___pawn.def.defName))
+                {
+                    if (___pawn.IsSurrogateAndroid())
                         //Log.Message(___pawn.LabelCap);
                         __result = Utils.SXColor;
-                    }
 
-                    CompAndroidState cas = ___pawn.TryGetComp<CompAndroidState>();
+                    var cas = ___pawn.TryGetComp<CompAndroidState>();
 
-                    if(cas != null )
+                    if (cas != null)
                     {
-                        AndroidPaintColor pc = (AndroidPaintColor)cas.customColor;
+                        var pc = (AndroidPaintColor) cas.customColor;
                         if (Settings.androidsCanRust && cas.paintingIsRusted)
                         {
                             __result = Utils.androidCustomColorRust;
                         }
-                        else if(pc != AndroidPaintColor.None && pc != AndroidPaintColor.Default)
+                        else if (pc != AndroidPaintColor.None && pc != AndroidPaintColor.Default)
                         {
                             if (pc == AndroidPaintColor.Green)
                                 __result = Utils.androidCustomColorGreen;
-                            else if(pc == AndroidPaintColor.Black)
+                            else if (pc == AndroidPaintColor.Black)
                                 __result = Utils.androidCustomColorBlack;
                             else if (pc == AndroidPaintColor.Gray)
                                 __result = Utils.androidCustomColorGray;

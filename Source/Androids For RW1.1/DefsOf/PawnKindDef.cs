@@ -1,5 +1,5 @@
-﻿using Verse;
-using RimWorld;
+﻿using RimWorld;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -39,7 +39,5 @@ namespace MOARANDROIDS
         public static PawnKindDef AndroidSheep;
 
         public static PawnKindDef AncientSoldier;
-
-
     }
 }

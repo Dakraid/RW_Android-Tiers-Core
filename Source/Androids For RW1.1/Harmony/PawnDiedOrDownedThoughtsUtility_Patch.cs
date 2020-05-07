@@ -1,11 +1,6 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
-using HarmonyLib;
+﻿using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -23,8 +18,7 @@ namespace MOARANDROIDS
                 //Si android avec peu de logique alors tous le monde se fout de sa mort OU si Surrogate
                 if (Utils.ExceptionAndroidListBasic.Contains(victim.def.defName) || victim.IsSurrogateAndroid() || victim.IsBlankAndroid())
                     return false;
-                else
-                    return true;
+                return true;
             }
         }
     }

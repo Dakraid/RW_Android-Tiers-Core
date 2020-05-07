@@ -1,6 +1,5 @@
-﻿using System;
+﻿using RimWorld;
 using Verse;
-using RimWorld;
 
 namespace MOARANDROIDS
 {
@@ -8,7 +7,7 @@ namespace MOARANDROIDS
     {
         public override bool ShouldMeasureTimeNow(Pawn pawn)
         {
-            return pawn.InBed() && (HealthAIUtility.ShouldSeekMedicalRestUrgent(pawn) || (HealthAIUtility.ShouldSeekMedicalRest(pawn) || pawn.CurJob.restUntilHealed));
+            return pawn.InBed() && (HealthAIUtility.ShouldSeekMedicalRestUrgent(pawn) || HealthAIUtility.ShouldSeekMedicalRest(pawn) || pawn.CurJob.restUntilHealed);
         }
     }
 }

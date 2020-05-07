@@ -1,11 +1,7 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
+﻿using System.Linq;
 using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -20,7 +16,7 @@ namespace MOARANDROIDS
             {
                 Pawn p1 = null;
                 Pawn p2 = null;
-                int nba = args.Count();
+                var nba = args.Count();
 
                 if (nba >= 2)
                 {
@@ -28,14 +24,19 @@ namespace MOARANDROIDS
                     p2 = args[1] as Pawn;
                 }
                 else if (nba == 1)
+                {
                     p1 = args[0] as Pawn;
+                }
                 else
+                {
                     return true;
+                }
 
                 //Si colon tué est un T1/T2 OU un surrogate on s'en fou
                 if (def == TaleDefOf.KilledColonist)
                 {
-                    if ((p2 != null && (Utils.ExceptionAndroidListBasic.Contains(p2.def.defName) || (p2.TryGetComp<CompAndroidState>() != null && p2.TryGetComp<CompAndroidState>().isSurrogate))))
+                    if (p2 != null && (Utils.ExceptionAndroidListBasic.Contains(p2.def.defName) ||
+                                       p2.TryGetComp<CompAndroidState>() != null && p2.TryGetComp<CompAndroidState>().isSurrogate))
                         return false;
                 }
                 //Si androide butcherisé

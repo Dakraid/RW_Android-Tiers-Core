@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Verse;
-using Verse.AI.Group;
+﻿using System.Collections.Generic;
 using RimWorld;
-using Verse.AI;
-using RimWorld.Planet;
-using UnityEngine;
-using Verse.Sound;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -16,7 +9,7 @@ namespace MOARANDROIDS
         protected override bool CanFireNowSub(IncidentParms parms)
         {
             return !Settings.disableSkyMindSecurityStuff && !Utils.isThereSolarFlare()
-                    && Utils.GCATPP.getNbDevices() > 0;
+                                                         && Utils.GCATPP.getNbDevices() > 0;
         }
 
         protected override bool TryExecuteWorker(IncidentParms parms)
@@ -25,17 +18,17 @@ namespace MOARANDROIDS
                 return false;
 
             List<Thing> victims;
-            string title = "";
-            string msg = "";
-            int nbConnectedClients = Utils.GCATPP.getNbThingsConnected();
-            List<string> cryptolockedThings = new List<string>();
-            int nbDevices = Utils.GCATPP.getNbDevices();
-            int nbUnsecurisedClients = nbConnectedClients - Utils.GCATPP.getNbSlotSecurisedAvailable();
+            var title = "";
+            var msg = "";
+            var nbConnectedClients = Utils.GCATPP.getNbThingsConnected();
+            var cryptolockedThings = new List<string>();
+            var nbDevices = Utils.GCATPP.getNbDevices();
+            var nbUnsecurisedClients = nbConnectedClients - Utils.GCATPP.getNbSlotSecurisedAvailable();
 
             LetterDef letter;
             //Selection type virus 
-            int attackType=1;
-            int fee = 0;
+            var attackType = 1;
+            var fee = 0;
 
             //Check si sur lensemble des clients connecté il y a quand meme des devices
             if (nbDevices <= 0)
@@ -47,36 +40,30 @@ namespace MOARANDROIDS
                 if (!Rand.Chance(Settings.riskSecurisedSecuritySystemGetVirus))
                     return false;
 
-                int nb = 0;
-                
+                var nb = 0;
+
 
                 nb = nbDevices / 2;
                 if (nb != 0)
-                {
                     nb = Rand.Range(1, nb + 1);
-                }
                 else
                     nb = 1;
 
                 letter = LetterDefOf.ThreatSmall;
                 //Obtention des victimes
                 victims = Utils.GCATPP.getRandomDevices(nb);
-                if (victims.Count == 0)
-                {
-                    return false;
-                }
+                if (victims.Count == 0) return false;
 
                 foreach (var v in victims)
                 {
-                    CompSkyMind csm = v.TryGetComp<CompSkyMind>();
-                    CompAndroidState cas = v.TryGetComp<CompAndroidState>();
+                    var csm = v.TryGetComp<CompSkyMind>();
+                    var cas = v.TryGetComp<CompAndroidState>();
                     if (cas == null)
                         continue;
 
                     csm.Infected = 4;
 
                     //Piratage temporaire
-
                 }
 
 
@@ -89,15 +76,15 @@ namespace MOARANDROIDS
 
                 foreach (var v in victims)
                 {
-                    CompSkyMind csm = v.TryGetComp<CompSkyMind>();
+                    var csm = v.TryGetComp<CompSkyMind>();
                     if (csm == null)
                         continue;
 
                     Utils.GCATPP.disconnectUser(v);
                     csm.Infected = attackType;
-                    csm.infectedEndGT = Find.TickManager.TicksGame + (Rand.Range(Settings.nbHourLiteHackingDeviceAttackLastMin, Settings.nbHourLiteHackingDeviceAttackLastMax)* 2500);
+                    csm.infectedEndGT = Find.TickManager.TicksGame +
+                                        Rand.Range(Settings.nbHourLiteHackingDeviceAttackLastMin, Settings.nbHourLiteHackingDeviceAttackLastMax) * 2500;
                 }
-
             }
             else
             {
@@ -105,15 +92,13 @@ namespace MOARANDROIDS
 
                 attackType = Rand.Range(1, 4);
 
-                int nb = 0;
+                var nb = 0;
 
                 //Attaque virale douce
                 //Obtention des victimes (qui peut allez de 1 victime a N/2 victimes
                 nb = nbDevices / 2;
                 if (nb != 0)
-                {
                     nb = Rand.Range(1, nb + 1);
-                }
                 else
                     nb = 1;
 
@@ -141,7 +126,7 @@ namespace MOARANDROIDS
 
                 foreach (var v in victims)
                 {
-                    CompSkyMind csm = v.TryGetComp<CompSkyMind>();
+                    var csm = v.TryGetComp<CompSkyMind>();
                     if (csm == null)
                         continue;
 
@@ -152,20 +137,20 @@ namespace MOARANDROIDS
                     if (attackType == 3)
                     {
                         cryptolockedThings.Add(v.GetUniqueLoadID());
-                        fee += (int)(v.def.BaseMarketValue * 0.25f);
+                        fee += (int) (v.def.BaseMarketValue * 0.25f);
                     }
                 }
             }
 
-            Find.LetterStack.ReceiveLetter(title, msg, letter, (LookTargets) victims, null, null);
+            Find.LetterStack.ReceiveLetter(title, msg, letter, victims);
 
-            
+
             if (attackType == 3)
             {
                 //Déduction faction ennemis au hasard
-                Faction faction = Find.FactionManager.RandomEnemyFaction();
+                var faction = Find.FactionManager.RandomEnemyFaction();
 
-                ChoiceLetter_RansomDemand ransom = (ChoiceLetter_RansomDemand) LetterMaker.MakeLetter(DefDatabase<LetterDef>.GetNamed("ATPP_CLPayCryptoRansom"));
+                var ransom = (ChoiceLetter_RansomDemand) LetterMaker.MakeLetter(DefDatabase<LetterDef>.GetNamed("ATPP_CLPayCryptoRansom"));
                 ransom.label = "ATPP_CryptolockerNeedPayRansomTitle".Translate();
                 ransom.text = "ATPP_CryptolockerNeedPayRansom".Translate(faction.Name, fee);
                 ransom.faction = faction;
@@ -174,11 +159,10 @@ namespace MOARANDROIDS
                 ransom.cryptolockedThings = cryptolockedThings;
                 ransom.deviceType = true;
                 ransom.StartTimeout(60000);
-                Find.LetterStack.ReceiveLetter(ransom, null);
+                Find.LetterStack.ReceiveLetter(ransom);
             }
 
             return true;
         }
-
     }
 }

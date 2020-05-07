@@ -1,11 +1,6 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
-using HarmonyLib;
-using RimWorld;
-using System.Collections.Generic;
-using System;
+﻿using HarmonyLib;
 using RimWorld.Planet;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -21,10 +16,8 @@ namespace MOARANDROIDS
             [HarmonyPostfix]
             public static void Listener(ref bool __result, ref Caravan __instance)
             {
-                if( !__instance.pawns.InnerListForReading.Any(p => !(Utils.ExceptionAndroidList.Contains(p.def.defName) || Utils.ExceptionAndroidAnimals.Contains(p.def.defName))))
-                {
-                    __result = false;
-                }
+                if (!__instance.pawns.InnerListForReading.Any(p => !(Utils.ExceptionAndroidList.Contains(p.def.defName) || Utils.ExceptionAndroidAnimals.Contains(p.def.defName)))
+                ) __result = false;
             }
         }
     }

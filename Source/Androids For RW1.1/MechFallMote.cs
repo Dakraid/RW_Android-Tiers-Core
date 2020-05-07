@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-using Verse;
-using RimWorld;
+﻿using Verse;
 
 namespace MOARANDROIDS
 {
@@ -12,12 +8,11 @@ namespace MOARANDROIDS
         // Token: 0x060022A7 RID: 8871 RVA: 0x00103CA4 File Offset: 0x001020A4
         public static void MakeMechFallMote(IntVec3 cell, Map map)
         {
-            Mote mote = (Mote)ThingMaker.MakeThing(RimWorld.ThingDefOf.Mote_Bombardment, null);
+            var mote = (Mote) ThingMaker.MakeThing(RimWorld.ThingDefOf.Mote_Bombardment);
             mote.exactPosition = cell.ToVector3Shifted();
             mote.Scale = 5f;
             mote.rotationRate = 0f;
             GenSpawn.Spawn(mote, cell, map);
         }
-
     }
 }

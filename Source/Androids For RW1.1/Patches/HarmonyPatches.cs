@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using MOARANDROIDS;
 using HarmonyLib;
+using MOARANDROIDS;
 using RimWorld;
 using RimWorld.Planet;
 using Verse;
 using Verse.AI;
+using PawnKindDefOf = MOARANDROIDS.PawnKindDefOf;
 
 namespace BlueLeakTest
 {
     [StaticConstructorOnStartup]
-    static public class HarmonyPatches
+    public static class HarmonyPatches
     {
         static HarmonyPatches()
         {
@@ -32,25 +32,21 @@ namespace BlueLeakTest
 
             DefDatabase<RecipeDef>.GetNamed("ButcherCorpseAndroidAT").fixedIngredientFilter.SetAllow(MOARANDROIDS.ThingCategoryDefOf.androidCorpseCategory, true, null, null);
             DefDatabase<RecipeDef>.GetNamed("ButcherCorpseFlesh").fixedIngredientFilter.SetAllow(MOARANDROIDS.ThingCategoryDefOf.androidCorpseCategory, false);*/
-
         }
-
     }
+
     [HarmonyPatch(typeof(SickPawnVisitUtility), "CanVisit")]
-    static class Harmony_FindRandomSickPawn
+    internal static class Harmony_FindRandomSickPawn
     {
-        static bool Prefix(Pawn pawn, Pawn sick, JoyCategory maxPatientJoy, ref bool __result)
+        private static bool Prefix(Pawn pawn, Pawn sick, JoyCategory maxPatientJoy, ref bool __result)
         {
-            if (sick.needs.rest != null)
-            {
-                return true;
-            }
+            if (sick.needs.rest != null) return true;
 
             __result = sick.IsColonist && !sick.Dead && pawn != sick && sick.InBed()
-            && sick.Awake() && !sick.IsForbidden(pawn) && sick.needs.joy != null
-            && sick.needs.joy.CurCategory <= maxPatientJoy
-            && InteractionUtility.CanReceiveInteraction(sick) && !sick.needs.food.Starving
-            && pawn.CanReserveAndReach(sick, PathEndMode.InteractionCell, Danger.None, 1, -1, null, false);
+                       && sick.Awake() && !sick.IsForbidden(pawn) && sick.needs.joy != null
+                       && sick.needs.joy.CurCategory <= maxPatientJoy
+                       && InteractionUtility.CanReceiveInteraction(sick) && !sick.needs.food.Starving
+                       && pawn.CanReserveAndReach(sick, PathEndMode.InteractionCell, Danger.None);
             return false;
         }
     }
@@ -73,25 +69,22 @@ namespace BlueLeakTest
             return codeInstructions;
         }
     }*/
-        [HarmonyPatch(typeof(JobDriver_Vomit))]
+    [HarmonyPatch(typeof(JobDriver_Vomit))]
     [HarmonyPatch("MakeNewToils")]
     internal static class DeclineVomitJob
     {
         public static bool Prefix(ref JobDriver_Vomit __instance, ref IEnumerable<Toil> __result)
         {
-            Pawn pawn = __instance.pawn;
+            var pawn = __instance.pawn;
             bool result;
             if (pawn.IsAndroidGen())
             {
-                JobDriver_Vomit instance = __instance;
+                var instance = __instance;
                 __result = new List<Toil>
                 {
                     new Toil
                     {
-                        initAction = delegate()
-                        {
-                            instance.pawn.jobs.StopAll(false);
-                        }
+                        initAction = delegate { instance.pawn.jobs.StopAll(); }
                     }
                 };
                 result = false;
@@ -100,6 +93,7 @@ namespace BlueLeakTest
             {
                 result = true;
             }
+
             return result;
         }
     }
@@ -120,11 +114,12 @@ namespace BlueLeakTest
             {
                 result = true;
             }
+
             return result;
         }
     }
 
-    [HarmonyPatch(new Type[] { typeof(Pawn) })]
+    [HarmonyPatch(new[] {typeof(Pawn)})]
     [HarmonyPatch(typeof(PawnCapacityDef))]
     [HarmonyPatch("GetLabelFor")]
     internal static class GetLabelForAndroidCapacity
@@ -132,13 +127,12 @@ namespace BlueLeakTest
         public static bool Prefix(ref string __result, PawnCapacityDef __instance, Pawn pawn)
         {
             if (pawn != null && pawn.RaceProps != null && pawn.RaceProps.FleshType == DefDatabase<FleshTypeDef>.GetNamed("Android"))
-            {
                 if (__instance.GetModExtension<AndroidCapacityLabel>() != null)
                 {
                     __result = __instance.GetModExtension<AndroidCapacityLabel>().androidNewLabel;
                     return false;
                 }
-            }
+
             return true;
         }
     }
@@ -149,12 +143,11 @@ namespace BlueLeakTest
     {
         private static bool Prefix(Pawn_HealthTracker __instance, DamageInfo? dinfo, Hediff hediff, Caravan caravan)
         {
-            Pawn value = Traverse.Create(__instance).Field("pawn").GetValue<Pawn>();
-            bool flag = value.kindDef == MOARANDROIDS.PawnKindDefOf.MicroScyther;
+            var value = Traverse.Create(__instance).Field("pawn").GetValue<Pawn>();
+            var flag = value.kindDef == PawnKindDefOf.MicroScyther;
             return !flag;
         }
     }
-
 
 
     [HarmonyPatch(typeof(FactionDialogMaker))]
@@ -163,19 +156,13 @@ namespace BlueLeakTest
     {
         private static void Postfix(ref DiaNode __result, Pawn negotiator, Faction faction)
         {
-            if (__result == null)
-            {
-                return;
-            }
-            if (faction.def.leaderTitle != "grand leader")
-            {
-                return;
-            }
+            if (__result == null) return;
+            if (faction.def.leaderTitle != "grand leader") return;
 
-            Pawn pawn = faction.leader;
-            string value = faction.leader.Name.ToStringFull;
+            var pawn = faction.leader;
+            var value = faction.leader.Name.ToStringFull;
 
-            Random rnd = new Random();
+            var rnd = new Random();
             string key;
             if (faction.PlayerRelationKind == FactionRelationKind.Hostile)
             {
@@ -195,8 +182,8 @@ namespace BlueLeakTest
                         key = "AndroidFactionGreetingHostileI";
                         break;
                 }
-                
-                __result.text = (key.Translate(value).AdjustedFor(pawn, "PAWN"));
+
+                __result.text = key.Translate(value).AdjustedFor(pawn);
             }
             else if (faction.PlayerRelationKind == FactionRelationKind.Neutral)
             {
@@ -216,7 +203,8 @@ namespace BlueLeakTest
                         key = "AndroidFactionGreetingWaryI";
                         break;
                 }
-                __result.text = (key.Translate(value, negotiator.LabelShort, negotiator.Named("NEGOTIATOR"), pawn.Named("LEADER")).AdjustedFor(pawn, "PAWN"));
+
+                __result.text = key.Translate(value, negotiator.LabelShort, negotiator.Named("NEGOTIATOR"), pawn.Named("LEADER")).AdjustedFor(pawn);
             }
             else
             {
@@ -236,9 +224,9 @@ namespace BlueLeakTest
                         key = "AndroidFactionGreetingWarmI";
                         break;
                 }
-                __result.text = (key.Translate(value, negotiator.LabelShort, negotiator.Named("NEGOTIATOR"), pawn.Named("LEADER")).AdjustedFor(pawn, "PAWN"));
+
+                __result.text = key.Translate(value, negotiator.LabelShort, negotiator.Named("NEGOTIATOR"), pawn.Named("LEADER")).AdjustedFor(pawn);
             }
-    
         }
     }
 
@@ -248,30 +236,30 @@ namespace BlueLeakTest
     {
         private static void Postfix(ref Pawn __result)
         {
-            if (__result == null)
+            if (__result == null) return;
+            if (Faction.OfPlayer.def.basicMemberKind != PawnKindDefOf.AndroidT2ColonistGeneral)
             {
-                return;
-            }
-            if (Faction.OfPlayer.def.basicMemberKind != MOARANDROIDS.PawnKindDefOf.AndroidT2ColonistGeneral)
-            {
-                return;
             }
             else
             {
-                Random rnd = new Random();
+                var rnd = new Random();
                 PawnGenerationRequest request;
                 switch (rnd.Next(1, 3))
                 {
                     case 1:
-                        request = new PawnGenerationRequest(MOARANDROIDS.PawnKindDefOf.AndroidT2ColonistGeneral, Faction.OfPlayer, PawnGenerationContext.PlayerStarter, -1, true, false, false, false, true, TutorSystem.TutorialMode, 20f, false, true, true, false, false, false, false);
+                        request = new PawnGenerationRequest(PawnKindDefOf.AndroidT2ColonistGeneral, Faction.OfPlayer, PawnGenerationContext.PlayerStarter, -1, true, false, false,
+                            false, true, TutorSystem.TutorialMode, 20f, false, true, true, false);
                         break;
                     case 2:
-                        request = new PawnGenerationRequest(MOARANDROIDS.PawnKindDefOf.AndroidT1ColonistGeneral, Faction.OfPlayer, PawnGenerationContext.PlayerStarter, -1, true, false, false, false, true, TutorSystem.TutorialMode, 20f, false, true, true, false, false, false, false);
+                        request = new PawnGenerationRequest(PawnKindDefOf.AndroidT1ColonistGeneral, Faction.OfPlayer, PawnGenerationContext.PlayerStarter, -1, true, false, false,
+                            false, true, TutorSystem.TutorialMode, 20f, false, true, true, false);
                         break;
                     default:
-                        request = new PawnGenerationRequest(Faction.OfPlayer.def.basicMemberKind, Faction.OfPlayer, PawnGenerationContext.PlayerStarter, -1, true, false, false, false, true, TutorSystem.TutorialMode, 20f, false, true, true, false, false, false, false);
+                        request = new PawnGenerationRequest(Faction.OfPlayer.def.basicMemberKind, Faction.OfPlayer, PawnGenerationContext.PlayerStarter, -1, true, false, false,
+                            false, true, TutorSystem.TutorialMode, 20f, false, true, true, false);
                         break;
                 }
+
                 __result = null;
                 try
                 {
@@ -279,50 +267,44 @@ namespace BlueLeakTest
                 }
                 catch (Exception arg)
                 {
-                    Log.Error("There was an exception thrown by the PawnGenerator during generating a starting pawn. Trying one more time...\nException: " + arg, false);
+                    Log.Error("There was an exception thrown by the PawnGenerator during generating a starting pawn. Trying one more time...\nException: " + arg);
                     __result = PawnGenerator.GeneratePawn(request);
                 }
+
                 __result.relations.everSeenByPlayer = true;
                 PawnComponentsUtility.AddComponentsForSpawn(__result);
             }
-
         }
     }
 
-        [HarmonyPatch(typeof(CompFoodPoisonable))]
+    [HarmonyPatch(typeof(CompFoodPoisonable))]
     [HarmonyPatch("PostIngested")]
     internal static class AndroidsFoodPoisonOverride
     {
         private static bool Prefix(CompFoodPoisonable __instance, Pawn ingester)
         {
-            Pawn value = Traverse.Create(__instance).Field("ingester").GetValue<Pawn>();
-            if (ingester.IsAndroid() == true)
-            {
+            var value = Traverse.Create(__instance).Field("ingester").GetValue<Pawn>();
+            if (ingester.IsAndroid())
                 return false;
-            }
-            else
-            {
-                return true;
-            }
+            return true;
         }
     }
 
-        [HarmonyPatch(typeof(Pawn_HealthTracker))]
+    [HarmonyPatch(typeof(Pawn_HealthTracker))]
     [HarmonyPatch("MakeDowned")]
     internal static class DiesUponDowned
     {
         private static bool Prefix(Pawn_HealthTracker __instance, DamageInfo? dinfo, Hediff hediff, Pawn ___pawn)
         {
-            Pawn value = Traverse.Create(__instance).Field("pawn").GetValue<Pawn>();
-            if(value.kindDef == MOARANDROIDS.PawnKindDefOf.MicroScyther || value.kindDef == MOARANDROIDS.PawnKindDefOf.AbominationAtlas || (value.kindDef == MOARANDROIDS.PawnKindDefOf.M7MechPawn && ___pawn.TryGetComp<CompAndroidState>() != null && !___pawn.TryGetComp<CompAndroidState>().isSurrogate))
+            var value = Traverse.Create(__instance).Field("pawn").GetValue<Pawn>();
+            if (value.kindDef == PawnKindDefOf.MicroScyther || value.kindDef == PawnKindDefOf.AbominationAtlas || value.kindDef == PawnKindDefOf.M7MechPawn &&
+                ___pawn.TryGetComp<CompAndroidState>() != null && !___pawn.TryGetComp<CompAndroidState>().isSurrogate)
             {
                 value.Kill(null);
                 return false;
-            } else
-            {
-                return true;
             }
+
+            return true;
         }
     }
-    
 }

@@ -1,66 +1,121 @@
 ﻿using System;
-using Verse;
-using Verse.AI;
-using RimWorld;
 using System.Collections.Generic;
-using UnityEngine;
-using System.Text;
-using Verse.AI.Group;
 using System.Linq;
-using HarmonyLib;
-using System.Reflection;
-using Verse.Sound;
 using System.Text.RegularExpressions;
+using RimWorld;
+using UnityEngine;
+using Verse;
+using Verse.Sound;
 
 namespace MOARANDROIDS
 {
     public class CompSurrogateOwner : ThingComp
     {
+        public List<Pawn> availableSX = new List<Pawn>();
+
+        //Indique si le colon est en mode controle de clone
+        public bool controlMode;
+        public int downloadFromSkyCloudEndingGT = -1;
+
+        public int downloadFromSkyCloudStartGT;
+        public int duplicateEndingGT = -1;
+        public Pawn duplicateRecipient;
+
+        public int duplicateStartGT;
+
+        public bool externalController = true;
+
+        //Désigne les SX additionnelles (possesseur de VX3)
+        public List<Pawn> extraSX = new List<Pawn>();
+
+        public int migrationEndingGT = -1;
+
+        //Migration stuff related
+        public Building migrationSkyCloudHostDest;
+        public int migrationStartGT;
+        public int mindAbsorptionEndingGT = -1;
+
+        public int mindAbsorptionStartGT;
+        public int permuteEndingGT = -1;
+        public Pawn permuteRecipient;
+
+        public int permuteStartGT;
+        public SkillDef ransomwareSkillStolen;
+        public int ransomwareSkillValue = -1;
+
+        public TraitDef ransomwareTraitAdded;
+
+        public bool repairAndroids;
+
+        public int replicationEndingGT = -1;
+
+        //Replication stuff related
+        public int replicationStartGT;
+
+
+        //Permet de stocker une copies des levels de skills quand permutation avec un M7
+        public List<string> savedSkillsBecauseM7Control;
+        public List<string> savedWorkAffectationBecauseM7Control;
+        public bool showDuplicateProgress;
+
+        public bool showPermuteProgress;
+
+        public Pawn skyCloudDownloadRecipient;
+
+        public Building skyCloudHost;
+
+        public Building skyCloudRecipient;
+
+        //Désigne le SX visé
+        public Pawn SX;
+        public int uploadToSkyCloudEndingGT = -1;
+
+        public int uploadToSkyCloudStartGT;
+
         public override void PostExposeData()
         {
             base.PostExposeData();
 
-            Scribe_Values.Look<bool>(ref this.controlMode, "ATPP_controlMode", false);
+            Scribe_Values.Look(ref controlMode, "ATPP_controlMode");
             Scribe_References.Look(ref SX, "ATPP_SX");
             Scribe_References.Look(ref permuteRecipient, "ATPP_permuteRecipient");
             Scribe_References.Look(ref duplicateRecipient, "ATPP_duplicateRecipient");
             Scribe_References.Look(ref skyCloudRecipient, "ATPP_skyCloudRecipient");
             Scribe_References.Look(ref skyCloudDownloadRecipient, "ATPP_skyCloudDownloadRecipient");
 
-            Scribe_Values.Look<bool>(ref this.repairAndroids, "ATPP_repairAndroids", false);
+            Scribe_Values.Look(ref repairAndroids, "ATPP_repairAndroids");
 
-            Scribe_Values.Look<int>(ref this.migrationEndingGT, "ATPP_migrationEndingGT", -1);
-            Scribe_Values.Look<int>(ref this.migrationStartGT, "ATPP_migrationStartGT", 0);
+            Scribe_Values.Look(ref migrationEndingGT, "ATPP_migrationEndingGT", -1);
+            Scribe_Values.Look(ref migrationStartGT, "ATPP_migrationStartGT");
             Scribe_References.Look(ref migrationSkyCloudHostDest, "ATPP_migrationSkyCloudHostDest");
 
 
-            Scribe_Values.Look<int>(ref this.mindAbsorptionEndingGT, "ATPP_mindAbsorptionEndingGT", -1);
-            Scribe_Values.Look<int>(ref this.mindAbsorptionStartGT, "ATPP_mindAbsorptionStartGT", 0);
+            Scribe_Values.Look(ref mindAbsorptionEndingGT, "ATPP_mindAbsorptionEndingGT", -1);
+            Scribe_Values.Look(ref mindAbsorptionStartGT, "ATPP_mindAbsorptionStartGT");
 
-            Scribe_Values.Look<int>(ref this.downloadFromSkyCloudEndingGT, "ATPP_downloadFromSkyCloudEndingGT", -1);
-            Scribe_Values.Look<int>(ref this.downloadFromSkyCloudStartGT, "ATPP_downloadFromSkyCloudStartGT", 0);
-            Scribe_Values.Look<int>(ref this.uploadToSkyCloudEndingGT, "ATPP_uploadToSkyCloudEndingGT", -1);
-            Scribe_Values.Look<int>(ref this.uploadToSkyCloudStartGT, "ATPP_uploadToSkyCloudStartGT", 0);
-            Scribe_Values.Look<int>(ref this.permuteEndingGT, "ATPP_permuteEndingGT", -1);
-            Scribe_Values.Look<int>(ref this.permuteStartGT, "ATPP_permuteStartGT", 0);
-            Scribe_Values.Look<int>(ref this.duplicateEndingGT, "ATPP_duplicateEndingGT", -1);
-            Scribe_Values.Look<int>(ref this.duplicateStartGT, "ATPP_duplicateStartGT", 0);
-            Scribe_Values.Look<bool>(ref this.showPermuteProgress, "ATPP_showPermuteProgress", false);
-            Scribe_Values.Look<bool>(ref this.showDuplicateProgress, "ATPP_showDuplicateProgress", false);
+            Scribe_Values.Look(ref downloadFromSkyCloudEndingGT, "ATPP_downloadFromSkyCloudEndingGT", -1);
+            Scribe_Values.Look(ref downloadFromSkyCloudStartGT, "ATPP_downloadFromSkyCloudStartGT");
+            Scribe_Values.Look(ref uploadToSkyCloudEndingGT, "ATPP_uploadToSkyCloudEndingGT", -1);
+            Scribe_Values.Look(ref uploadToSkyCloudStartGT, "ATPP_uploadToSkyCloudStartGT");
+            Scribe_Values.Look(ref permuteEndingGT, "ATPP_permuteEndingGT", -1);
+            Scribe_Values.Look(ref permuteStartGT, "ATPP_permuteStartGT");
+            Scribe_Values.Look(ref duplicateEndingGT, "ATPP_duplicateEndingGT", -1);
+            Scribe_Values.Look(ref duplicateStartGT, "ATPP_duplicateStartGT");
+            Scribe_Values.Look(ref showPermuteProgress, "ATPP_showPermuteProgress");
+            Scribe_Values.Look(ref showDuplicateProgress, "ATPP_showDuplicateProgress");
 
-            Scribe_Values.Look<int>(ref this.replicationStartGT, "ATPP_replicationStartGT", 0);
-            Scribe_Values.Look<int>(ref this.replicationEndingGT, "ATPP_replicationEndingGT", -1);
-
+            Scribe_Values.Look(ref replicationStartGT, "ATPP_replicationStartGT");
+            Scribe_Values.Look(ref replicationEndingGT, "ATPP_replicationEndingGT", -1);
 
 
             Scribe_References.Look(ref skyCloudHost, "ATPP_skyCloudHost");
-            Scribe_Defs.Look(ref this.ransomwareSkillStolen, "ATPP_ransomwareSkillStolen");
-            Scribe_Values.Look<int>(ref this.ransomwareSkillValue, "ATPP_ransomwareSkillValue", -1);
+            Scribe_Defs.Look(ref ransomwareSkillStolen, "ATPP_ransomwareSkillStolen");
+            Scribe_Values.Look(ref ransomwareSkillValue, "ATPP_ransomwareSkillValue", -1);
             Scribe_Defs.Look(ref ransomwareTraitAdded, "ATPP_ransomwareTraitAdded");
-            Scribe_Values.Look<bool>(ref this.externalController, "ATPP_CSIOExternalController", false);
+            Scribe_Values.Look(ref externalController, "ATPP_CSIOExternalController");
             Scribe_Collections.Look(ref savedSkillsBecauseM7Control, "ATPP_savedSkillsBecauseM7Control", LookMode.Value, LookMode.Value);
             Scribe_Collections.Look(ref savedWorkAffectationBecauseM7Control, "ATPP_savedWorkAffectationBecauseM7Control", LookMode.Value, LookMode.Value);
-            Scribe_Collections.Look(ref this.extraSX, false, "ATPP_extraSX", LookMode.Reference);
+            Scribe_Collections.Look(ref extraSX, false, "ATPP_extraSX", LookMode.Reference);
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
@@ -70,8 +125,8 @@ namespace MOARANDROIDS
                 //Reconsitution du tableau de SX virtuelle (fusion extraSX et SX)
                 if (SX != null)
                     availableSX.Add(SX);
-                if(extraSX.Count >0)
-                    availableSX = (List<Pawn>)availableSX.Concat(extraSX).ToList();
+                if (extraSX.Count > 0)
+                    availableSX = availableSX.Concat(extraSX).ToList();
 
                 availableSX.RemoveAll(item => item == null);
             }
@@ -84,20 +139,18 @@ namespace MOARANDROIDS
             if (parent.Map == null || !parent.Spawned)
                 return;
 
-            int GT = Find.TickManager.TicksGame;
+            var GT = Find.TickManager.TicksGame;
 
-            if(GT % 600 == 0)
+            if (GT % 600 == 0)
             {
-                Pawn cpawn = (Pawn)parent;
-                if (cpawn.IsKidnapped())
-                {
-                    Utils.GCATPP.disconnectUser(cpawn);
-                }
+                var cpawn = (Pawn) parent;
+                if (cpawn.IsKidnapped()) Utils.GCATPP.disconnectUser(cpawn);
             }
 
-            if (GT % 120 == 0 && ( permuteEndingGT != -1 || duplicateEndingGT != -1 || uploadToSkyCloudEndingGT != -1 || migrationEndingGT != -1 || mindAbsorptionEndingGT != -1 || downloadFromSkyCloudEndingGT != -1 || (controlMode && SX != null)))
+            if (GT % 120 == 0 && (permuteEndingGT != -1 || duplicateEndingGT != -1 || uploadToSkyCloudEndingGT != -1 || migrationEndingGT != -1 || mindAbsorptionEndingGT != -1 ||
+                                  downloadFromSkyCloudEndingGT != -1 || controlMode && SX != null))
             {
-                Pawn cpawn = (Pawn)parent;
+                var cpawn = (Pawn) parent;
                 checkInterruptedUpload();
 
                 //Atteinte d'un chargement de permutation de conscience
@@ -111,7 +164,8 @@ namespace MOARANDROIDS
 
                     Utils.removeUploadHediff(cpawn, permuteRecipient);
 
-                    Find.LetterStack.ReceiveLetter("ATPP_LetterPermuteOK".Translate(), "ATPP_LetterPermuteOKDesc".Translate(cpawn.LabelShortCap, permuteRecipient.LabelShortCap), LetterDefOf.PositiveEvent, parent);
+                    Find.LetterStack.ReceiveLetter("ATPP_LetterPermuteOK".Translate(), "ATPP_LetterPermuteOKDesc".Translate(cpawn.LabelShortCap, permuteRecipient.LabelShortCap),
+                        LetterDefOf.PositiveEvent, parent);
                     //On realise effectivement la permutation
                     Utils.PermutePawn(cpawn, permuteRecipient);
 
@@ -130,7 +184,7 @@ namespace MOARANDROIDS
                     else
                         Utils.removeSimpleMindedTrait(cpawn);
 
-                    if(cpawn.IsPrisoner || permuteRecipient.IsPrisoner)
+                    if (cpawn.IsPrisoner || permuteRecipient.IsPrisoner)
                         dealWithPrisonerRecipientPermute(cpawn, permuteRecipient);
 
                     resetUploadStuff();
@@ -148,7 +202,8 @@ namespace MOARANDROIDS
 
                     Utils.removeUploadHediff(cpawn, duplicateRecipient);
 
-                    Find.LetterStack.ReceiveLetter("ATPP_LetterDuplicateOK".Translate(), "ATPP_LetterDuplicateOKDesc".Translate(cpawn.LabelShortCap, duplicateRecipient.LabelShortCap), LetterDefOf.PositiveEvent, parent);
+                    Find.LetterStack.ReceiveLetter("ATPP_LetterDuplicateOK".Translate(),
+                        "ATPP_LetterDuplicateOKDesc".Translate(cpawn.LabelShortCap, duplicateRecipient.LabelShortCap), LetterDefOf.PositiveEvent, parent);
                     //On realise effectivement la permutation
                     Utils.Duplicate(cpawn, duplicateRecipient);
 
@@ -161,9 +216,9 @@ namespace MOARANDROIDS
                     else
                         Utils.removeSimpleMindedTrait(duplicateRecipient);
 
-                    
+
                     dealWithPrisonerRecipient(cpawn, duplicateRecipient);
-                    
+
 
                     resetUploadStuff();
                 }
@@ -178,9 +233,10 @@ namespace MOARANDROIDS
                     uploadToSkyCloudEndingGT = -1;
                     Utils.removeUploadHediff(cpawn, null);
 
-                    CompSkyCloudCore csc = skyCloudRecipient.TryGetComp<CompSkyCloudCore>();
+                    var csc = skyCloudRecipient.TryGetComp<CompSkyCloudCore>();
 
-                    Find.LetterStack.ReceiveLetter("ATPP_LetterSkyCloudUploadOK".Translate(), "ATPP_LetterSkyCloudUploadOKDesc".Translate(cpawn.LabelShortCap, csc.getName()), LetterDefOf.PositiveEvent, parent);
+                    Find.LetterStack.ReceiveLetter("ATPP_LetterSkyCloudUploadOK".Translate(), "ATPP_LetterSkyCloudUploadOKDesc".Translate(cpawn.LabelShortCap, csc.getName()),
+                        LetterDefOf.PositiveEvent, parent);
                     //On realise effectivement l'upload vers le Core
 
                     //Stockage pawn actuel
@@ -193,21 +249,19 @@ namespace MOARANDROIDS
                     Utils.removeSimpleMindedTrait(cpawn);
 
                     //Copie du corps du pawn et placement sur la carte
-                    bool killMode = false;
+                    var killMode = false;
                     if (Settings.skyCloudUploadModeForSourceMind == 2)
                         killMode = true;
 
-                    Pawn corpse = Utils.spawnCorpseCopy(cpawn,killMode);
+                    var corpse = Utils.spawnCorpseCopy(cpawn, killMode);
 
                     //Reconfiguration en mode VX0 auto
-                    if(Settings.skyCloudUploadModeForSourceMind == 1)
+                    if (Settings.skyCloudUploadModeForSourceMind == 1)
                     {
                         //On retire la VX2/VX3
-                        foreach(var he in corpse.health.hediffSet.hediffs.ToList())
-                        {
+                        foreach (var he in corpse.health.hediffSet.hediffs.ToList())
                             if (he.def == Utils.hediffHaveVX2Chip || he.def == Utils.hediffHaveVX3Chip)
                                 corpse.health.RemoveHediff(he);
-                        }
 
                         BodyPartRecord bpr = null;
                         bpr = corpse.health.hediffSet.GetBrain();
@@ -245,24 +299,25 @@ namespace MOARANDROIDS
                     downloadFromSkyCloudEndingGT = -1;
                     Utils.removeUploadHediff(cpawn, null);
 
-                    CompSurrogateOwner cso = skyCloudDownloadRecipient.TryGetComp<CompSurrogateOwner>();
+                    var cso = skyCloudDownloadRecipient.TryGetComp<CompSurrogateOwner>();
                     if (cso.skyCloudHost == null)
                         return;
 
-                    CompSkyCloudCore csc = cso.skyCloudHost.TryGetComp<CompSkyCloudCore>();
+                    var csc = cso.skyCloudHost.TryGetComp<CompSkyCloudCore>();
 
                     //Arret des jobs d'un esprit
                     csc.stopMindActivities(skyCloudDownloadRecipient);
 
 
-                    Find.LetterStack.ReceiveLetter("ATPP_LetterSkyCloudDownloadOK".Translate(), "ATPP_LetterSkyCloudDownloadOKDesc".Translate(skyCloudDownloadRecipient.LabelShortCap, cpawn.LabelShortCap), LetterDefOf.PositiveEvent, parent);
+                    Find.LetterStack.ReceiveLetter("ATPP_LetterSkyCloudDownloadOK".Translate(),
+                        "ATPP_LetterSkyCloudDownloadOKDesc".Translate(skyCloudDownloadRecipient.LabelShortCap, cpawn.LabelShortCap), LetterDefOf.PositiveEvent, parent);
                     //On realise effectivement le download du core vers le cerveau
                     //Permutation
                     Utils.PermutePawn(skyCloudDownloadRecipient, cpawn);
 
                     //Report du blankAndroid pour le flagger dans la routine de kill
-                    CompAndroidState cas = skyCloudDownloadRecipient.TryGetComp<CompAndroidState>();
-                    if(cas != null)
+                    var cas = skyCloudDownloadRecipient.TryGetComp<CompAndroidState>();
+                    if (cas != null)
                         cas.isBlankAndroid = true;
 
                     //Clear du status de blank andorid si destinataire blank android
@@ -271,7 +326,6 @@ namespace MOARANDROIDS
                     //Si cpawn un T1 on lui ajoute le trait SimpleMinded
                     Utils.addSimpleMindedTraitForT1(cpawn);
 
-                    
 
                     //Suppression de la memoire du core
                     csc.RemoveMind(skyCloudDownloadRecipient);
@@ -282,31 +336,29 @@ namespace MOARANDROIDS
                     Utils.playVocal("soundDefSkyCloudMindUploadCompleted");
 
                     //On kill le destinataire permuté
-                    skyCloudDownloadRecipient.Kill(null,null);
+                    skyCloudDownloadRecipient.Kill(null);
 
                     resetUploadStuff();
                 }
 
-                if(mindAbsorptionEndingGT != -1 && mindAbsorptionEndingGT < GT)
+                if (mindAbsorptionEndingGT != -1 && mindAbsorptionEndingGT < GT)
                 {
                     //Calcul moyenne point de skill du prisonnier
-                    int sum = 0;
-                    int average = 0;
-                    foreach (var sr in cpawn.skills.skills)
-                    {
-                        sum += sr.levelInt;
-                    }
-                    average = (int)((float)sum / (float)cpawn.skills.skills.Count());
+                    var sum = 0;
+                    var average = 0;
+                    foreach (var sr in cpawn.skills.skills) sum += sr.levelInt;
+                    average = (int) (sum / (float) cpawn.skills.skills.Count());
 
-                    int nbp = (int)((float)((float)average / (float)20) * Rand.Range(1000, 5000));
+                    var nbp = (int) (average / (float) 20 * Rand.Range(1000, 5000));
 
                     Utils.GCATPP.incSkillPoints(nbp);
 
-                    Find.LetterStack.ReceiveLetter("ATPP_MindAbsorptionDone".Translate(), "ATPP_MindAbsorptionDoneDesc".Translate(cpawn.LabelShortCap, nbp), LetterDefOf.PositiveEvent, cpawn);
+                    Find.LetterStack.ReceiveLetter("ATPP_MindAbsorptionDone".Translate(), "ATPP_MindAbsorptionDoneDesc".Translate(cpawn.LabelShortCap, nbp),
+                        LetterDefOf.PositiveEvent, cpawn);
 
                     resetUploadStuff();
 
-                    cpawn.Kill(null, null);
+                    cpawn.Kill(null);
                 }
             }
         }
@@ -316,29 +368,17 @@ namespace MOARANDROIDS
             //Si destinataire de la duplication prisonnier Et emetteur pas prisonier on enleve la condition 
             if (!cpawn.IsPrisoner && recipient.IsPrisoner)
             {
-                if (recipient.Faction != Faction.OfPlayer)
-                {
-                    recipient.SetFaction(Faction.OfPlayer, null);
-                }
+                if (recipient.Faction != Faction.OfPlayer) recipient.SetFaction(Faction.OfPlayer);
 
-                if (recipient.guest != null)
-                {
-                    recipient.guest.SetGuestStatus(null, false);
-                }
+                if (recipient.guest != null) recipient.guest.SetGuestStatus(null);
             }
 
             //SI destinataire de la duplication colon regular et emetteur prisonnier 
             if (cpawn.IsPrisoner && !recipient.IsPrisoner)
             {
-                if (recipient.Faction != cpawn.Faction)
-                {
-                    recipient.SetFaction(cpawn.Faction, null);
-                }
+                if (recipient.Faction != cpawn.Faction) recipient.SetFaction(cpawn.Faction);
 
-                if (recipient.guest != null)
-                {
-                    recipient.guest.SetGuestStatus(Faction.OfPlayer, true);
-                }
+                if (recipient.guest != null) recipient.guest.SetGuestStatus(Faction.OfPlayer, true);
             }
         }
 
@@ -346,16 +386,16 @@ namespace MOARANDROIDS
         {
             if (!cpawn.IsPrisoner && recipient.IsPrisoner)
             {
-                Faction tmp = recipient.Faction;
+                var tmp = recipient.Faction;
 
                 if (recipient.Faction != Faction.OfPlayer)
-                    recipient.SetFaction(Faction.OfPlayer, null);
+                    recipient.SetFaction(Faction.OfPlayer);
 
                 if (recipient.guest != null)
-                    recipient.guest.SetGuestStatus(null, false);
+                    recipient.guest.SetGuestStatus(null);
 
                 if (cpawn.Faction != tmp)
-                    cpawn.SetFaction(tmp, null);
+                    cpawn.SetFaction(tmp);
 
                 if (cpawn.guest != null)
                     cpawn.guest.SetGuestStatus(Faction.OfPlayer, true);
@@ -364,18 +404,18 @@ namespace MOARANDROIDS
                     recipient.workSettings.EnableAndInitialize();
             }
             else
-            // Prisonner <=> COLON
+                // Prisonner <=> COLON
             {
-                Faction tmp = cpawn.Faction;
+                var tmp = cpawn.Faction;
 
                 if (cpawn.Faction != Faction.OfPlayer)
-                    cpawn.SetFaction(Faction.OfPlayer, null);
+                    cpawn.SetFaction(Faction.OfPlayer);
 
                 if (cpawn.guest != null)
-                    cpawn.guest.SetGuestStatus(null, false);
+                    cpawn.guest.SetGuestStatus(null);
 
                 if (recipient.Faction != tmp)
-                    recipient.SetFaction(tmp, null);
+                    recipient.SetFaction(tmp);
 
                 if (recipient.guest != null)
                     recipient.guest.SetGuestStatus(Faction.OfPlayer, true);
@@ -387,24 +427,23 @@ namespace MOARANDROIDS
 
         public void OnReplicate()
         {
-            Pawn cpawn = (Pawn)parent;
+            var cpawn = (Pawn) parent;
             checkInterruptedUpload();
             if (replicationEndingGT == -1)
                 return;
             replicationEndingGT = -1;
-            CompSkyCloudCore csc = skyCloudHost.TryGetComp<CompSkyCloudCore>();
+            var csc = skyCloudHost.TryGetComp<CompSkyCloudCore>();
 
-            PawnGenerationRequest request = new PawnGenerationRequest(cpawn.kindDef, Faction.OfPlayer, PawnGenerationContext.NonPlayer, -1, true, false, false, false, true, false, 1f, false, true, true, false, true, false, false, fixedBiologicalAge: cpawn.ageTracker.AgeBiologicalYearsFloat, fixedChronologicalAge: cpawn.ageTracker.AgeChronologicalYearsFloat, fixedGender: cpawn.gender, fixedMelanin: cpawn.story.melanin);
-            Pawn clone = PawnGenerator.GeneratePawn(request);
+            var request = new PawnGenerationRequest(cpawn.kindDef, Faction.OfPlayer, PawnGenerationContext.NonPlayer, -1, true, false, false, false, true, false, 1f, false, true,
+                true, false, true, false, false, fixedBiologicalAge: cpawn.ageTracker.AgeBiologicalYearsFloat, fixedChronologicalAge: cpawn.ageTracker.AgeChronologicalYearsFloat,
+                fixedGender: cpawn.gender, fixedMelanin: cpawn.story.melanin);
+            var clone = PawnGenerator.GeneratePawn(request);
 
             //surrogate.Name = new NameTriple("", "S" + prefix + SXVer + "-" + Utils.GCATPP.getNextSXID(SXVer), "");
 
-            foreach (var h in clone.health.hediffSet.hediffs.ToList())
-            {
-                clone.health.RemoveHediff(h);
-            }
+            foreach (var h in clone.health.hediffSet.hediffs.ToList()) clone.health.RemoveHediff(h);
 
-            CompSurrogateOwner cso = clone.TryGetComp<CompSurrogateOwner>();
+            var cso = clone.TryGetComp<CompSurrogateOwner>();
             cso.skyCloudHost = skyCloudHost;
 
             Utils.Duplicate(cpawn, clone, false);
@@ -413,60 +452,51 @@ namespace MOARANDROIDS
             //Définition nouveau nom
             try
             {
-                string baseName = clone.LabelShort;
-                int start = 1;
-                int tmp = 0;
+                var baseName = clone.LabelShort;
+                var start = 1;
+                var tmp = 0;
                 //Tentative pour touver dernier indice numerique 
                 foreach (var m in csc.storedMinds)
-                {
                     if (m.LabelShort.StartsWith(baseName))
                     {
                         var result = Regex.Match(m.LabelShort, @" \d+$", RegexOptions.RightToLeft);
                         if (result.Success)
                         {
-                            int tmp2 = 0;
-                            if (Int32.TryParse(result.Value, out tmp2))
-                            {
+                            var tmp2 = 0;
+                            if (int.TryParse(result.Value, out tmp2))
                                 if (tmp2 > tmp)
                                     tmp = tmp2;
-                            }
                         }
                     }
-                }
 
                 if (tmp > 0)
                 {
                     start = tmp + 1;
                     //On garde uniquement la partie sans chiffre terminal
-                    int idx = baseName.LastIndexOf(' ');
-                    if (idx != -1)
-                    {
-                        baseName = baseName.Substring(0, idx);
-                    }
+                    var idx = baseName.LastIndexOf(' ');
+                    if (idx != -1) baseName = baseName.Substring(0, idx);
                 }
 
-                for (int i = start; true; i++)
+                for (var i = start;; i++)
                 {
-                    bool ok = true;
-                    string destName = baseName + " " + i.ToString();
+                    var ok = true;
+                    var destName = baseName + " " + i;
                     foreach (var m in csc.storedMinds)
-                    {
                         if (m.LabelShort == destName)
                         {
                             ok = false;
                             break;
                         }
-                    }
 
                     if (ok)
                     {
-                        NameTriple nt = (NameTriple)clone.Name;
+                        var nt = (NameTriple) clone.Name;
                         clone.Name = new NameTriple(nt.First, destName, nt.Last);
                         break;
                     }
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Log.Message("[ATPP] ReplicateMind.SetNewName " + e.Message + " " + e.StackTrace);
             }
@@ -476,28 +506,30 @@ namespace MOARANDROIDS
             //On enleve le mind de la liste des minds en cours de replication
             csc.replicatingMinds.Remove(cpawn);
 
-            Find.LetterStack.ReceiveLetter("ATPP_LetterSkyCloudReplicateOK".Translate(), "ATPP_LetterSkyCloudReplicateOKDesc".Translate(cpawn.LabelShortCap, skyCloudHost.TryGetComp<CompSkyCloudCore>().getName()), LetterDefOf.PositiveEvent, parent);
+            Find.LetterStack.ReceiveLetter("ATPP_LetterSkyCloudReplicateOK".Translate(),
+                "ATPP_LetterSkyCloudReplicateOKDesc".Translate(cpawn.LabelShortCap, skyCloudHost.TryGetComp<CompSkyCloudCore>().getName()), LetterDefOf.PositiveEvent, parent);
 
             resetUploadStuff();
         }
 
         public void OnMigrated()
         {
-            Pawn cpawn = (Pawn)parent;
+            var cpawn = (Pawn) parent;
             checkInterruptedUpload();
             if (migrationEndingGT == -1)
                 return;
             migrationEndingGT = -1;
 
-            CompSkyCloudCore csc = skyCloudHost.TryGetComp<CompSkyCloudCore>();
-            CompSkyCloudCore csc2 = migrationSkyCloudHostDest.TryGetComp<CompSkyCloudCore>();
+            var csc = skyCloudHost.TryGetComp<CompSkyCloudCore>();
+            var csc2 = migrationSkyCloudHostDest.TryGetComp<CompSkyCloudCore>();
 
 
             csc.RemoveMind(cpawn);
             csc2.storedMinds.Add(cpawn);
             skyCloudHost = migrationSkyCloudHostDest;
 
-            Find.LetterStack.ReceiveLetter("ATPP_LetterSkyCloudMigrateOK".Translate(), "ATPP_LetterSkyCloudMigrateOKDesc".Translate(cpawn.LabelShortCap, csc.getName(), csc2.getName()), LetterDefOf.PositiveEvent, skyCloudHost);
+            Find.LetterStack.ReceiveLetter("ATPP_LetterSkyCloudMigrateOK".Translate(),
+                "ATPP_LetterSkyCloudMigrateOKDesc".Translate(cpawn.LabelShortCap, csc.getName(), csc2.getName()), LetterDefOf.PositiveEvent, skyCloudHost);
             resetUploadStuff();
         }
 
@@ -506,15 +538,16 @@ namespace MOARANDROIDS
             Material avatar = null;
             Vector3 vector;
 
-            if ( (permuteEndingGT != -1 || showPermuteProgress) || (duplicateEndingGT != -1 || showDuplicateProgress) || uploadToSkyCloudEndingGT != -1 || downloadFromSkyCloudEndingGT != -1)
+            if (permuteEndingGT != -1 || showPermuteProgress || duplicateEndingGT != -1 || showDuplicateProgress || uploadToSkyCloudEndingGT != -1 ||
+                downloadFromSkyCloudEndingGT != -1)
                 avatar = Tex.UploadInProgress;
 
             if (avatar != null)
             {
-                vector = this.parent.TrueCenter();
-                vector.y = Altitudes.AltitudeFor(AltitudeLayer.MetaOverlays) + 0.28125f;
+                vector = parent.TrueCenter();
+                vector.y = AltitudeLayer.MetaOverlays.AltitudeFor() + 0.28125f;
                 vector.z += 1.4f;
-                vector.x += this.parent.def.size.x / 2;
+                vector.x += parent.def.size.x / 2;
 
                 Graphics.DrawMesh(MeshPool.plane08, vector, Quaternion.identity, avatar, 0);
             }
@@ -531,15 +564,15 @@ namespace MOARANDROIDS
                 controlMode = false;
             }
 
-            Pawn cpawn = (Pawn)parent;
+            var cpawn = (Pawn) parent;
 
-            Hediff he = cpawn.health.hediffSet.GetFirstHediffOfDef(DefDatabase<HediffDef>.GetNamed("ATPP_ConsciousnessUpload"));
+            var he = cpawn.health.hediffSet.GetFirstHediffOfDef(DefDatabase<HediffDef>.GetNamed("ATPP_ConsciousnessUpload"));
             if (he != null)
             {
                 cpawn.health.hediffSet.hediffs.Remove(he);
                 he.PostRemoved();
             }
-            
+
             he = cpawn.health.hediffSet.GetFirstHediffOfDef(DefDatabase<HediffDef>.GetNamed("ATPP_InRemoteControlMode"));
             if (he != null)
             {
@@ -552,44 +585,30 @@ namespace MOARANDROIDS
         {
             base.PostDrawExtraSelectionOverlays();
 
-            if( (permuteEndingGT != -1 && permuteRecipient != null) || showPermuteProgress)
-            {
+            if (permuteEndingGT != -1 && permuteRecipient != null || showPermuteProgress)
                 GenDraw.DrawLineBetween(parent.TrueCenter(), permuteRecipient.TrueCenter(), SimpleColor.Green);
-            }
 
-            if ((duplicateEndingGT != -1 && duplicateRecipient != null) || showDuplicateProgress)
-            {
+            if (duplicateEndingGT != -1 && duplicateRecipient != null || showDuplicateProgress)
                 GenDraw.DrawLineBetween(parent.TrueCenter(), duplicateRecipient.TrueCenter(), SimpleColor.Green);
-            }
 
             //Dessin liaison trasfert vers SkyCloud
-            if(uploadToSkyCloudEndingGT != -1 && skyCloudRecipient.Map == parent.Map)
-            {
+            if (uploadToSkyCloudEndingGT != -1 && skyCloudRecipient.Map == parent.Map)
                 GenDraw.DrawLineBetween(parent.TrueCenter(), skyCloudRecipient.TrueCenter(), SimpleColor.Green);
-            }
 
             //Dessin liaison entre controlleur et son/Ses SX
-            if (controlMode) {
-                if (SX != null && SX.Map == parent.Map)
-                {
-                    GenDraw.DrawLineBetween(parent.TrueCenter(), SX.Position.ToVector3(), SimpleColor.Blue);
-                }
+            if (controlMode)
+            {
+                if (SX != null && SX.Map == parent.Map) GenDraw.DrawLineBetween(parent.TrueCenter(), SX.Position.ToVector3(), SimpleColor.Blue);
                 if (extraSX.Count > 0)
-                {
                     foreach (var e in extraSX)
-                    {
                         if (e.Map == parent.Map)
-                        {
                             GenDraw.DrawLineBetween(parent.TrueCenter(), e.Position.ToVector3(), SimpleColor.Blue);
-                        }
-                }
-                }
             }
         }
 
         private void toggleControlMode()
         {
-            Pawn cpawn = (Pawn)parent;
+            var cpawn = (Pawn) parent;
 
             //Si dupication ou permutation en cours on empeche le mode control
             if (duplicateEndingGT != -1 || permuteEndingGT != -1)
@@ -612,40 +631,36 @@ namespace MOARANDROIDS
 
         private void addRemoteControlHediff()
         {
-            Pawn cpawn = (Pawn)parent;
+            var cpawn = (Pawn) parent;
             cpawn.health.AddHediff(DefDatabase<HediffDef>.GetNamed("ATPP_InRemoteControlMode"));
         }
 
         private void removeRemoteControlHediff()
         {
-            Pawn cpawn = (Pawn)parent;
-            Hediff he = cpawn.health.hediffSet.GetFirstHediffOfDef(DefDatabase<HediffDef>.GetNamed("ATPP_InRemoteControlMode"));
+            var cpawn = (Pawn) parent;
+            var he = cpawn.health.hediffSet.GetFirstHediffOfDef(DefDatabase<HediffDef>.GetNamed("ATPP_InRemoteControlMode"));
             if (he != null)
                 cpawn.health.RemoveHediff(he);
         }
 
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
         {
-            Pawn pawn = (Pawn)parent;
-            bool isPrisonner = pawn.IsPrisoner;
-            CompAndroidState cas = pawn.TryGetComp<CompAndroidState>();
-            bool isBlankAndroid = (cas != null && cas.isBlankAndroid);
+            var pawn = (Pawn) parent;
+            var isPrisonner = pawn.IsPrisoner;
+            var cas = pawn.TryGetComp<CompAndroidState>();
+            var isBlankAndroid = cas != null && cas.isBlankAndroid;
 
             //Si pas prisonier ET pas un surrogate non controlé && affecté au crafting
-            if (!isPrisonner && !(cas != null && cas.isSurrogate && cas.surrogateController == null) && pawn.workSettings != null && pawn.workSettings.WorkIsActive(Utils.WorkTypeDefSmithing) && Settings.androidsCanOnlyBeHealedByCrafter)
-            {
+            if (!isPrisonner && !(cas != null && cas.isSurrogate && cas.surrogateController == null) && pawn.workSettings != null &&
+                pawn.workSettings.WorkIsActive(Utils.WorkTypeDefSmithing) && Settings.androidsCanOnlyBeHealedByCrafter)
                 yield return new Command_Toggle
                 {
                     icon = Tex.RepairAndroid,
                     defaultLabel = "ATPP_RepairAndroids".Translate(),
                     defaultDesc = "ATPP_RepairAndroidsDesc".Translate(),
-                    isActive = (() => repairAndroids),
-                    toggleAction = delegate ()
-                    {
-                        repairAndroids = !repairAndroids;
-                    }
+                    isActive = () => repairAndroids,
+                    toggleAction = delegate { repairAndroids = !repairAndroids; }
                 };
-            }
 
             //Possibilitée réservé uniquement aux pucés ET connectés aux SkyMind
             if (!pawn.VXChipPresent())
@@ -656,33 +671,27 @@ namespace MOARANDROIDS
                 yield break;
 
             if (!isPrisonner && !isBlankAndroid)
-            {
                 yield return new Command_Toggle
                 {
                     icon = Tex.SurrogateMode,
-                    defaultLabel = "ATPP_EnableSurrogateControlMode".Translate(),// "ATPP_UseBattery".Translate(),
-                    defaultDesc = "ATPP_EnableSurrogateControlModeDesc".Translate(),//"ATPP_UseBatteryDesc".Translate(),
-                    isActive = (() => controlMode),
-                    toggleAction = delegate ()
-                    {
-                        toggleControlMode();
-                    }
+                    defaultLabel = "ATPP_EnableSurrogateControlMode".Translate(), // "ATPP_UseBattery".Translate(),
+                    defaultDesc = "ATPP_EnableSurrogateControlModeDesc".Translate(), //"ATPP_UseBatteryDesc".Translate(),
+                    isActive = () => controlMode,
+                    toggleAction = delegate { toggleControlMode(); }
                 };
-            }
 
             if (!Utils.GCATPP.isConnectedToSkyMind(pawn))
                 yield break;
 
 
-            bool transfertAllowed = Utils.mindTransfertsAllowed((Pawn)parent);
+            var transfertAllowed = Utils.mindTransfertsAllowed((Pawn) parent);
 
             if (isPrisonner)
-            {
                 //AJout bouton d'absorption d'esprit
                 //ATPP_MindAbsorption
                 if (mindAbsorptionEndingGT == -1 && Utils.GCATPP.isThereSkillServers())
                 {
-                    Texture2D tex = Tex.MindAbsorption;
+                    var tex = Tex.MindAbsorption;
                     if (!transfertAllowed)
                         tex = Tex.MindAbsorptionDisabled;
 
@@ -691,39 +700,38 @@ namespace MOARANDROIDS
                         icon = tex,
                         defaultLabel = "ATPP_MindAbsorption".Translate(),
                         defaultDesc = "ATPP_MindAbsorptionDesc".Translate(),
-                        action = delegate ()
+                        action = delegate
                         {
                             if (!transfertAllowed)
                                 return;
 
-                            Find.WindowStack.Add(new Dialog_Msg("ATPP_MindAbsorptionConfirm".Translate(), "ATPP_MindAbsorptionConfirmDesc".Translate(parent.LabelShortCap) + "\n" + ("ATPP_WarningSkyMindDisconnectionRisk").Translate(), delegate
-                            {
-                                mindAbsorptionStartGT = Find.TickManager.TicksGame;
-                                mindAbsorptionEndingGT = mindAbsorptionStartGT + 5000;
+                            Find.WindowStack.Add(new Dialog_Msg("ATPP_MindAbsorptionConfirm".Translate(),
+                                "ATPP_MindAbsorptionConfirmDesc".Translate(parent.LabelShortCap) + "\n" + "ATPP_WarningSkyMindDisconnectionRisk".Translate(), delegate
+                                {
+                                    mindAbsorptionStartGT = Find.TickManager.TicksGame;
+                                    mindAbsorptionEndingGT = mindAbsorptionStartGT + 5000;
 
-                                Messages.Message("ATPP_MindAbsorptionStarted".Translate(pawn.LabelShortCap), parent, MessageTypeDefOf.PositiveEvent);
-
-                            }, false));
+                                    Messages.Message("ATPP_MindAbsorptionStarted".Translate(pawn.LabelShortCap), parent, MessageTypeDefOf.PositiveEvent);
+                                }));
                         }
                     };
                 }
-            }
 
             //Si en mode controle alors on affiche le selecteur de SX
             if (controlMode && !isPrisonner)
             {
-                if ( (SX == null && availableSX.Count == 0) || (pawn.VX3ChipPresent() && availableSX.Count < Settings.VX3MaxSurrogateControllableAtOnce) )
+                if (SX == null && availableSX.Count == 0 || pawn.VX3ChipPresent() && availableSX.Count < Settings.VX3MaxSurrogateControllableAtOnce)
                 {
                     yield return new Command_Action
                     {
                         icon = Tex.AndroidToControlTarget,
                         defaultLabel = "ATPP_AndroidToControlTarget".Translate(),
                         defaultDesc = "ATPP_AndroidToControlTargetDesc".Translate(),
-                        action = delegate ()
+                        action = delegate
                         {
                             //Listing map de destination
-                            List<FloatMenuOption> opts = new List<FloatMenuOption>();
-                            string lib = "";
+                            var opts = new List<FloatMenuOption>();
+                            var lib = "";
                             foreach (var m in Find.Maps)
                             {
                                 if (m == Find.CurrentMap)
@@ -734,21 +742,21 @@ namespace MOARANDROIDS
                                 opts.Add(new FloatMenuOption(lib, delegate
                                 {
                                     Current.Game.CurrentMap = m;
-                                    Designator_AndroidToControl x = new Designator_AndroidToControl((Pawn)parent);
+                                    var x = new Designator_AndroidToControl((Pawn) parent);
                                     Find.DesignatorManager.Select(x);
-
-                                }, MenuOptionPriority.Default, null, null, 0f, null, null));
+                                }));
                             }
+
                             if (opts.Count != 0)
                             {
                                 if (opts.Count == 1)
                                 {
-                                    Designator_AndroidToControl x = new Designator_AndroidToControl((Pawn)parent);
+                                    var x = new Designator_AndroidToControl((Pawn) parent);
                                     Find.DesignatorManager.Select(x);
                                 }
                                 else
                                 {
-                                    FloatMenu floatMenuMap = new FloatMenu(opts);
+                                    var floatMenuMap = new FloatMenu(opts);
                                     Find.WindowStack.Add(floatMenuMap);
                                 }
                             }
@@ -757,40 +765,36 @@ namespace MOARANDROIDS
                     //yield return new Designator_AndroidToControl((Pawn)parent);
 
                     if (Utils.isThereNotControlledSurrogateInCaravan())
-                    {
                         //Si drones SX no controllés dans une caravane
                         yield return new Command_Action
                         {
                             icon = Tex.AndroidToControlTargetRecovery,
                             defaultLabel = "ATPP_AndroidToControlTargetRecoverCaravan".Translate(),
                             defaultDesc = "ATPP_AndroidToControlTargetRecoverCaravanDesc".Translate(),
-                            action = delegate ()
+                            action = delegate
                             {
-                                Utils.ShowFloatMenuNotCOntrolledSurrogateInCaravan((Pawn)parent, delegate (Pawn sSX)
-                                 {
-                                     if (!Utils.GCATPP.isConnectedToSkyMind(sSX))
-                                     {
-                                         //Tentative connection au skymind 
-                                         if (!Utils.GCATPP.connectUser(sSX))
-                                             return;
-                                     }
-                                     setControlledSurrogate(sSX);
-                                 });
+                                Utils.ShowFloatMenuNotCOntrolledSurrogateInCaravan((Pawn) parent, delegate(Pawn sSX)
+                                {
+                                    if (!Utils.GCATPP.isConnectedToSkyMind(sSX))
+                                        //Tentative connection au skymind 
+                                        if (!Utils.GCATPP.connectUser(sSX))
+                                            return;
+                                    setControlledSurrogate(sSX);
+                                });
                             }
                         };
-                    }
                 }
 
-                if(availableSX.Count > 0)
+                if (availableSX.Count > 0)
                     yield return new Command_Action
                     {
                         icon = Tex.AndroidToControlTargetDisconnect,
                         defaultLabel = "ATPP_AndroidToControlTargetDisconnect".Translate(),
                         defaultDesc = "ATPP_AndroidToControlTargetDisconnectDesc".Translate(),
-                        action = delegate ()
+                        action = delegate
                         {
                             //Impossibilité de deconnexion si le controleur à un mental break
-                            Pawn cpawn = (Pawn)parent;
+                            var cpawn = (Pawn) parent;
                             disconnectControlledSurrogate(null);
                         }
                     };
@@ -800,7 +804,7 @@ namespace MOARANDROIDS
             if (!pawn.VX2ChipPresent() && !pawn.VX3ChipPresent())
                 yield break;
 
-            Texture2D selTex = Tex.Permute;
+            var selTex = Tex.Permute;
 
 
             //Si en mode surrogate alors desactivation possibilité de duplication/permutation
@@ -816,18 +820,18 @@ namespace MOARANDROIDS
                 icon = selTex,
                 defaultLabel = "ATPP_Permute".Translate(),
                 defaultDesc = "ATPP_PermuteDesc".Translate(),
-                action = delegate ()
+                action = delegate
                 {
                     if (!transfertAllowed)
                         return;
 
-                    Utils.ShowFloatMenuPermuteOrDuplicateCandidate((Pawn)parent, delegate (Pawn target)
-                    {
-                        Find.WindowStack.Add(new Dialog_Msg("ATPP_PermuteConsciousnessConfirm".Translate(parent.LabelShortCap, target.LabelShortCap), "ATPP_PermuteConsciousnessConfirmDesc".Translate(parent.LabelShortCap, target.LabelShortCap) + "\n" + ("ATPP_WarningSkyMindDisconnectionRisk").Translate(), delegate
+                    Utils.ShowFloatMenuPermuteOrDuplicateCandidate((Pawn) parent,
+                        delegate(Pawn target)
                         {
-                            OnPermuteConfirmed((Pawn)parent, target);
-                        }, false));
-                    },true);
+                            Find.WindowStack.Add(new Dialog_Msg("ATPP_PermuteConsciousnessConfirm".Translate(parent.LabelShortCap, target.LabelShortCap),
+                                "ATPP_PermuteConsciousnessConfirmDesc".Translate(parent.LabelShortCap, target.LabelShortCap) + "\n" +
+                                "ATPP_WarningSkyMindDisconnectionRisk".Translate(), delegate { OnPermuteConfirmed((Pawn) parent, target); }));
+                        }, true);
                 }
             };
 
@@ -842,18 +846,18 @@ namespace MOARANDROIDS
                 icon = selTex,
                 defaultLabel = "ATPP_Duplicate".Translate(),
                 defaultDesc = "ATPP_DuplicateDesc".Translate(),
-                action = delegate ()
+                action = delegate
                 {
                     if (!transfertAllowed)
                         return;
 
-                    Utils.ShowFloatMenuPermuteOrDuplicateCandidate((Pawn)parent, delegate (Pawn target)
-                    {
-                        Find.WindowStack.Add(new Dialog_Msg("ATPP_DuplicateConsciousnessConfirm".Translate(parent.LabelShortCap, target.LabelShortCap), "ATPP_DuplicateConsciousnessConfirmDesc".Translate(parent.LabelShortCap, target.LabelShortCap) + "\n" + ("ATPP_WarningSkyMindDisconnectionRisk").Translate(), delegate
+                    Utils.ShowFloatMenuPermuteOrDuplicateCandidate((Pawn) parent,
+                        delegate(Pawn target)
                         {
-                            OnDuplicateConfirmed((Pawn)parent, target);
-                        }, false));
-                    });
+                            Find.WindowStack.Add(new Dialog_Msg("ATPP_DuplicateConsciousnessConfirm".Translate(parent.LabelShortCap, target.LabelShortCap),
+                                "ATPP_DuplicateConsciousnessConfirmDesc".Translate(parent.LabelShortCap, target.LabelShortCap) + "\n" +
+                                "ATPP_WarningSkyMindDisconnectionRisk".Translate(), delegate { OnDuplicateConfirmed((Pawn) parent, target); }));
+                        });
                 }
             };
 
@@ -872,22 +876,21 @@ namespace MOARANDROIDS
                     icon = selTex,
                     defaultLabel = "ATPP_MoveToSkyCloud".Translate(),
                     defaultDesc = "ATPP_MoveToSkyCloudDesc".Translate(),
-                    action = delegate ()
+                    action = delegate
                     {
-                        if ((!transfertAllowed || isPrisonner))
+                        if (!transfertAllowed || isPrisonner)
                             return;
 
-                        Utils.ShowFloatMenuSkyCloudCores( delegate (Building target)
+                        Utils.ShowFloatMenuSkyCloudCores(delegate(Building target)
                         {
-                            Find.WindowStack.Add(new Dialog_Msg("ATPP_MoveToSkyCloud".Translate(), "ATPP_MoveToSkyCloudDesc".Translate() + "\n" + ("ATPP_WarningSkyMindDisconnectionRisk").Translate(), delegate
-                            {
-                                OnMoveConsciousnessToSkyCloudCore((Pawn)parent, target);
-                            }, false));
+                            Find.WindowStack.Add(new Dialog_Msg("ATPP_MoveToSkyCloud".Translate(),
+                                "ATPP_MoveToSkyCloudDesc".Translate() + "\n" + "ATPP_WarningSkyMindDisconnectionRisk".Translate(),
+                                delegate { OnMoveConsciousnessToSkyCloudCore((Pawn) parent, target); }));
                         });
                     }
                 };
 
-                bool transfertAllowed2 = Utils.mindTransfertsAllowed((Pawn)parent,false);
+                var transfertAllowed2 = Utils.mindTransfertsAllowed((Pawn) parent, false);
                 if (controlMode)
                     transfertAllowed2 = false;
 
@@ -901,41 +904,37 @@ namespace MOARANDROIDS
                     icon = selTex,
                     defaultLabel = "ATPP_MoveFromSkyCloud".Translate(),
                     defaultDesc = "ATPP_MoveFromSkyCloudDesc".Translate(),
-                    action = delegate ()
+                    action = delegate
                     {
                         if (!transfertAllowed2)
                             return;
 
-                        Utils.ShowFloatMenuSkyCloudCores(delegate (Building target)
+                        Utils.ShowFloatMenuSkyCloudCores(delegate(Building target)
                         {
-                            CompSkyCloudCore csc = target.TryGetComp<CompSkyCloudCore>();
+                            var csc = target.TryGetComp<CompSkyCloudCore>();
 
-                            csc.showFloatMenuMindsStored(delegate (Pawn mind)
+                            csc.showFloatMenuMindsStored(delegate(Pawn mind)
                             {
-                                Find.WindowStack.Add(new Dialog_Msg("ATPP_MoveFromSkyCloud".Translate(), "ATPP_MoveFromSkyCloudDesc".Translate() + "\n" + ("ATPP_WarningSkyMindDisconnectionRisk").Translate(), delegate
-                                {
-                                    OnMoveConsciousnessFromSkyCloudCore(mind);
-                                }, false));
+                                Find.WindowStack.Add(new Dialog_Msg("ATPP_MoveFromSkyCloud".Translate(),
+                                    "ATPP_MoveFromSkyCloudDesc".Translate() + "\n" + "ATPP_WarningSkyMindDisconnectionRisk".Translate(),
+                                    delegate { OnMoveConsciousnessFromSkyCloudCore(mind); }));
                             });
                         });
                     }
                 };
-
             }
-
-            yield break;
         }
 
-        public void disconnectControlledSurrogate(Pawn surrogate, bool externalController=false, bool preventNoHost=false)
+        public void disconnectControlledSurrogate(Pawn surrogate, bool externalController = false, bool preventNoHost = false)
         {
-            Pawn cpawn = (Pawn)parent;
+            var cpawn = (Pawn) parent;
             //Arret du control d'un potentiel clone
             stopControlledSurrogate(surrogate, externalController, preventNoHost);
         }
 
         public override string CompInspectStringExtra()
         {
-            string ret = "";
+            var ret = "";
             try
             {
                 if (parent.Map == null)
@@ -947,14 +946,15 @@ namespace MOARANDROIDS
                     float p;
                     if (permuteEndingGT == -1)
                     {
-                        CompSurrogateOwner cso = permuteRecipient.TryGetComp<CompSurrogateOwner>();
-                        p = Math.Min(1.0f, (float)(Find.TickManager.TicksGame - cso.permuteStartGT) / (float)(cso.permuteEndingGT - cso.permuteStartGT));
+                        var cso = permuteRecipient.TryGetComp<CompSurrogateOwner>();
+                        p = Math.Min(1.0f, (Find.TickManager.TicksGame - cso.permuteStartGT) / (float) (cso.permuteEndingGT - cso.permuteStartGT));
                     }
                     else
                     {
-                        p = p = Math.Min(1.0f, (float)(Find.TickManager.TicksGame - permuteStartGT) / (float)(permuteEndingGT - permuteStartGT));
+                        p = p = Math.Min(1.0f, (Find.TickManager.TicksGame - permuteStartGT) / (float) (permuteEndingGT - permuteStartGT));
                     }
-                    ret += "ATPP_PermutationPercentage".Translate(((int)(p * (float)100)).ToString()) + "\n";
+
+                    ret += "ATPP_PermutationPercentage".Translate(((int) (p * 100)).ToString()) + "\n";
                 }
 
 
@@ -964,14 +964,15 @@ namespace MOARANDROIDS
                     float p;
                     if (duplicateEndingGT == -1)
                     {
-                        CompSurrogateOwner cso = duplicateRecipient.TryGetComp<CompSurrogateOwner>();
-                        p = p = Math.Min(1.0f, (float)(Find.TickManager.TicksGame - cso.duplicateStartGT) / (float)(cso.duplicateEndingGT - cso.duplicateStartGT));
+                        var cso = duplicateRecipient.TryGetComp<CompSurrogateOwner>();
+                        p = p = Math.Min(1.0f, (Find.TickManager.TicksGame - cso.duplicateStartGT) / (float) (cso.duplicateEndingGT - cso.duplicateStartGT));
                     }
                     else
                     {
-                        p = p = Math.Min(1.0f, (float)(Find.TickManager.TicksGame - duplicateStartGT) / (float)(duplicateEndingGT - duplicateStartGT));
+                        p = p = Math.Min(1.0f, (Find.TickManager.TicksGame - duplicateStartGT) / (float) (duplicateEndingGT - duplicateStartGT));
                     }
-                    ret += "ATPP_DuplicationPercentage".Translate(((int)(p * (float)100)).ToString()) + "\n";
+
+                    ret += "ATPP_DuplicationPercentage".Translate(((int) (p * 100)).ToString()) + "\n";
                 }
 
                 if (uploadToSkyCloudEndingGT != -1)
@@ -979,8 +980,8 @@ namespace MOARANDROIDS
                     //Calcul pourcentage de transfert
                     float p;
 
-                    p = p = Math.Min(1.0f, (float)(Find.TickManager.TicksGame - uploadToSkyCloudStartGT) / (float)(uploadToSkyCloudEndingGT - uploadToSkyCloudStartGT));
-                    ret += "ATPP_UploadSkyCloudPercentage".Translate(((int)(p * (float)100)).ToString()) + "\n";
+                    p = p = Math.Min(1.0f, (Find.TickManager.TicksGame - uploadToSkyCloudStartGT) / (float) (uploadToSkyCloudEndingGT - uploadToSkyCloudStartGT));
+                    ret += "ATPP_UploadSkyCloudPercentage".Translate(((int) (p * 100)).ToString()) + "\n";
                 }
 
                 if (downloadFromSkyCloudEndingGT != -1)
@@ -988,8 +989,8 @@ namespace MOARANDROIDS
                     //Calcul pourcentage de transfert
                     float p;
 
-                    p = p = Math.Min(1.0f, (float)(Find.TickManager.TicksGame - downloadFromSkyCloudStartGT) / (float)(downloadFromSkyCloudEndingGT - downloadFromSkyCloudStartGT));
-                    ret += "ATPP_DownloadFromSkyCloudPercentage".Translate(((int)(p * (float)100)).ToString()) + "\n";
+                    p = p = Math.Min(1.0f, (Find.TickManager.TicksGame - downloadFromSkyCloudStartGT) / (float) (downloadFromSkyCloudEndingGT - downloadFromSkyCloudStartGT));
+                    ret += "ATPP_DownloadFromSkyCloudPercentage".Translate(((int) (p * 100)).ToString()) + "\n";
                 }
 
                 if (mindAbsorptionEndingGT != -1)
@@ -997,33 +998,27 @@ namespace MOARANDROIDS
                     //Calcul pourcentage de transfert
                     float p;
 
-                    p = p = Math.Min(1.0f, (float)(Find.TickManager.TicksGame - mindAbsorptionStartGT) / (float)(mindAbsorptionEndingGT - mindAbsorptionStartGT));
-                    ret += "ATPP_MindAbsorptionProgress".Translate(((int)(p * (float)100)).ToString()) + "\n";
+                    p = p = Math.Min(1.0f, (Find.TickManager.TicksGame - mindAbsorptionStartGT) / (float) (mindAbsorptionEndingGT - mindAbsorptionStartGT));
+                    ret += "ATPP_MindAbsorptionProgress".Translate(((int) (p * 100)).ToString()) + "\n";
                 }
 
                 if (controlMode && availableSX.Count > 0)
                 {
-                    string lst = "";
+                    var lst = "";
                     foreach (var s in availableSX)
-                    {
                         if (SX == s)
-                        {
                             lst += Utils.getSavedSurrogateNameNick(SX) + ", ";
-                        }
                         else
-                        {
                             lst += Utils.getSavedSurrogateNameNick(s) + ", ";
-                        }
-                    }
 
                     ret += "ATPP_RemotelyControl".Translate(lst.TrimEnd(' ', ',')) + "\n";
                 }
 
                 return ret.TrimEnd('\r', '\n', ' ') + base.CompInspectStringExtra();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                Log.Message("[ATPP] CompSurrogateOwner.CompInspectStringExtra "+e.Message+" "+e.StackTrace);
+                Log.Message("[ATPP] CompSurrogateOwner.CompInspectStringExtra " + e.Message + " " + e.StackTrace);
                 return ret.TrimEnd('\r', '\n', ' ') + base.CompInspectStringExtra();
             }
         }
@@ -1047,23 +1042,22 @@ namespace MOARANDROIDS
         }
 
 
-        public void setControlledSurrogate(Pawn controlled, bool external=false)
+        public void setControlledSurrogate(Pawn controlled, bool external = false)
         {
-            Pawn cp = (Pawn)parent;
+            var cp = (Pawn) parent;
             if (cp == null)
                 return;
-            bool VX3Host = cp.VX3ChipPresent();
+            var VX3Host = cp.VX3ChipPresent();
 
             if (controlled == null)
                 return;
-            CompAndroidState cas = controlled.TryGetComp<CompAndroidState>();
+            var cas = controlled.TryGetComp<CompAndroidState>();
 
-            if (cas == null 
-                || ((SX != null && !VX3Host) || (VX3Host && availableSX.Count+1 > Settings.VX3MaxSurrogateControllableAtOnce)) 
-                || (!external && (!controlMode || !Utils.GCATPP.isConnectedToSkyMind(cp) || !Utils.GCATPP.isConnectedToSkyMind(controlled))))
+            if (cas == null || SX != null && !VX3Host || VX3Host && availableSX.Count + 1 > Settings.VX3MaxSurrogateControllableAtOnce ||
+                !external && (!controlMode || !Utils.GCATPP.isConnectedToSkyMind(cp) || !Utils.GCATPP.isConnectedToSkyMind(controlled)))
                 return;
 
-                externalController = external;
+            externalController = external;
 
             if (!external)
             {
@@ -1075,7 +1069,7 @@ namespace MOARANDROIDS
             cas.surrogateController = cp;
             cas.lastController = cp;
 
-            bool inMainSX = false;
+            var inMainSX = false;
 
             if (SX == null)
             {
@@ -1094,7 +1088,6 @@ namespace MOARANDROIDS
 
             //On ne sauvegarde les stats que si il sagit d'une laison vers un surrogate principale
             if (inMainSX)
-            {
                 //Si SX est un M7 on sauvegarde les skills (que si pas fait)
                 if (controlled.def.defName == "M7Mech" && savedSkillsBecauseM7Control == null)
                 {
@@ -1103,20 +1096,17 @@ namespace MOARANDROIDS
 
                     foreach (var s in cp.skills.skills)
                     {
-                        string k = s.def.defName + "-" + s.levelInt.ToString() + "-" + s.xpSinceLastLevel.ToString() + "-" + s.xpSinceMidnight.ToString();
+                        var k = s.def.defName + "-" + s.levelInt + "-" + s.xpSinceLastLevel + "-" + s.xpSinceMidnight;
                         savedSkillsBecauseM7Control.Add(k);
                     }
 
                     if (cp.workSettings != null && cp.workSettings.EverWork)
-                    {
                         foreach (var el in DefDatabase<WorkTypeDef>.AllDefsListForReading)
                         {
-                            string k = el.defName + "-" + cp.workSettings.GetPriority(el).ToString();
+                            var k = el.defName + "-" + cp.workSettings.GetPriority(el);
                             savedWorkAffectationBecauseM7Control.Add(k);
                         }
-                    }
                 }
-            }
 
             //Si pas la premiere connecction alors duplication 
             if (!inMainSX)
@@ -1133,12 +1123,12 @@ namespace MOARANDROIDS
                 //Sauvegarde nom du surrogate
                 Utils.saveSurrogateName(cp);
                 //Definition nom originel du controlleur
-                NameTriple nam = (NameTriple)controlled.Name;
+                var nam = (NameTriple) controlled.Name;
                 cp.Name = new NameTriple(nam.First, nam.Nick, nam.Last);
             }
 
             //On enleve le hediff de no host
-            Hediff he = controlled.health.hediffSet.GetFirstHediffOfDef(Utils.hediffNoHost);
+            var he = controlled.health.hediffSet.GetFirstHediffOfDef(Utils.hediffNoHost);
             if (he != null)
                 controlled.health.RemoveHediff(he);
             //On Ajout le hediff de remotely controlled
@@ -1151,20 +1141,13 @@ namespace MOARANDROIDS
             if (!externalController)
             {
                 if (cp.workSettings != null && cp.workSettings.EverWork)
-                {
                     foreach (var el in DefDatabase<WorkTypeDef>.AllDefsListForReading)
-                    {
                         controlled.workSettings.SetPriority(el, cp.workSettings.GetPriority(el));
-                    }
-                }
                 controlled.playerSettings.AreaRestriction = cp.playerSettings.AreaRestriction;
                 controlled.playerSettings.hostilityResponse = cp.playerSettings.hostilityResponse;
 
                 //ON duplique l'agenda du controleur sur le SX
-                for (int i = 0; i != 24; i++)
-                {
-                    controlled.timetable.SetAssignment(i, cp.timetable.GetAssignment(i));
-                }
+                for (var i = 0; i != 24; i++) controlled.timetable.SetAssignment(i, cp.timetable.GetAssignment(i));
             }
         }
 
@@ -1176,26 +1159,27 @@ namespace MOARANDROIDS
             return SX != null || extraSX.Count > 0;
         }
 
-        public void stopControlledSurrogate(Pawn surrogate, bool externalController=false, bool preventNoHost=false,bool noPrisonedSurrogateConversion=false)
+        public void stopControlledSurrogate(Pawn surrogate, bool externalController = false, bool preventNoHost = false, bool noPrisonedSurrogateConversion = false)
         {
             //Log.Message("SetControlledSurrogate DEB");
-            Pawn cp = (Pawn)parent;
+            var cp = (Pawn) parent;
 
             //Pas de surrogate controllé
-            if (!isThereSX() || (surrogate != null && !availableSX.Contains(surrogate)))
+            if (!isThereSX() || surrogate != null && !availableSX.Contains(surrogate))
                 return;
 
             //Demande d'arret de toutes les connexions
             if (surrogate == null)
             {
                 //Application effet de la  deconnexion au niveau mental
-                foreach(var s in extraSX)
+                foreach (var s in extraSX)
                 {
                     //Reset stats
                     Utils.initBodyAsSurrogate(s);
                     //Restauration nom
                     Utils.restoreSavedSurrogateName(s);
                 }
+
                 if (SX != null)
                 {
                     //Restauration nom SX
@@ -1234,15 +1218,15 @@ namespace MOARANDROIDS
                         foreach (var k in savedSkillsBecauseM7Control)
                         {
                             //Explode
-                            string[] vals = k.Split('-');
+                            var vals = k.Split('-');
                             if (vals.Count() != 4)
                                 continue;
 
-                            SkillDef sd = DefDatabase<SkillDef>.GetNamed(vals[0], false);
+                            var sd = DefDatabase<SkillDef>.GetNamed(vals[0], false);
                             if (sd == null)
                                 continue;
 
-                            int levelInt = 0;
+                            var levelInt = 0;
                             float xpSinceLastLevel = 0;
                             float xpSinceMidnight = 0;
 
@@ -1252,27 +1236,25 @@ namespace MOARANDROIDS
                             }
                             catch (Exception)
                             {
-
                             }
+
                             try
                             {
                                 xpSinceLastLevel = float.Parse(vals[2]);
                             }
                             catch (Exception)
                             {
-
                             }
+
                             try
                             {
                                 xpSinceMidnight = float.Parse(vals[3]);
                             }
                             catch (Exception)
                             {
-
                             }
 
                             foreach (var s in cp.skills.skills)
-                            {
                                 if (s.def == sd)
                                 {
                                     s.levelInt = levelInt;
@@ -1280,35 +1262,31 @@ namespace MOARANDROIDS
                                     s.xpSinceMidnight = xpSinceMidnight;
                                     break;
                                 }
-                            }
                         }
 
                         if (cp.workSettings != null)
-                        {
                             foreach (var k in savedWorkAffectationBecauseM7Control)
                             {
                                 //Explode
-                                string[] vals = k.Split('-');
+                                var vals = k.Split('-');
                                 if (vals.Count() != 2)
                                     continue;
 
-                                WorkTypeDef wtd = DefDatabase<WorkTypeDef>.GetNamed(vals[0], false);
+                                var wtd = DefDatabase<WorkTypeDef>.GetNamed(vals[0], false);
                                 if (wtd == null)
                                     continue;
 
-                                int priority = 0;
+                                var priority = 0;
                                 try
                                 {
                                     priority = int.Parse(vals[1]);
                                 }
                                 catch (Exception)
                                 {
-
                                 }
 
                                 cp.workSettings.SetPriority(wtd, priority);
                             }
-                        }
 
                         savedSkillsBecauseM7Control = null;
                         savedWorkAffectationBecauseM7Control = null;
@@ -1320,7 +1298,7 @@ namespace MOARANDROIDS
                 }
 
                 //On enleve le controller
-                CompAndroidState cas = csurrogate.TryGetComp<CompAndroidState>();
+                var cas = csurrogate.TryGetComp<CompAndroidState>();
                 if (cas != null)
                     cas.surrogateController = null;
 
@@ -1329,7 +1307,7 @@ namespace MOARANDROIDS
                 //On effectue des operations directes sur les heddifs sans passer par AddHediff et RemoveHediff car cest surfonction peuvent checquer la mort du pawn et appelez Kill
                 // (sachant que cette routine est elle meme appelée lors d'un Kill via notre patch cela duplique la mort de la creature courante) 
                 //On enleve le hediff de remotely controled
-                Hediff he = csurrogate.health.hediffSet.GetFirstHediffOfDef(DefDatabase<HediffDef>.GetNamed("ATPP_RemotelyControlled"));
+                var he = csurrogate.health.hediffSet.GetFirstHediffOfDef(DefDatabase<HediffDef>.GetNamed("ATPP_RemotelyControlled"));
                 if (he != null)
                 {
                     if (Utils.insideKillFuncSurrogate)
@@ -1348,11 +1326,9 @@ namespace MOARANDROIDS
                 if (!externalController && !preventNoHost)
                 {
                     if (Utils.insideKillFuncSurrogate)
-                        csurrogate.health.hediffSet.AddDirect(HediffMaker.MakeHediff(Utils.hediffNoHost, csurrogate, null));
+                        csurrogate.health.hediffSet.AddDirect(HediffMaker.MakeHediff(Utils.hediffNoHost, csurrogate));
                     else
-                    {
                         csurrogate.health.AddHediff(Utils.hediffNoHost);
-                    }
                 }
 
 
@@ -1372,7 +1348,6 @@ namespace MOARANDROIDS
                 }
 
 
-
                 //Utils.disableGlobalKill = false;
 
                 Utils.soundDefSurrogateConnectionStopped.PlayOneShot(null);
@@ -1380,20 +1355,11 @@ namespace MOARANDROIDS
                 //Si surrogate est prisonnier on le met comme non prisonnier et le controlleur comme prisonnier
                 if (csurrogate.IsPrisoner && !noPrisonedSurrogateConversion)
                 {
-                    if (csurrogate.Faction != Faction.OfPlayer)
-                    {
-                        csurrogate.SetFaction(Faction.OfPlayer, null);
-                    }
+                    if (csurrogate.Faction != Faction.OfPlayer) csurrogate.SetFaction(Faction.OfPlayer);
 
-                    if (csurrogate.guest != null)
-                    {
-                        csurrogate.guest.SetGuestStatus(null, false);
-                    }
+                    if (csurrogate.guest != null) csurrogate.guest.SetGuestStatus(null);
 
-                    if (cp.guest != null)
-                    {
-                        cp.guest.SetGuestStatus(Faction.OfPlayer, true);
-                    }
+                    if (cp.guest != null) cp.guest.SetGuestStatus(Faction.OfPlayer, true);
 
                     //On va egalement forcer la fin du controlMode car le joueur na plus de controle pour l'enlever sur le colon
                     //SX = null;
@@ -1405,13 +1371,9 @@ namespace MOARANDROIDS
                 //On restaure a zero les worksettings du SX
 
                 if (csurrogate.def.defName != "M7Mech" && csurrogate.workSettings != null && csurrogate.workSettings.EverWork)
-                {
                     foreach (var el in DefDatabase<WorkTypeDef>.AllDefsListForReading)
-                    {
                         if (csurrogate.workSettings.GetPriority(el) != 0)
                             csurrogate.workSettings.SetPriority(el, 3);
-                    }
-                }
 
                 if (csurrogate.playerSettings != null)
                 {
@@ -1420,12 +1382,8 @@ namespace MOARANDROIDS
                 }
 
                 if (csurrogate.timetable != null)
-                {
-                    for (int i = 0; i != 24; i++)
-                    {
+                    for (var i = 0; i != 24; i++)
                         csurrogate.timetable.SetAssignment(i, TimeAssignmentDefOf.Anything);
-                    }
-                }
             }
             //Log.Message("SetControlledSurrogate FIN");
 
@@ -1465,14 +1423,14 @@ namespace MOARANDROIDS
             source.health.AddHediff(DefDatabase<HediffDef>.GetNamed("ATPP_ConsciousnessUpload"));
             dest.health.AddHediff(DefDatabase<HediffDef>.GetNamed("ATPP_ConsciousnessUpload"));
 
-            int CGT = Find.TickManager.TicksGame;
+            var CGT = Find.TickManager.TicksGame;
             permuteRecipient = dest;
             permuteStartGT = CGT;
-            permuteEndingGT = CGT + 60-(CGT%60) + Settings.mindPermutationHours * 2500;
+            permuteEndingGT = CGT + 60 - CGT % 60 + Settings.mindPermutationHours * 2500;
 
-            CompSurrogateOwner cso = dest.TryGetComp<CompSurrogateOwner>();
+            var cso = dest.TryGetComp<CompSurrogateOwner>();
             cso.showPermuteProgress = true;
-            cso.permuteRecipient = (Pawn)parent;
+            cso.permuteRecipient = (Pawn) parent;
 
             Messages.Message("ATPP_StartPermute".Translate(source.LabelShortCap, dest.LabelShortCap), parent, MessageTypeDefOf.PositiveEvent);
         }
@@ -1483,14 +1441,14 @@ namespace MOARANDROIDS
             source.health.AddHediff(DefDatabase<HediffDef>.GetNamed("ATPP_ConsciousnessUpload"));
             dest.health.AddHediff(DefDatabase<HediffDef>.GetNamed("ATPP_ConsciousnessUpload"));
 
-            int CGT = Find.TickManager.TicksGame;
+            var CGT = Find.TickManager.TicksGame;
             duplicateRecipient = dest;
             duplicateStartGT = CGT;
-            duplicateEndingGT = CGT + 60-(CGT%60) + Settings.mindDuplicationHours * 2500;
+            duplicateEndingGT = CGT + 60 - CGT % 60 + Settings.mindDuplicationHours * 2500;
 
-            CompSurrogateOwner cso = dest.TryGetComp<CompSurrogateOwner>();
+            var cso = dest.TryGetComp<CompSurrogateOwner>();
             cso.showDuplicateProgress = true;
-            cso.duplicateRecipient = (Pawn)parent;
+            cso.duplicateRecipient = (Pawn) parent;
 
             //Log.Message("DUPLICATION STARTED !! ");
             Messages.Message("ATPP_StartDuplicate".Translate(source.LabelShortCap, dest.LabelShortCap), parent, MessageTypeDefOf.PositiveEvent);
@@ -1500,50 +1458,49 @@ namespace MOARANDROIDS
         {
             source.health.AddHediff(DefDatabase<HediffDef>.GetNamed("ATPP_ConsciousnessUpload"));
 
-            int CGT = Find.TickManager.TicksGame;
+            var CGT = Find.TickManager.TicksGame;
             skyCloudRecipient = dest;
             uploadToSkyCloudStartGT = CGT;
-            uploadToSkyCloudEndingGT = CGT + 60 - (CGT % 60) + Settings.mindUploadToSkyCloudHours * 2500;
+            uploadToSkyCloudEndingGT = CGT + 60 - CGT % 60 + Settings.mindUploadToSkyCloudHours * 2500;
 
-            CompSkyCloudCore csc = dest.TryGetComp<CompSkyCloudCore>();
+            var csc = dest.TryGetComp<CompSkyCloudCore>();
 
             Messages.Message("ATPP_StartSkyCloudUpload".Translate(source.LabelShortCap, csc.getName()), parent, MessageTypeDefOf.PositiveEvent);
         }
 
         private void OnMoveConsciousnessFromSkyCloudCore(Pawn source)
         {
-            Pawn dest = (Pawn)parent;
+            var dest = (Pawn) parent;
             dest.health.AddHediff(DefDatabase<HediffDef>.GetNamed("ATPP_ConsciousnessUpload"));
 
-            int CGT = Find.TickManager.TicksGame;
+            var CGT = Find.TickManager.TicksGame;
             skyCloudDownloadRecipient = source;
             downloadFromSkyCloudStartGT = CGT;
-            downloadFromSkyCloudEndingGT = CGT + 60 - (CGT % 60) + Settings.mindUploadToSkyCloudHours * 2500;
+            downloadFromSkyCloudEndingGT = CGT + 60 - CGT % 60 + Settings.mindUploadToSkyCloudHours * 2500;
 
-            CompSkyCloudCore csc = source.TryGetComp<CompSkyCloudCore>();
+            var csc = source.TryGetComp<CompSkyCloudCore>();
 
-            string name = source.LabelShortCap;
-            CompSurrogateOwner cso = source.TryGetComp<CompSurrogateOwner>();
+            var name = source.LabelShortCap;
+            var cso = source.TryGetComp<CompSurrogateOwner>();
 
             if (cso != null && cso.isThereSX())
-            {
-                if(cso.SX != null)
+                if (cso.SX != null)
                     name = cso.SX.LabelShortCap;
-            }
 
             Messages.Message("ATPP_StartSkyCloudDownload".Translate(source.LabelShortCap, dest.LabelShortCap), parent, MessageTypeDefOf.PositiveEvent);
         }
 
         public void startMigration(Building dest)
         {
-            CompSkyCloudCore csc2 = dest.TryGetComp<CompSkyCloudCore>();
+            var csc2 = dest.TryGetComp<CompSkyCloudCore>();
 
-            int CGT = Find.TickManager.TicksGame;
+            var CGT = Find.TickManager.TicksGame;
             migrationSkyCloudHostDest = dest;
             migrationStartGT = CGT;
-            migrationEndingGT = CGT + 60 - (CGT % 60) + Settings.mindSkyCloudMigrationHours * 2500;
+            migrationEndingGT = CGT + 60 - CGT % 60 + Settings.mindSkyCloudMigrationHours * 2500;
 
-            Messages.Message("ATPP_StartSkyCloudMigration".Translate(((Pawn)parent).LabelShortCap, skyCloudHost.TryGetComp<CompSkyCloudCore>().getName(), csc2.getName()), parent, MessageTypeDefOf.PositiveEvent);
+            Messages.Message("ATPP_StartSkyCloudMigration".Translate(((Pawn) parent).LabelShortCap, skyCloudHost.TryGetComp<CompSkyCloudCore>().getName(), csc2.getName()), parent,
+                MessageTypeDefOf.PositiveEvent);
         }
 
         /*
@@ -1551,53 +1508,53 @@ namespace MOARANDROIDS
          */
         public void checkInterruptedUpload()
         {
-            bool killSelf = false;
-            Pawn cpawn = (Pawn)parent;
-           
+            var killSelf = false;
+            var cpawn = (Pawn) parent;
+
             //Permutation ou duplication en cours on test si les conditions d'arret sont presentes
-            if (permuteEndingGT != -1 || duplicateEndingGT != -1 || uploadToSkyCloudEndingGT != -1 || downloadFromSkyCloudEndingGT != -1 || mindAbsorptionEndingGT != -1 || migrationEndingGT != -1 || replicationEndingGT != -1)
+            if (permuteEndingGT != -1 || duplicateEndingGT != -1 || uploadToSkyCloudEndingGT != -1 || downloadFromSkyCloudEndingGT != -1 || mindAbsorptionEndingGT != -1 ||
+                migrationEndingGT != -1 || replicationEndingGT != -1)
             {
-                bool permuteRecipientDead = false;
+                var permuteRecipientDead = false;
                 if (permuteRecipient != null)
                     permuteRecipientDead = permuteRecipient.Dead;
 
-                bool duplicateRecipientDead = false;
+                var duplicateRecipientDead = false;
                 if (duplicateRecipient != null)
                     duplicateRecipientDead = duplicateRecipient.Dead;
 
-                bool recipientConnected = false;
+                var recipientConnected = false;
 
-                bool emitterConnected = false;
+                var emitterConnected = false;
 
                 if (permuteRecipient != null && Utils.GCATPP.isConnectedToSkyMind(permuteRecipient, true))
                     recipientConnected = true;
 
-                if (duplicateRecipient != null && Utils.GCATPP.isConnectedToSkyMind(duplicateRecipient,true))
+                if (duplicateRecipient != null && Utils.GCATPP.isConnectedToSkyMind(duplicateRecipient, true))
                     recipientConnected = true;
 
                 if (Utils.GCATPP.isThereSkillServers())
                     recipientConnected = true;
 
                 //L'équivalence du EST connecté sur le COre s'est si il est bien alimenté en elec
-                if ( (skyCloudRecipient != null && skyCloudRecipient.TryGetComp<CompPowerTrader>().PowerOn)
-                    || (replicationEndingGT != -1 && skyCloudHost.TryGetComp<CompPowerTrader>().PowerOn)
-                    || (migrationSkyCloudHostDest != null && migrationSkyCloudHostDest.TryGetComp<CompPowerTrader>().PowerOn)
-                    || (skyCloudDownloadRecipient != null && skyCloudDownloadRecipient.TryGetComp<CompSurrogateOwner>() != null && skyCloudDownloadRecipient.TryGetComp<CompSurrogateOwner>().skyCloudHost.TryGetComp<CompPowerTrader>().PowerOn))
-                {
+                if (skyCloudRecipient != null && skyCloudRecipient.TryGetComp<CompPowerTrader>().PowerOn
+                    || replicationEndingGT != -1 && skyCloudHost.TryGetComp<CompPowerTrader>().PowerOn
+                    || migrationSkyCloudHostDest != null && migrationSkyCloudHostDest.TryGetComp<CompPowerTrader>().PowerOn
+                    || skyCloudDownloadRecipient != null && skyCloudDownloadRecipient.TryGetComp<CompSurrogateOwner>() != null &&
+                    skyCloudDownloadRecipient.TryGetComp<CompSurrogateOwner>().skyCloudHost.TryGetComp<CompPowerTrader>().PowerOn)
                     recipientConnected = true;
-                }
 
                 //L'équivalence en mode migration est le check de si le host du mind est branché
-                if (Utils.GCATPP.isConnectedToSkyMind(cpawn,true)
-                    || (replicationEndingGT != -1 && skyCloudHost.TryGetComp<CompPowerTrader>().PowerOn)
-                    || (skyCloudHost != null && skyCloudHost.TryGetComp<CompPowerTrader>().PowerOn) )
+                if (Utils.GCATPP.isConnectedToSkyMind(cpawn, true)
+                    || replicationEndingGT != -1 && skyCloudHost.TryGetComp<CompPowerTrader>().PowerOn
+                    || skyCloudHost != null && skyCloudHost.TryGetComp<CompPowerTrader>().PowerOn)
                     emitterConnected = true;
 
                 //Si hote plus valide alors on arrete le processus et on kill les deux androids
-                if ((permuteRecipientDead || duplicateRecipientDead || cpawn.Dead || !emitterConnected || !recipientConnected))
+                if (permuteRecipientDead || duplicateRecipientDead || cpawn.Dead || !emitterConnected || !recipientConnected)
                 {
-                    bool showMindUploadNotif = true;
-                    string reason = "";
+                    var showMindUploadNotif = true;
+                    var reason = "";
                     if (permuteRecipientDead || duplicateRecipientDead)
                     {
                         reason = "ATPP_LetterInterruptedUploadDescCompHostDead".Translate();
@@ -1608,29 +1565,31 @@ namespace MOARANDROIDS
                     {
                         reason = "ATPP_LetterInterruptedUploadDescCompSourceDead".Translate();
                         if (permuteRecipient != null && !permuteRecipient.Dead)
-                            permuteRecipient.Kill(null, null);
+                            permuteRecipient.Kill(null);
 
                         if (duplicateRecipient != null && !duplicateRecipient.Dead)
-                            duplicateRecipient.Kill(null, null);
+                            duplicateRecipient.Kill(null);
                     }
 
-                    if (reason == "" )
+                    if (reason == "")
                     {
-                        if(mindAbsorptionEndingGT != -1)
+                        if (mindAbsorptionEndingGT != -1)
                         {
                             if (!cpawn.Dead)
                                 killSelf = true;
 
                             showMindUploadNotif = false;
-                            Find.LetterStack.ReceiveLetter("ATPP_LetterInterruptedMindAbsorption".Translate(), "ATPP_LetterInterruptedMindAbsorptionDesc".Translate(cpawn.LabelShortCap), LetterDefOf.ThreatSmall);
+                            Find.LetterStack.ReceiveLetter("ATPP_LetterInterruptedMindAbsorption".Translate(),
+                                "ATPP_LetterInterruptedMindAbsorptionDesc".Translate(cpawn.LabelShortCap), LetterDefOf.ThreatSmall);
                         }
                         else if (replicationEndingGT != -1)
                         {
-                            CompSkyCloudCore csc = skyCloudHost.TryGetComp<CompSkyCloudCore>();
-                            csc.replicatingMinds.Remove((Pawn)parent);
+                            var csc = skyCloudHost.TryGetComp<CompSkyCloudCore>();
+                            csc.replicatingMinds.Remove((Pawn) parent);
                             showMindUploadNotif = false;
 
-                            Find.LetterStack.ReceiveLetter("ATPP_LetterInterruptedSkyCloudReplication".Translate(), "ATPP_LetterInterruptedSkyCloudReplicationDesc".Translate(cpawn.LabelShortCap), LetterDefOf.ThreatSmall);
+                            Find.LetterStack.ReceiveLetter("ATPP_LetterInterruptedSkyCloudReplication".Translate(),
+                                "ATPP_LetterInterruptedSkyCloudReplicationDesc".Translate(cpawn.LabelShortCap), LetterDefOf.ThreatSmall);
                         }
                         else if (!recipientConnected || !emitterConnected)
                         {
@@ -1639,29 +1598,20 @@ namespace MOARANDROIDS
                             killSelf = true;
                             if (permuteEndingGT != -1)
                             {
-                                if (permuteRecipient != null && !permuteRecipient.Dead)
-                                {
-                                    permuteRecipient.Kill(null, null);
-                                }
+                                if (permuteRecipient != null && !permuteRecipient.Dead) permuteRecipient.Kill(null);
                             }
                             else if (duplicateEndingGT != -1)
                             {
-                                if (duplicateRecipient != null && !duplicateRecipient.Dead)
-                                {
-                                    duplicateRecipient.Kill(null, null);
-                                }
+                                if (duplicateRecipient != null && !duplicateRecipient.Dead) duplicateRecipient.Kill(null);
                             }
                         }
                     }
 
                     resetUploadStuff();
 
-                    if (killSelf && !cpawn.Dead)
-                    {
-                        cpawn.Kill(null, null);
-                    }
+                    if (killSelf && !cpawn.Dead) cpawn.Kill(null);
 
-                    if(showMindUploadNotif)
+                    if (showMindUploadNotif)
                         Utils.showFailedLetterMindUpload(reason);
                 }
             }
@@ -1671,14 +1621,14 @@ namespace MOARANDROIDS
         {
             if (duplicateRecipient != null)
             {
-                CompSurrogateOwner cso = duplicateRecipient.TryGetComp<CompSurrogateOwner>();
+                var cso = duplicateRecipient.TryGetComp<CompSurrogateOwner>();
                 cso.showDuplicateProgress = false;
                 cso.duplicateRecipient = null;
             }
 
             if (permuteRecipient != null)
             {
-                CompSurrogateOwner cso = permuteRecipient.TryGetComp<CompSurrogateOwner>();
+                var cso = permuteRecipient.TryGetComp<CompSurrogateOwner>();
                 cso.showPermuteProgress = false;
                 cso.permuteRecipient = null;
             }
@@ -1703,59 +1653,5 @@ namespace MOARANDROIDS
             mindAbsorptionEndingGT = -1;
             mindAbsorptionStartGT = -1;
         }
-
-        //Indique si le colon est en mode controle de clone
-        public bool controlMode = false;
-        //Désigne le SX visé
-        public Pawn SX = null;
-        //Désigne les SX additionnelles (possesseur de VX3)
-        public List<Pawn> extraSX = new List<Pawn>();
-
-        public int mindAbsorptionStartGT = 0;
-        public int mindAbsorptionEndingGT = -1;
-
-        public int permuteStartGT = 0;
-        public int permuteEndingGT = -1;
-
-        public int duplicateStartGT = 0;
-        public int duplicateEndingGT = -1;
-
-        public int uploadToSkyCloudStartGT = 0;
-        public int uploadToSkyCloudEndingGT = -1;
-
-        public int downloadFromSkyCloudStartGT = 0;
-        public int downloadFromSkyCloudEndingGT = -1;
-
-        public Pawn skyCloudDownloadRecipient;
-        public Building skyCloudRecipient;
-        public Pawn permuteRecipient;
-        public Pawn duplicateRecipient;
-
-        public bool showPermuteProgress = false;
-        public bool showDuplicateProgress = false;
-
-        public TraitDef ransomwareTraitAdded;
-        public int ransomwareSkillValue = -1;
-        public SkillDef ransomwareSkillStolen;
-
-        public bool externalController = true;
-
-        public Building skyCloudHost;
-        //Migration stuff related
-        public Building migrationSkyCloudHostDest;
-        public int migrationStartGT = 0;
-        public int migrationEndingGT = -1;
-        //Replication stuff related
-        public int replicationStartGT = 0;
-        public int replicationEndingGT = -1;
-
-        public bool repairAndroids = false;
-
-
-        //Permet de stocker une copies des levels de skills quand permutation avec un M7
-        public List<string> savedSkillsBecauseM7Control;
-        public List<string> savedWorkAffectationBecauseM7Control;
-
-        public List<Pawn> availableSX = new List<Pawn>();
     }
 }

@@ -1,16 +1,16 @@
-﻿using System;
-using Verse;
+﻿using Verse;
 
 namespace MOARANDROIDS
 {
     public class CompProperties_SurrogateSpawner : CompProperties
     {
-        public CompProperties_SurrogateSpawner()
-        {
-            this.compClass = typeof(CompSurrogateSpawner);
-        }
+        public int gender;
 
         public PawnKindDef Pawnkind;
-        public int gender;
+
+        public CompProperties_SurrogateSpawner()
+        {
+            compClass = typeof(CompSurrogateSpawner);
+        }
     }
 }

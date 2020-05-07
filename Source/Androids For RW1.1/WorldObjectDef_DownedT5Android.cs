@@ -1,6 +1,5 @@
-﻿using System;
+﻿using RimWorld;
 using RimWorld.Planet;
-using RimWorld;
 
 namespace MOARANDROIDS
 {
@@ -8,8 +7,8 @@ namespace MOARANDROIDS
     {
         public WorldObjectCompProperties_DownedT5Android()
         {
-            this.compClass = typeof(DownedT5AndroidComp);
-            this.compClass = typeof(TimedForcedExit);
+            compClass = typeof(DownedT5AndroidComp);
+            compClass = typeof(TimedForcedExit);
         }
     }
 }

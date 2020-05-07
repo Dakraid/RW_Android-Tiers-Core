@@ -1,12 +1,6 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
+﻿using System;
 using HarmonyLib;
-using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
-using UnityEngine;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -24,13 +18,11 @@ namespace MOARANDROIDS
             {
                 try
                 {
-                    if ((Utils.ExceptionAndroidList.Contains(ingester.def.defName)))
-                    {
-                            if (Settings.androidNeedToEatMore)
+                    if (Utils.ExceptionAndroidList.Contains(ingester.def.defName))
+                        if (Settings.androidNeedToEatMore)
                             __result *= 0.5f;
-                    }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Log.Message("[ATPP] Thing.Ingested : " + e.Message + " - " + e.StackTrace);
                 }
@@ -46,8 +38,9 @@ namespace MOARANDROIDS
             [HarmonyPostfix]
             public static void Listener(Thing __instance, ref bool __result)
             {
-                if (__instance is Pawn) {
-                    CompSurrogateOwner cso = ((Pawn)__instance).TryGetComp<CompSurrogateOwner>();
+                if (__instance is Pawn)
+                {
+                    var cso = ((Pawn) __instance).TryGetComp<CompSurrogateOwner>();
                     if (cso != null && cso.skyCloudHost != null)
                         __result = true;
                 }

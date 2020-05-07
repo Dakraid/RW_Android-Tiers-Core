@@ -1,11 +1,7 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
+﻿using System;
 using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -26,21 +22,18 @@ namespace MOARANDROIDS
                     if (Current.ProgramState != ProgramState.Playing)
                         return true;
 
-                    List<object> obj = Find.Selector.SelectedObjects;
+                    var obj = Find.Selector.SelectedObjects;
 
-                    if (obj != null && obj.Count == 1 && (obj[0] is Pawn))
+                    if (obj != null && obj.Count == 1 && obj[0] is Pawn)
                     {
-                        Pawn pawn = (Pawn)obj[0];
+                        var pawn = (Pawn) obj[0];
 
-                        if (pawn.IsAndroidTier())
-                        {
-                            warnOnFail = false;
-                        }
+                        if (pawn.IsAndroidTier()) warnOnFail = false;
                     }
 
                     return true;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Log.Message("[ATPP] ForbidUtility.SetForbidden " + e.Message + " " + e.StackTrace);
                     return true;
@@ -52,7 +45,7 @@ namespace MOARANDROIDS
          * PostFix évitant d'attribuer de need comfort et outdoor aux T1 et T2 et l'hygiene a l'ensemble des robots
          */
         [HarmonyPatch(typeof(ForbidUtility), "IsForbidden")]
-        [HarmonyPatch(new Type[] { typeof(Thing), typeof(Pawn)})]
+        [HarmonyPatch(new[] {typeof(Thing), typeof(Pawn)})]
         public class IsForbidden_Patch
         {
             [HarmonyPostfix]
@@ -60,7 +53,7 @@ namespace MOARANDROIDS
             {
                 try
                 {
-                    if (Utils.HOSPITALITY_LOADED && CPaths.HospitalityPatchInsideFindBedFor)// && target.Thing.GetType().IsSubclassOf(typeof(Building_Bed)))
+                    if (Utils.HOSPITALITY_LOADED && CPaths.HospitalityPatchInsideFindBedFor) // && target.Thing.GetType().IsSubclassOf(typeof(Building_Bed)))
                     {
                         if (pawn.IsAndroidTier())
                         {
@@ -76,6 +69,7 @@ namespace MOARANDROIDS
                             else
                                 __result = false;
                         }
+
                         //Log.Message(">>"+pawn.LabelShort+" "+t.def.defName+" "+__result);
                     }
                 }

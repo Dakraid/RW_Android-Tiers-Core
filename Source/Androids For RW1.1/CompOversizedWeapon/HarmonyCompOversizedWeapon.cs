@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Security.Cryptography;
+﻿using System.Linq;
 using HarmonyLib;
 using RimWorld;
 using UnityEngine;
@@ -15,7 +13,7 @@ namespace MOARANDROIDS
         {
             var harmony = new Harmony("rimworld.androitiers-jecrell.comps.oversized");
             harmony.Patch(typeof(PawnRenderer).GetMethod("DrawEquipmentAiming"),
-                new HarmonyMethod(typeof(HarmonyCompOversizedWeapon).GetMethod("DrawEquipmentAimingPreFix")), null);
+                new HarmonyMethod(typeof(HarmonyCompOversizedWeapon).GetMethod("DrawEquipmentAimingPreFix")));
             harmony.Patch(AccessTools.Method(typeof(Thing), "get_DefaultGraphic"), null,
                 new HarmonyMethod(typeof(HarmonyCompOversizedWeapon), nameof(get_Graphic_PostFix)));
         }
@@ -51,7 +49,7 @@ namespace MOARANDROIDS
                     var num = aimAngle - 90f;
                     var pawn = Traverse.Create(__instance).Field("pawn").GetValue<Pawn>();
                     if (pawn == null) return true;
-                    
+
                     Mesh mesh;
                     if (aimAngle > 20f && aimAngle < 160f)
                     {
@@ -69,19 +67,12 @@ namespace MOARANDROIDS
                     {
                         num = AdjustOffsetAtPeace(eq, pawn, compOversizedWeapon, num);
                     }
-                    
-                    if (compOversizedWeapon.Props != null && (!pawn.IsFighting() && (compOversizedWeapon.Props.verticalFlipNorth && pawn.Rotation == Rot4.North)))
-                    {
-                        num += 180f;
-                    }
-                    if (!pawn.IsFighting())
-                    {
-                        num = AdjustNonCombatRotation(pawn, num, compOversizedWeapon);
-                    }
+
+                    if (compOversizedWeapon.Props != null && !pawn.IsFighting() && compOversizedWeapon.Props.verticalFlipNorth && pawn.Rotation == Rot4.North) num += 180f;
+                    if (!pawn.IsFighting()) num = AdjustNonCombatRotation(pawn, num, compOversizedWeapon);
                     num %= 360f;
-                    
-         
-                    
+
+
                     var graphic_StackCount = eq.Graphic as Graphic_StackCount;
                     Material matSingle;
                     if (graphic_StackCount != null)
@@ -89,14 +80,14 @@ namespace MOARANDROIDS
                     else
                         matSingle = eq.Graphic.MatSingle;
 
-         
+
                     var s = new Vector3(eq.def.graphicData.drawSize.x, 1f, eq.def.graphicData.drawSize.y);
                     var matrix = default(Matrix4x4);
 
-         
-                    Vector3 curOffset = AdjustRenderOffsetFromDir(pawn, compOversizedWeapon);
-                    matrix.SetTRS(drawLoc + curOffset, Quaternion.AngleAxis(num, Vector3.up), s);                        
-                    
+
+                    var curOffset = AdjustRenderOffsetFromDir(pawn, compOversizedWeapon);
+                    matrix.SetTRS(drawLoc + curOffset, Quaternion.AngleAxis(num, Vector3.up), s);
+
                     Graphics.DrawMesh(!flip ? MeshPool.plane10 : MeshPool.plane10Flip, matrix, matSingle, 0);
                     if (compOversizedWeapon.Props != null && compOversizedWeapon.Props.isDualWeapon)
                     {
@@ -113,12 +104,15 @@ namespace MOARANDROIDS
                             curOffset = new Vector3(curOffset.x, curOffset.y - 0.1f, curOffset.z + 0.15f);
                             curPool = !flip ? MeshPool.plane10 : MeshPool.plane10Flip;
                         }
-                        matrix.SetTRS(drawLoc + curOffset, Quaternion.AngleAxis(num, Vector3.up), s);                        
+
+                        matrix.SetTRS(drawLoc + curOffset, Quaternion.AngleAxis(num, Vector3.up), s);
                         Graphics.DrawMesh(curPool, matrix, matSingle, 0);
                     }
+
                     return false;
                 }
             }
+
             //}
             return true;
         }
@@ -128,10 +122,7 @@ namespace MOARANDROIDS
             Mesh mesh;
             mesh = MeshPool.plane10;
             var offsetAtPeace = eq.def.equippedAngleOffset;
-            if (compOversizedWeapon.Props != null && (!pawn.IsFighting() && compOversizedWeapon.Props.verticalFlipOutsideCombat))
-            {
-                offsetAtPeace += 180f;
-            }
+            if (compOversizedWeapon.Props != null && !pawn.IsFighting() && compOversizedWeapon.Props.verticalFlipOutsideCombat) offsetAtPeace += 180f;
             num += offsetAtPeace;
             return num;
         }
@@ -141,49 +132,33 @@ namespace MOARANDROIDS
             if (compOversizedWeapon.Props != null)
             {
                 if (pawn.Rotation == Rot4.North)
-                {
                     num += compOversizedWeapon.Props.angleAdjustmentNorth;
-                }
                 else if (pawn.Rotation == Rot4.East)
-                {
                     num += compOversizedWeapon.Props.angleAdjustmentEast;
-                }
                 else if (pawn.Rotation == Rot4.West)
-                {
                     num += compOversizedWeapon.Props.angleAdjustmentWest;
-                }
-                else if (pawn.Rotation == Rot4.South)
-                {
-                    num += compOversizedWeapon.Props.angleAdjustmentSouth;
-                }
+                else if (pawn.Rotation == Rot4.South) num += compOversizedWeapon.Props.angleAdjustmentSouth;
             }
+
             return num;
         }
 
         private static Vector3 AdjustRenderOffsetFromDir(Pawn pawn, CompOversizedWeapon compOversizedWeapon)
         {
             var curDir = pawn.Rotation;
-         
-            Vector3 curOffset = Vector3.zero;
-         
+
+            var curOffset = Vector3.zero;
+
             if (compOversizedWeapon.Props != null)
             {
-         
                 curOffset = compOversizedWeapon.Props.northOffset;
                 if (curDir == Rot4.East)
-                {
                     curOffset = compOversizedWeapon.Props.eastOffset;
-                }
                 else if (curDir == Rot4.South)
-                {
                     curOffset = compOversizedWeapon.Props.southOffset;
-                }
-                else if (curDir == Rot4.West)
-                {
-                    curOffset = compOversizedWeapon.Props.westOffset;
-                }
+                else if (curDir == Rot4.West) curOffset = compOversizedWeapon.Props.westOffset;
             }
-         
+
             return curOffset;
         }
 
@@ -204,13 +179,14 @@ namespace MOARANDROIDS
                         if (getPawn != null)
                             return;
                     }
+
                     var compOversizedWeapon = thingWithComps.TryGetComp<CompOversizedWeapon>();
                     if (compOversizedWeapon != null)
                     {
                         if (compOversizedWeapon.Props?.groundGraphic == null)
                         {
                             tempGraphic.drawSize = __instance.def.graphicData.drawSize;
-                            __result = tempGraphic;   
+                            __result = tempGraphic;
                         }
                         else
                         {
@@ -225,12 +201,12 @@ namespace MOARANDROIDS
                                     newResult)
                                 {
                                     newResult.drawSize = compOversizedWeapon.Props.groundGraphic.drawSize;
-                                    __result = newResult;      
+                                    __result = newResult;
                                 }
                                 else
                                 {
                                     tempGraphic.drawSize = __instance.def.graphicData.drawSize;
-                                    __result = tempGraphic;   
+                                    __result = tempGraphic;
                                 }
                             }
                         }

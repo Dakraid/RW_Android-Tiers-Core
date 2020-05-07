@@ -1,14 +1,5 @@
-﻿using System;
+﻿using RimWorld;
 using Verse;
-using Verse.AI;
-using RimWorld;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Text;
-using Verse.AI.Group;
-using System.Linq;
-using HarmonyLib;
-using System.Reflection;
 
 namespace MOARANDROIDS
 {
@@ -18,16 +9,16 @@ namespace MOARANDROIDS
         {
             base.PostDeSpawn(map);
 
-            Building build = (Building)this.parent;
+            var build = (Building) parent;
 
             //if (this.parent.TryGetComp<CompPowerTrader>().PowerOn)
-                Utils.GCATPP.popSkyMindWANServer(build, map);
+            Utils.GCATPP.popSkyMindWANServer(build, map);
         }
 
         public override void PostDestroy(DestroyMode mode, Map previousMap)
         {
             base.PostDestroy(mode, previousMap);
-            Utils.GCATPP.popSkyMindWANServer((Building)this.parent, previousMap);
+            Utils.GCATPP.popSkyMindWANServer((Building) parent, previousMap);
         }
 
 
@@ -35,7 +26,7 @@ namespace MOARANDROIDS
         {
             base.ReceiveCompSignal(signal);
 
-            Building build = (Building)this.parent;
+            var build = (Building) parent;
 
             switch (signal)
             {
@@ -50,7 +41,7 @@ namespace MOARANDROIDS
 
         public override string CompInspectStringExtra()
         {
-            string ret = "";
+            var ret = "";
 
             if (parent.Map == null)
                 return base.CompInspectStringExtra();
@@ -65,8 +56,8 @@ namespace MOARANDROIDS
         {
             base.PostSpawnSetup(respawningAfterLoad);
 
-            if (this.parent.TryGetComp<CompPowerTrader>().PowerOn)
-                Utils.GCATPP.pushSkyMindWANServer((Building)this.parent);
+            if (parent.TryGetComp<CompPowerTrader>().PowerOn)
+                Utils.GCATPP.pushSkyMindWANServer((Building) parent);
         }
     }
 }

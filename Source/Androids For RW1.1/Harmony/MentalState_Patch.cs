@@ -1,11 +1,6 @@
-﻿using Verse;
+﻿using HarmonyLib;
+using Verse;
 using Verse.AI;
-using Verse.AI.Group;
-using HarmonyLib;
-using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
 
 namespace MOARANDROIDS
 {
@@ -23,18 +18,15 @@ namespace MOARANDROIDS
             {
                 if (__instance.pawn.IsSurrogateAndroid())
                 {
-                    CompSkyMind csm = __instance.pawn.TryGetComp<CompSkyMind>();
+                    var csm = __instance.pawn.TryGetComp<CompSkyMind>();
                     if (csm == null)
                         return;
 
                     if (csm.Infected == 4)
                     {
                         csm.Infected = -1;
-                        Hediff he = __instance.pawn.health.hediffSet.GetFirstHediffOfDef(Utils.hediffNoHost);
-                        if (he == null)
-                        {
-                            __instance.pawn.health.AddHediff(Utils.hediffNoHost);
-                        }
+                        var he = __instance.pawn.health.hediffSet.GetFirstHediffOfDef(Utils.hediffNoHost);
+                        if (he == null) __instance.pawn.health.AddHediff(Utils.hediffNoHost);
                     }
                 }
             }
@@ -47,19 +39,20 @@ namespace MOARANDROIDS
         public class TryStartMentalState_Patch
         {
             [HarmonyPostfix]
-            public static void Listener(MentalStateDef stateDef, string reason, bool forceWake, bool causedByMood, Pawn otherPawn, bool transitionSilently, Pawn ___pawn, MentalStateHandler __instance, ref bool __result)
+            public static void Listener(MentalStateDef stateDef, string reason, bool forceWake, bool causedByMood, Pawn otherPawn, bool transitionSilently, Pawn ___pawn,
+                MentalStateHandler __instance, ref bool __result)
             {
                 if (__result && ___pawn.IsSurrogateAndroid())
                 {
-                    CompAndroidState cas = ___pawn.TryGetComp<CompAndroidState>();
+                    var cas = ___pawn.TryGetComp<CompAndroidState>();
 
                     if (cas == null || cas.surrogateController == null)
                         return;
 
-                    CompSurrogateOwner cso = cas.surrogateController.TryGetComp<CompSurrogateOwner>();
-                    if(cso.skyCloudHost != null)
+                    var cso = cas.surrogateController.TryGetComp<CompSurrogateOwner>();
+                    if (cso.skyCloudHost != null)
                     {
-                        CompSkyCloudCore csc = cso.skyCloudHost.TryGetComp<CompSkyCloudCore>();
+                        var csc = cso.skyCloudHost.TryGetComp<CompSkyCloudCore>();
                         if (csc == null)
                             return;
 
@@ -70,6 +63,5 @@ namespace MOARANDROIDS
                 }
             }
         }
-
     }
 }

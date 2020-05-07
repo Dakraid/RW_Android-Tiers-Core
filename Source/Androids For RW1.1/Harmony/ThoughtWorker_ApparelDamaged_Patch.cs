@@ -1,11 +1,6 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
-using HarmonyLib;
+﻿using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -21,10 +16,8 @@ namespace MOARANDROIDS
             [HarmonyPostfix]
             public static void Listener(Pawn p, ref ThoughtState __result)
             {
-                if ((Utils.ExceptionAndroidListBasic.Contains(p.def.defName) || (p.story != null && p.story.traits.HasTrait(Utils.traitSimpleMinded))))
-                {
+                if (Utils.ExceptionAndroidListBasic.Contains(p.def.defName) || p.story != null && p.story.traits.HasTrait(Utils.traitSimpleMinded))
                     __result = ThoughtState.Inactive;
-                }
             }
         }
     }

@@ -1,11 +1,5 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
-using HarmonyLib;
-using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
+﻿using HarmonyLib;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -20,10 +14,9 @@ namespace MOARANDROIDS
             {
                 //Si transhumaniste et a un corp d'androide on simule +10 addedParts
                 if (hs.pawn.story != null && hs.pawn.story.traits.HasTrait(TraitDefOf.Transhumanist)
-                    && ((Utils.ExceptionAndroidList.Contains(hs.pawn.def.defName)) || (hs.pawn.TryGetComp<CompSurrogateOwner>() != null && hs.pawn.TryGetComp<CompSurrogateOwner>().skyCloudHost != null)))
-                {
+                                          && (Utils.ExceptionAndroidList.Contains(hs.pawn.def.defName) || hs.pawn.TryGetComp<CompSurrogateOwner>() != null &&
+                                              hs.pawn.TryGetComp<CompSurrogateOwner>().skyCloudHost != null))
                     __result += 20;
-                }
             }
         }
     }

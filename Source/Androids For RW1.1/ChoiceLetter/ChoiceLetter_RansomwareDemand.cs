@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Verse;
+﻿using System.Collections.Generic;
 using RimWorld;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -15,13 +14,13 @@ namespace MOARANDROIDS
         {
             get
             {
-                if (base.ArchivedOnly)
+                if (ArchivedOnly)
                 {
-                    yield return base.Option_Close;
+                    yield return Option_Close;
                 }
                 else
                 {
-                    DiaOption accept = new DiaOption("RansomDemand_Accept".Translate());
+                    var accept = new DiaOption("RansomDemand_Accept".Translate());
                     accept.action = delegate
                     {
                         Utils.anyPlayerColonnyPaySilver(fee);
@@ -29,21 +28,19 @@ namespace MOARANDROIDS
                         //Check si la faction tient parole
                         if (Rand.Chance(1.0f - Settings.riskCryptolockerScam))
                         {
+                            var cso = victim.TryGetComp<CompSurrogateOwner>();
 
-                            CompSurrogateOwner cso = victim.TryGetComp<CompSurrogateOwner>();
-                            
-                            if(cso.ransomwareTraitAdded != null)
+                            if (cso.ransomwareTraitAdded != null)
                             {
                                 if (victim.story.traits.HasTrait(cso.ransomwareTraitAdded))
                                 {
                                     Trait ct = null;
-                                    foreach(var t in victim.story.traits.allTraits)
-                                    {
-                                        if (t.def == cso.ransomwareTraitAdded) {
+                                    foreach (var t in victim.story.traits.allTraits)
+                                        if (t.def == cso.ransomwareTraitAdded)
+                                        {
                                             ct = t;
                                             break;
                                         }
-                                    }
 
                                     if (ct != null)
                                         victim.story.traits.allTraits.Remove(ct);
@@ -51,15 +48,14 @@ namespace MOARANDROIDS
                             }
                             else
                             {
-                                foreach(var s in victim.skills.skills)
-                                {
-                                    if(s.def == cso.ransomwareSkillStolen)
+                                foreach (var s in victim.skills.skills)
+                                    if (s.def == cso.ransomwareSkillStolen)
                                     {
                                         s.levelInt = cso.ransomwareSkillValue;
                                         break;
                                     }
-                                }
                             }
+
                             cso.clearRansomwareVar();
 
                             Messages.Message("ATPP_RansomwareClearedByFaction".Translate(faction.Name, victim.LabelShortCap), MessageTypeDefOf.PositiveEvent);
@@ -67,37 +63,29 @@ namespace MOARANDROIDS
                         else
                         {
                             //ATPP_LetterFactionScamCryptolocker
-                            Find.LetterStack.ReceiveLetter("ATPP_LetterFactionScam".Translate(), "ATPP_LetterFactionScamRansomwareDesc".Translate(faction.Name), LetterDefOf.ThreatBig);
+                            Find.LetterStack.ReceiveLetter("ATPP_LetterFactionScam".Translate(), "ATPP_LetterFactionScamRansomwareDesc".Translate(faction.Name),
+                                LetterDefOf.ThreatBig);
                         }
 
                         Find.LetterStack.RemoveLetter(this);
                     };
                     accept.resolveTree = true;
-                    if (!Utils.anyPlayerColonnyHasEnoughtSilver(fee))
-                    {
-                        accept.Disable("NeedSilverLaunchable".Translate(this.fee.ToString()));
-                    }
+                    if (!Utils.anyPlayerColonnyHasEnoughtSilver(fee)) accept.Disable("NeedSilverLaunchable".Translate(fee.ToString()));
                     yield return accept;
-                    yield return base.Option_Reject;
-                    yield return base.Option_Postpone;
+                    yield return Option_Reject;
+                    yield return Option_Postpone;
                 }
             }
         }
 
-        public override bool CanShowInLetterStack
-        {
-            get
-            {
-                return base.CanShowInLetterStack;
-            }
-        }
+        public override bool CanShowInLetterStack => base.CanShowInLetterStack;
 
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_References.Look<Faction>(ref this.faction, "faction", false);
-            Scribe_References.Look<Pawn>(ref this.victim, "victim", false);
-            Scribe_Values.Look<int>(ref this.fee, "fee", 0, false);
+            Scribe_References.Look(ref faction, "faction");
+            Scribe_References.Look(ref victim, "victim");
+            Scribe_Values.Look(ref fee, "fee");
         }
     }
 }

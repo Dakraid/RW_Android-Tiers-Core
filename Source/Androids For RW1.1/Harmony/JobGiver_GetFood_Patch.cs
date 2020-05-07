@@ -1,17 +1,13 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
+﻿using System;
 using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
+using Verse;
+using Verse.AI;
 
 namespace MOARANDROIDS
 {
     internal class JobGiver_GetFood_Patch
     {
-
         /*
          * Postfix permettant de rerouter le JobGiver_GetFood en JobDriver_GoReloadBattery
          */
@@ -104,12 +100,12 @@ namespace MOARANDROIDS
                     if (Utils.ExceptionAndroidCanReloadWithPowerList.Contains(pawn.def.defName))
                     {
                         //Check si l'android utilise sa batterie le cas non echeant on arrete l'override ET on l'arret aussi si l'android dans une caravane !!
-                        CompAndroidState ca = pawn.TryGetComp<CompAndroidState>();
+                        var ca = pawn.TryGetComp<CompAndroidState>();
                         if (ca == null || !pawn.Spawned || !ca.UseBattery || pawn.Drafted)
                             return;
 
                         //SI recharge LWPN en cours valide alors on annule la recharge par nourrite ou elec traditionelle
-                        if(Utils.POWERPP_LOADED && ca.connectedLWPNActive && ca.connectedLWPN != null)
+                        if (Utils.POWERPP_LOADED && ca.connectedLWPNActive && ca.connectedLWPN != null)
                         {
                             __result = null;
                             return;
@@ -125,8 +121,8 @@ namespace MOARANDROIDS
                         catch (Exception)
                         {
                         }
-                        
-                        if(pod != null)
+
+                        if (pod != null)
                         {
                             __result = new Job(DefDatabase<JobDef>.GetNamed("ATPP_GoReloadBattery"), new LocalTargetInfo(pod));
                             return;
@@ -134,15 +130,16 @@ namespace MOARANDROIDS
 
                         //Log.Message("Android want EAT !!! ");
                         //Recherche reload station disponible sur la map 
-                        Building rsb = Utils.GCATPP.getFreeReloadStation(pawn.Map, pawn);
+                        var rsb = Utils.GCATPP.getFreeReloadStation(pawn.Map, pawn);
                         if (rsb == null)
                         {
                             __result = null;
                             //Log.Message("No ReloadStation found !!");
                             return;
                         }
+
                         //Obtention place disponible sur la RS
-                        CompReloadStation rs = rsb.TryGetComp<CompReloadStation>();
+                        var rs = rsb.TryGetComp<CompReloadStation>();
 
                         if (rs == null)
                         {
@@ -154,7 +151,7 @@ namespace MOARANDROIDS
                         __result = new Job(DefDatabase<JobDef>.GetNamed("ATPP_GoReloadBattery"), new LocalTargetInfo(rs.getFreeReloadPlacePos(pawn)), new LocalTargetInfo(rsb));
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Log.Message("[ATPP] JobGiver_GetFood.TryGiveJob : " + e.Message + " - " + e.StackTrace);
                 }

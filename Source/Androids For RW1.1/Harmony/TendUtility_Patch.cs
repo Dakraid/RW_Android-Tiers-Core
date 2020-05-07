@@ -1,12 +1,8 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
+﻿using System;
 using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
 using UnityEngine;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -17,7 +13,7 @@ namespace MOARANDROIDS
          * Set correct stats for crafter healing androids
          */
         [HarmonyPatch(typeof(TendUtility), "CalculateBaseTendQuality")]
-        [HarmonyPatch(new Type[] { typeof(Pawn), typeof(Pawn), typeof(float), typeof(float) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal })]
+        [HarmonyPatch(new[] {typeof(Pawn), typeof(Pawn), typeof(float), typeof(float)}, new[] {ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal})]
         public class CalculateBaseTendQuality_Patch
         {
             [HarmonyPrefix]
@@ -30,27 +26,17 @@ namespace MOARANDROIDS
                 {
                     float num;
                     if (doctor != null)
-                    {
-                        num = doctor.GetStatValue(Utils.statDefAndroidTending, true);
-                    }
+                        num = doctor.GetStatValue(Utils.statDefAndroidTending);
                     else
-                    {
                         num = 0.75f;
-                    }
                     num *= medicinePotency;
-                    Building_Bed building_Bed = (patient == null) ? null : patient.CurrentBed();
-                    if (building_Bed != null)
-                    {
-                        num += building_Bed.GetStatValue(StatDefOf.MedicalTendQualityOffset, true);
-                    }
-                    if (doctor == patient && doctor != null)
-                    {
-                        num *= 0.7f;
-                    }
+                    var building_Bed = patient == null ? null : patient.CurrentBed();
+                    if (building_Bed != null) num += building_Bed.GetStatValue(StatDefOf.MedicalTendQualityOffset);
+                    if (doctor == patient && doctor != null) num *= 0.7f;
                     __result = Mathf.Clamp(num, 0f, medicineQualityMax);
                     return false;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Log.Message("[ATPP] TendUtility.CalculateBaseTendQuality " + e.Message + " " + e.StackTrace);
                     return true;

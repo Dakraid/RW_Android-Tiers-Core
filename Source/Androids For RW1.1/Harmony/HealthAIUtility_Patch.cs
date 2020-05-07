@@ -1,11 +1,8 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
+﻿using System;
 using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
+using Verse;
+using Verse.AI;
 
 namespace MOARANDROIDS
 {
@@ -24,14 +21,14 @@ namespace MOARANDROIDS
                 {
                     if (pawn.Faction == Faction.OfPlayer)
                     {
-                        CompAndroidState cas = pawn.TryGetComp<CompAndroidState>();
-                        if (cas != null && pawn.health != null && pawn.health.summaryHealth.SummaryHealthPercent >= 0.80f && cas.isSurrogate && cas.surrogateController == null && pawn.ownership != null && pawn.ownership.OwnedBed != null )//&& ReachabilityUtility.CanReach(pawn, pawn.ownership.OwnedBed, PathEndMode.OnCell, Danger.Deadly))
-                        {
+                        var cas = pawn.TryGetComp<CompAndroidState>();
+                        if (cas != null && pawn.health != null && pawn.health.summaryHealth.SummaryHealthPercent >= 0.80f && cas.isSurrogate && cas.surrogateController == null &&
+                            pawn.ownership != null &&
+                            pawn.ownership.OwnedBed != null) //&& ReachabilityUtility.CanReach(pawn, pawn.ownership.OwnedBed, PathEndMode.OnCell, Danger.Deadly))
                             __result = false;
-                        }
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Log.Message("[ATPP] HealthAIUtility.ShouldSeekMedicalRest " + e.Message + " " + e.StackTrace);
                 }
@@ -55,43 +52,44 @@ namespace MOARANDROIDS
                     if (Settings.androidsCanUseOrganicMedicine)
                         return;
 
-                    bool patientIsAndroid = Utils.ExceptionAndroidList.Contains(patient.def.defName) || patient.IsCyberAnimal();
+                    var patientIsAndroid = Utils.ExceptionAndroidList.Contains(patient.def.defName) || patient.IsCyberAnimal();
 
                     if (patient.playerSettings == null || patient.playerSettings.medCare <= MedicalCareCategory.NoMeds)
                     {
                         __result = null;
                         return;
                     }
+
                     if (Medicine.GetMedicineCountToFullyHeal(patient) <= 0)
                     {
                         __result = null;
                         return;
                     }
+
                     Predicate<Thing> predicate;
 
                     //COmpatibilité avec pharmacist, le medoc renvoyé doit avoir une quantitée de soin inferieur ou egal à celui renvoyé par les appels précédents
                     float medicalPotency = 0;
-                    if(__result != null)
-                    {
-                        medicalPotency = __result.def.GetStatValueAbstract(StatDefOf.MedicalPotency, null);
-                    }
+                    if (__result != null) medicalPotency = __result.def.GetStatValueAbstract(StatDefOf.MedicalPotency);
 
-                    if(patientIsAndroid)
-                        predicate = (Thing m) => Utils.ExceptionNanoKits.Contains(m.def.defName) && m.def.GetStatValueAbstract(StatDefOf.MedicalPotency, null)  <= medicalPotency && !m.IsForbidden(healer) && patient.playerSettings.medCare.AllowsMedicine(m.def) && healer.CanReserve(m, 10, 1, null, false);
+                    if (patientIsAndroid)
+                        predicate = m => Utils.ExceptionNanoKits.Contains(m.def.defName) && m.def.GetStatValueAbstract(StatDefOf.MedicalPotency) <= medicalPotency &&
+                                         !m.IsForbidden(healer) && patient.playerSettings.medCare.AllowsMedicine(m.def) && healer.CanReserve(m, 10, 1);
                     else
-                        predicate = (Thing m) => !Utils.ExceptionNanoKits.Contains(m.def.defName) && m.def.GetStatValueAbstract(StatDefOf.MedicalPotency, null) <= medicalPotency && !m.IsForbidden(healer) && !m.IsForbidden(healer) && patient.playerSettings.medCare.AllowsMedicine(m.def) && healer.CanReserve(m, 10, 1, null, false);
+                        predicate = m => !Utils.ExceptionNanoKits.Contains(m.def.defName) && m.def.GetStatValueAbstract(StatDefOf.MedicalPotency) <= medicalPotency &&
+                                         !m.IsForbidden(healer) && !m.IsForbidden(healer) && patient.playerSettings.medCare.AllowsMedicine(m.def) && healer.CanReserve(m, 10, 1);
 
-                    Func<Thing, float> priorityGetter = (Thing t) => t.def.GetStatValueAbstract(StatDefOf.MedicalPotency, null);
+                    Func<Thing, float> priorityGetter = t => t.def.GetStatValueAbstract(StatDefOf.MedicalPotency);
 
-                    IntVec3 position = patient.Position;
-                    Map map = patient.Map;
-                    List<Thing> searchSet = patient.Map.listerThings.ThingsInGroup(ThingRequestGroup.Medicine);
-                    PathEndMode peMode = PathEndMode.ClosestTouch;
-                    TraverseParms traverseParams = TraverseParms.For(healer, Danger.Deadly, TraverseMode.ByPawn, false);
-                    Predicate<Thing> validator = predicate;
+                    var position = patient.Position;
+                    var map = patient.Map;
+                    var searchSet = patient.Map.listerThings.ThingsInGroup(ThingRequestGroup.Medicine);
+                    var peMode = PathEndMode.ClosestTouch;
+                    var traverseParams = TraverseParms.For(healer);
+                    var validator = predicate;
                     __result = GenClosest.ClosestThing_Global_Reachable(position, map, searchSet, peMode, traverseParams, 9999f, validator, priorityGetter);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Log.Message("[ATPP] HealthAIUtility.FindBestMedicine(Error) : " + e.Message + " - " + e.StackTrace);
                 }

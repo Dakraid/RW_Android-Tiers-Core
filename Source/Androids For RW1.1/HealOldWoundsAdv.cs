@@ -2,73 +2,55 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using RimWorld;
 using Verse;
 
 namespace MOARANDROIDS
 {
     public class HediffComp_RegenWoundsAdv : HediffComp
     {
+        [CompilerGenerated] private static Func<Hediff, bool> stuff;
 
-        public HediffCompProperties_RegenWoundsAdv HealingProps
-        {
-            get
-            {
-                return this.props as HediffCompProperties_RegenWoundsAdv;
-            }
-        }
+        private int ticksToHeal;
+
+        public HediffCompProperties_RegenWoundsAdv HealingProps => props as HediffCompProperties_RegenWoundsAdv;
 
         public override void CompPostMake()
         {
             base.CompPostMake();
-            this.ResetTicksToHeal();
+            ResetTicksToHeal();
         }
 
         private void ResetTicksToHeal()
         {
-            this.ticksToHeal = Rand.Range(this.HealingProps.Delay, (this.HealingProps.Delay+1)) * 50;
+            ticksToHeal = Rand.Range(HealingProps.Delay, HealingProps.Delay + 1) * 50;
         }
 
         public override void CompPostTick(ref float severityAdjustment)
         {
-            this.ticksToHeal--;
-            if (this.ticksToHeal <= 0)
+            ticksToHeal--;
+            if (ticksToHeal <= 0)
             {
-                this.TryHealRandomWound();
-                this.ResetTicksToHeal();
+                TryHealRandomWound();
+                ResetTicksToHeal();
             }
         }
 
         private void TryHealRandomWound()
         {
-            IEnumerable<Hediff> hediffs = base.Pawn.health.hediffSet.hediffs;
-            if (HediffComp_RegenWoundsAdv.stuff == null)
-			{
-                HediffComp_RegenWoundsAdv.stuff = new Func<Hediff, bool>(HediffUtility.IsTended);
-            }
-            if (!hediffs.Where(HediffComp_RegenWoundsAdv.stuff).TryRandomElement(out Hediff hediff))
-            {
-                return;
-            }
-            if (hediff.def != RimWorld.HediffDefOf.WoundInfection || hediff.def.makesSickThought)
-            {
-                hediff.Severity -= this.HealingProps.HealingAmount;
-            }
+            IEnumerable<Hediff> hediffs = Pawn.health.hediffSet.hediffs;
+            if (stuff == null) stuff = HediffUtility.IsTended;
+            if (!hediffs.Where(stuff).TryRandomElement(out var hediff)) return;
+            if (hediff.def != RimWorld.HediffDefOf.WoundInfection || hediff.def.makesSickThought) hediff.Severity -= HealingProps.HealingAmount;
         }
 
         public override void CompExposeData()
         {
-            Scribe_Values.Look<int>(ref this.ticksToHeal, "ticksToHeal", 0, false);
+            Scribe_Values.Look(ref ticksToHeal, "ticksToHeal");
         }
 
         public override string CompDebugString()
         {
-            return "ticksToHeal: " + this.ticksToHeal;
+            return "ticksToHeal: " + ticksToHeal;
         }
-
-        private int ticksToHeal;
-
-        [CompilerGenerated]
-        private static Func<Hediff, bool> stuff;
-	}
+    }
 }

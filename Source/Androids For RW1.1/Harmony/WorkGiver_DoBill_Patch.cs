@@ -1,18 +1,16 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
-using HarmonyLib;
-using RimWorld;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
+using HarmonyLib;
+using RimWorld;
+using Verse;
+using Verse.AI;
 
 namespace MOARANDROIDS
 {
     internal class WorkGiver_DoBill_Patch
 
     {
-
         [HarmonyPatch(typeof(WorkGiver_DoBill), "AddEveryMedicineToRelevantThings")]
         public class AddEveryMedicineToRelevantThings_Patch
         {
@@ -23,29 +21,25 @@ namespace MOARANDROIDS
                 {
                     if (billGiver is Pawn)
                     {
-                        Pawn patient = (Pawn)billGiver;
+                        var patient = (Pawn) billGiver;
 
                         //On retire les medecine autre que nanokits
                         if (patient.IsAndroidTier() || patient.IsCyberAnimal())
                         {
                             foreach (var el in relevantThings.ToList())
-                            {
                                 if (!Utils.ExceptionNanoKits.Contains(el.def.defName))
                                     relevantThings.Remove(el);
-                            }
                         }
                         //On retire les nanokits
                         else
                         {
                             foreach (var el in relevantThings.ToList())
-                            {
                                 if (Utils.ExceptionNanoKits.Contains(el.def.defName))
                                     relevantThings.Remove(el);
-                            }
                         }
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Log.Message("[ATPP] WorkGiver_DoBill.AddEveryMedicineToRelevantThings " + e.Message + " " + e.StackTrace);
                 }
@@ -75,7 +69,7 @@ namespace MOARANDROIDS
                     //Medecin normal on jerte si t est un android
                     if (__instance.def.workType == WorkTypeDefOf.Doctor)
                     {
-                        if (thing is Pawn && ((Pawn)thing).IsAndroidTier())
+                        if (thing is Pawn && ((Pawn) thing).IsAndroidTier())
                             __result = null;
                     }
                     else
@@ -83,19 +77,21 @@ namespace MOARANDROIDS
                         if (Utils.CrafterDoctorJob.Contains(__instance.def))
                         {
                             //Crafteur on jerte si patient pas un android
-                            if (thing is Pawn && ((Pawn)thing).IsAndroidTier())
+                            if (thing is Pawn && ((Pawn) thing).IsAndroidTier())
                             {
-                                CompSurrogateOwner cso = pawn.TryGetComp<CompSurrogateOwner>();
+                                var cso = pawn.TryGetComp<CompSurrogateOwner>();
 
                                 if (cso == null || !cso.repairAndroids)
                                     __result = null;
                             }
                             else
+                            {
                                 __result = null;
+                            }
                         }
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Log.Message("[ATPP] WorkGiver_DoBill.JobOnThing " + e.Message + " " + e.StackTrace);
                 }

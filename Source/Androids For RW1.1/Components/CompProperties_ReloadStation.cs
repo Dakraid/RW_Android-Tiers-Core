@@ -1,6 +1,4 @@
-﻿using System;
-using Verse;
-using RimWorld;
+﻿using Verse;
 
 namespace MOARANDROIDS
 {
@@ -8,7 +6,7 @@ namespace MOARANDROIDS
     {
         public CompProperties_ReloadStation()
         {
-            this.compClass = typeof(CompReloadStation);
+            compClass = typeof(CompReloadStation);
         }
     }
 }

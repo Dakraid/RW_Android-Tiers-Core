@@ -1,14 +1,5 @@
-﻿using System;
+﻿using RimWorld;
 using Verse;
-using Verse.AI;
-using RimWorld;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Text;
-using Verse.AI.Group;
-using System.Linq;
-using HarmonyLib;
-using System.Reflection;
 
 namespace MOARANDROIDS
 {
@@ -18,21 +9,21 @@ namespace MOARANDROIDS
         {
             base.PostDeSpawn(map);
 
-            
-                Utils.GCATPP.popRelayTower((Building)this.parent, map);
+
+            Utils.GCATPP.popRelayTower((Building) parent, map);
         }
 
         public override void PostDestroy(DestroyMode mode, Map previousMap)
         {
             base.PostDestroy(mode, previousMap);
-            Utils.GCATPP.popRelayTower((Building)this.parent, previousMap);
+            Utils.GCATPP.popRelayTower((Building) parent, previousMap);
         }
 
         public override void ReceiveCompSignal(string signal)
         {
             base.ReceiveCompSignal(signal);
 
-            Building build = (Building)this.parent;
+            var build = (Building) parent;
 
             switch (signal)
             {
@@ -50,8 +41,8 @@ namespace MOARANDROIDS
         {
             base.PostSpawnSetup(respawningAfterLoad);
 
-            if (this.parent.TryGetComp<CompPowerTrader>().PowerOn)
-                Utils.GCATPP.pushRelayTower((Building)this.parent);
+            if (parent.TryGetComp<CompPowerTrader>().PowerOn)
+                Utils.GCATPP.pushRelayTower((Building) parent);
         }
     }
 }

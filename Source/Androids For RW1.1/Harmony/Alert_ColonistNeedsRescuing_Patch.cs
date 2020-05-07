@@ -1,10 +1,6 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
-using HarmonyLib;
+﻿using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -17,7 +13,6 @@ namespace MOARANDROIDS
             public static void Listener(Pawn p, ref bool __result)
             {
                 __result = __result && !p.IsSurrogateAndroid();
- 
             }
         }
     }

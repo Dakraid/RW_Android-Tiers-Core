@@ -1,12 +1,7 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
-using HarmonyLib;
+﻿using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
 using UnityEngine;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -22,11 +17,8 @@ namespace MOARANDROIDS
             public static bool Prefix(Rect outRect, Pawn pawn, bool allowOperations, bool showBloodLoss, Thing thingForMedBills)
             {
                 Utils.curSelPatientDrawMedOperationsTab = pawn;
-                CompSurrogateOwner cso = pawn.TryGetComp<CompSurrogateOwner>();
-                if(cso != null && cso.skyCloudHost != null)
-                {
-                    return false;
-                }
+                var cso = pawn.TryGetComp<CompSurrogateOwner>();
+                if (cso != null && cso.skyCloudHost != null) return false;
                 return true;
             }
 

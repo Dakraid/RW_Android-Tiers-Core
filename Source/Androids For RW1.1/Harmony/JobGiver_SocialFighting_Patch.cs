@@ -1,11 +1,7 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
-using HarmonyLib;
+﻿using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
+using Verse;
+using Verse.AI;
 
 namespace MOARANDROIDS
 {
@@ -21,11 +17,8 @@ namespace MOARANDROIDS
             [HarmonyPostfix]
             public static void Listener(Pawn pawn, ref Job __result)
             {
-                Pawn otherPawn = ((MentalState_SocialFighting)pawn.MentalState).otherPawn;
-                if (pawn.IsBasicAndroidTier() || otherPawn.IsBasicAndroidTier())
-                {
-                    __result = null;
-                }
+                var otherPawn = ((MentalState_SocialFighting) pawn.MentalState).otherPawn;
+                if (pawn.IsBasicAndroidTier() || otherPawn.IsBasicAndroidTier()) __result = null;
             }
         }
     }

@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Verse;
 using RimWorld;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -12,29 +11,20 @@ namespace MOARANDROIDS
         // Token: 0x06001252 RID: 4690 RVA: 0x0008CB84 File Offset: 0x0008AF84
         public override IEnumerable<BodyPartRecord> GetPartsToApplyOn(Pawn pawn, RecipeDef recipe)
         {
-            for (int i = 0; i < recipe.appliedOnFixedBodyParts.Count; i++)
+            for (var i = 0; i < recipe.appliedOnFixedBodyParts.Count; i++)
             {
-                BodyPartDef part = recipe.appliedOnFixedBodyParts[i];
-                List<BodyPartRecord> bpList = pawn.RaceProps.body.AllParts;
-                for (int j = 0; j < bpList.Count; j++)
+                var part = recipe.appliedOnFixedBodyParts[i];
+                var bpList = pawn.RaceProps.body.AllParts;
+                for (var j = 0; j < bpList.Count; j++)
                 {
-                    BodyPartRecord record = bpList[j];
+                    var record = bpList[j];
                     if (record.def == part)
-                    {
-                        if (pawn.health.hediffSet.GetNotMissingParts(BodyPartHeight.Undefined, BodyPartDepth.Undefined).Contains(record))
-                        {
+                        if (pawn.health.hediffSet.GetNotMissingParts().Contains(record))
                             if (!pawn.health.hediffSet.PartOrAnyAncestorHasDirectlyAddedParts(record))
-                            {
-                                if (!pawn.health.hediffSet.hediffs.Any((Hediff x) => x.Part == record && x.def == recipe.addsHediff))
-                                {
+                                if (!pawn.health.hediffSet.hediffs.Any(x => x.Part == record && x.def == recipe.addsHediff))
                                     yield return record;
-                                }
-                            }
-                        }
-                    }
                 }
             }
-            yield break;
         }
 
         // Token: 0x06001253 RID: 4691 RVA: 0x0008CBB0 File Offset: 0x0008AFB0
@@ -42,17 +32,11 @@ namespace MOARANDROIDS
         {
             if (billDoer != null)
             {
-                if (base.CheckSurgeryFailAndroid(billDoer, pawn, ingredients, part, bill))
-                {
-                    return;
-                }
-                TaleRecorder.RecordTale(TaleDefOf.DidSurgery, new object[]
-                {
-                    billDoer,
-                    pawn
-                });
+                if (CheckSurgeryFailAndroid(billDoer, pawn, ingredients, part, bill)) return;
+                TaleRecorder.RecordTale(TaleDefOf.DidSurgery, billDoer, pawn);
             }
-            pawn.health.AddHediff(this.recipe.addsHediff, part, null);
+
+            pawn.health.AddHediff(recipe.addsHediff, part, null);
         }
     }
 }

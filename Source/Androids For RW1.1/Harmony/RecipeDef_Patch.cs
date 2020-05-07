@@ -1,11 +1,5 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
-using HarmonyLib;
-using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
+﻿using HarmonyLib;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -22,17 +16,16 @@ namespace MOARANDROIDS
             public static void Listener(ref bool __result, RecipeDef __instance)
             {
                 if (Utils.curSelPatientDrawMedOperationsTab != null)
-                {
-                    if((Utils.curSelPatientDrawMedOperationsTab is Pawn))
+                    if (Utils.curSelPatientDrawMedOperationsTab is Pawn)
                     {
-                        CompAndroidState cas = Utils.curSelPatientDrawMedOperationsTab.TryGetComp<CompAndroidState>();
-                        
-                        if(cas != null)
+                        var cas = Utils.curSelPatientDrawMedOperationsTab.TryGetComp<CompAndroidState>();
+
+                        if (cas != null)
                         {
                             //Si androide surrogate on va virer la possibilité d'ajouter des VX chips
                             if (cas.isSurrogate)
                             {
-                                if(Utils.ExceptionVXNeuralChipSurgery.Contains(__instance.defName))
+                                if (Utils.ExceptionVXNeuralChipSurgery.Contains(__instance.defName))
                                     __result = false;
                             }
                             else
@@ -43,7 +36,6 @@ namespace MOARANDROIDS
                             }
                         }
                     }
-                }
             }
         }
     }

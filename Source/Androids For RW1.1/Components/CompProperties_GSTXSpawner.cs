@@ -1,17 +1,17 @@
-﻿using System;
-using Verse;
+﻿using Verse;
 
 namespace MOARANDROIDS
 {
     public class CompProperties_GSTXSpawner : CompProperties
     {
+        public string GSThing;
+
+        public PawnKindDef Pawnkind;
+        public int surrogate = 0;
+
         public CompProperties_GSTXSpawner()
         {
-            this.compClass = typeof(CompGSTXSpawner);
+            compClass = typeof(CompGSTXSpawner);
         }
-        
-        public PawnKindDef Pawnkind;
-        public string GSThing;
-        public int surrogate = 0;
     }
 }

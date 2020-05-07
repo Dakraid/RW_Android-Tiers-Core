@@ -1,11 +1,6 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
-using HarmonyLib;
+﻿using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -20,8 +15,7 @@ namespace MOARANDROIDS
             {
                 if (___pawn.IsAndroidTier())
                     return false;
-                else
-                    return true;
+                return true;
             }
         }
     }

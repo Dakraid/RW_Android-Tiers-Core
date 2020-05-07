@@ -1,12 +1,7 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
+﻿using System.Reflection;
 using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
-using System.Reflection;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -40,7 +35,7 @@ namespace MOARANDROIDS
             [HarmonyPostfix]
             public static void Postfix(Pawn ___pawn)
             {
-                if(Utils.insideResolveApparelGraphicsLastBodyTypeDef != null)
+                if (Utils.insideResolveApparelGraphicsLastBodyTypeDef != null)
                 {
                     ___pawn.story.bodyType = Utils.insideResolveApparelGraphicsLastBodyTypeDef;
                     Utils.insideResolveApparelGraphicsLastBodyTypeDef = null;
@@ -57,7 +52,7 @@ namespace MOARANDROIDS
                 if (Utils.RIMMSQOL_LOADED && Utils.ExceptionAndroidWithSkinList.Contains(__instance.pawn.def.defName))
                 {
                     Utils.lastResolveAllGraphicsHeadGraphicPath = __instance.pawn.story.HeadGraphicPath;
-                    __instance.pawn.story.GetType().GetField("headGraphicPath", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(__instance.pawn.story,null);
+                    __instance.pawn.story.GetType().GetField("headGraphicPath", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(__instance.pawn.story, null);
                 }
             }
         }

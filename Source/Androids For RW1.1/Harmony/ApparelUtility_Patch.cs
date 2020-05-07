@@ -1,12 +1,7 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
+﻿using System;
 using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
-using System.Reflection;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -19,7 +14,7 @@ namespace MOARANDROIDS
             [HarmonyPostfix]
             public static void Listener(ThingDef A, ThingDef B, BodyDef body, ref bool __result)
             {
-                if(A.defName == "VAE_Headgear_Scarf" && B.defName == "VAE_Headgear_Scarf")
+                if (A.defName == "VAE_Headgear_Scarf" && B.defName == "VAE_Headgear_Scarf")
                     __result = false;
             }
         }
@@ -35,35 +30,31 @@ namespace MOARANDROIDS
                     if (!p.IsAndroidTier())
                         return;
 
-                    bool councernFeet = apparel.apparel.bodyPartGroups.Contains(DefDatabase<BodyPartGroupDef>.GetNamed("Feet",false));
-                    bool councernHanbd = apparel.apparel.bodyPartGroups.Contains(DefDatabase<BodyPartGroupDef>.GetNamed("Hands", false));
+                    var councernFeet = apparel.apparel.bodyPartGroups.Contains(DefDatabase<BodyPartGroupDef>.GetNamed("Feet", false));
+                    var councernHanbd = apparel.apparel.bodyPartGroups.Contains(DefDatabase<BodyPartGroupDef>.GetNamed("Hands", false));
                     if (councernHanbd || councernFeet)
                     {
                         if (councernFeet)
                         {
                             foreach (var el in p.health.hediffSet.hediffs)
-                            {
-                                if ( Utils.ExceptionBionicHaveFeet.Contains(el.def.defName))
+                                if (Utils.ExceptionBionicHaveFeet.Contains(el.def.defName))
                                 {
                                     __result = true;
                                     return;
                                 }
-                            }
                         }
                         else
                         {
                             foreach (var el in p.health.hediffSet.hediffs)
-                            {
                                 if (Utils.ExceptionBionicHaveHand.Contains(el.def.defName))
                                 {
                                     __result = true;
                                     return;
                                 }
-                            }
                         }
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Log.Message("[ATPP] ApparelUtility.HasPartsToWear " + ex.Message + " " + ex.StackTrace);
                 }

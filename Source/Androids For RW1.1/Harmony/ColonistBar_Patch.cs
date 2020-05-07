@@ -1,12 +1,9 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
+﻿using System;
+using System.Collections.Generic;
 using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
 using UnityEngine;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -17,7 +14,8 @@ namespace MOARANDROIDS
         public class CheckRecacheEntries_Patch
         {
             [HarmonyPostfix]
-            public static void Listener(ColonistBar __instance, ref List<ColonistBar.Entry> ___cachedEntries, ref ColonistBarDrawLocsFinder ___drawLocsFinder, ref List<Vector2> ___cachedDrawLocs, ref float ___cachedScale)
+            public static void Listener(ColonistBar __instance, ref List<ColonistBar.Entry> ___cachedEntries, ref ColonistBarDrawLocsFinder ___drawLocsFinder,
+                ref List<Vector2> ___cachedDrawLocs, ref float ___cachedScale)
             {
                 try
                 {
@@ -27,7 +25,6 @@ namespace MOARANDROIDS
                     List<ColonistBar.Entry> toDel = null;
                     //Suppresssion de la barre du haut des surrogates non actifs
                     foreach (var e in ___cachedEntries)
-                    {
                         if (e.pawn.IsSurrogateAndroid(false, true))
                         {
                             if (toDel == null)
@@ -35,20 +32,17 @@ namespace MOARANDROIDS
 
                             toDel.Add(e);
                         }
-                    }
+
                     if (toDel != null)
                     {
-                        foreach (var e in toDel)
-                        {
-                            ___cachedEntries.Remove(e);
-                        }
+                        foreach (var e in toDel) ___cachedEntries.Remove(e);
 
                         __instance.drawer.Notify_RecachedEntries();
 
                         ___drawLocsFinder.CalculateDrawLocs(___cachedDrawLocs, out ___cachedScale);
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Log.Message("[ATPP] Colonistbar.CheckRecacheEntries " + e.Message + " " + e.StackTrace);
                 }

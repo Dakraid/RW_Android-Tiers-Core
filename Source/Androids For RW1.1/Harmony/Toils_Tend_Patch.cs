@@ -1,11 +1,8 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
+﻿using System;
 using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
+using Verse;
+using Verse.AI;
 
 namespace MOARANDROIDS
 {
@@ -25,32 +22,27 @@ namespace MOARANDROIDS
                 {
                     if (Settings.androidsCanOnlyBeHealedByCrafter && (patient.IsAndroidTier() || patient.IsCyberAnimal()))
                     {
-                        Toil toil = new Toil();
+                        var toil = new Toil();
                         toil.initAction = delegate
                         {
-                            Pawn actor = toil.actor;
-                            Medicine medicine = (Medicine)actor.CurJob.targetB.Thing;
-                            float num = (!patient.RaceProps.Animal) ? 500f : 175f;
-                            float num2 = (medicine != null) ? medicine.def.MedicineTendXpGainFactor : 0.5f;
-                            actor.skills.Learn(SkillDefOf.Crafting, num * num2, false);
+                            var actor = toil.actor;
+                            var medicine = (Medicine) actor.CurJob.targetB.Thing;
+                            var num = !patient.RaceProps.Animal ? 500f : 175f;
+                            var num2 = medicine != null ? medicine.def.MedicineTendXpGainFactor : 0.5f;
+                            actor.skills.Learn(SkillDefOf.Crafting, num * num2);
                             TendUtility.DoTend(actor, patient, medicine);
-                            if (medicine != null && medicine.Destroyed)
-                            {
-                                actor.CurJob.SetTarget(TargetIndex.B, LocalTargetInfo.Invalid);
-                            }
-                            if (toil.actor.CurJob.endAfterTendedOnce)
-                            {
-                                actor.jobs.EndCurrentJob(JobCondition.Succeeded, true);
-                            }
+                            if (medicine != null && medicine.Destroyed) actor.CurJob.SetTarget(TargetIndex.B, LocalTargetInfo.Invalid);
+                            if (toil.actor.CurJob.endAfterTendedOnce) actor.jobs.EndCurrentJob(JobCondition.Succeeded);
                         };
                         toil.defaultCompleteMode = ToilCompleteMode.Instant;
                         __result = toil;
 
                         return false;
                     }
+
                     return true;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Log.Message("[ATPP] Toils_Tend.FinalizeTend " + e.Message + " " + e.StackTrace);
                     return true;

@@ -1,11 +1,7 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
+﻿using System;
 using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -15,12 +11,9 @@ namespace MOARANDROIDS
         public class get_LabelCap
         {
             [HarmonyPostfix]
-            public static void Listener( ref string __result, Pawn ___pawn, Need __instance)
+            public static void Listener(ref string __result, Pawn ___pawn, Need __instance)
             {
-                if (__instance.def.defName == "Food" && ___pawn.IsAndroidTier())
-                {
-                    __result = "ATPP_EnergyNeed".Translate();
-                }
+                if (__instance.def.defName == "Food" && ___pawn.IsAndroidTier()) __result = "ATPP_EnergyNeed".Translate();
             }
         }
 
@@ -33,20 +26,8 @@ namespace MOARANDROIDS
                 try
                 {
                     if (__instance.def.defName == "Food" && ___pawn.IsAndroidTier())
-                    {
-                        __result = string.Concat(new string[]
-                            {
-                                __instance.LabelCap,
-                                ": ",
-                                __instance.CurLevelPercentage.ToStringPercent(),
-                                " (",
-                                __instance.CurLevel.ToString("0.##"),
-                                " / ",
-                                __instance.MaxLevel.ToString("0.##"),
-                                ")\n",
-                                "ATPP_EnergyNeedDesc".Translate()
-                            });
-                    }
+                        __result = string.Concat(__instance.LabelCap, ": ", __instance.CurLevelPercentage.ToStringPercent(), " (", __instance.CurLevel.ToString("0.##"), " / ",
+                            __instance.MaxLevel.ToString("0.##"), ")\n", "ATPP_EnergyNeedDesc".Translate());
                 }
                 catch (Exception e)
                 {

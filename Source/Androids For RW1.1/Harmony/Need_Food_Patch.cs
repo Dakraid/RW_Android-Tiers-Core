@@ -1,18 +1,12 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
-using HarmonyLib;
+﻿using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
+using Verse;
 
 namespace MOARANDROIDS
 {
     internal class Need_Food_Patch
 
     {
-
         /*
          * Mise en place d'un Maxlevel raisonable car avec l'algo de base de RW il st demeusuré de part la taille des M7 et donc la batterie (food) met BC de temps a s'écouler
          */
@@ -22,10 +16,7 @@ namespace MOARANDROIDS
             [HarmonyPostfix]
             public static void Listener(Pawn ___pawn, ref float __result)
             {
-                if (___pawn.def == Utils.M7Mech && ___pawn.IsSurrogateAndroid())
-                {
-                    __result = 1.5f;
-                }
+                if (___pawn.def == Utils.M7Mech && ___pawn.IsSurrogateAndroid()) __result = 1.5f;
             }
         }
 
@@ -39,10 +30,7 @@ namespace MOARANDROIDS
                 if (!___pawn.IsAndroidTier())
                     return;
 
-                if (Utils.androidIsValidPodForCharging(___pawn) || Utils.androidReloadingAtChargingStation(___pawn))
-                {
-                    __result = 0f;
-                }
+                if (Utils.androidIsValidPodForCharging(___pawn) || Utils.androidReloadingAtChargingStation(___pawn)) __result = 0f;
             }
         }
 

@@ -1,11 +1,7 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
+﻿using System;
 using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -32,14 +28,15 @@ namespace MOARANDROIDS
                     if (victim.IsSurrogateAndroid(true))
                     {
                         //Obtention controlleur
-                        CompAndroidState cas = victim.TryGetComp<CompAndroidState>();
+                        var cas = victim.TryGetComp<CompAndroidState>();
                         if (cas == null)
                             return;
 
                         //Arret du mode de control chez le controller
-                        CompSurrogateOwner cso = cas.surrogateController.TryGetComp<CompSurrogateOwner>();
+                        var cso = cas.surrogateController.TryGetComp<CompSurrogateOwner>();
                         cso.stopControlledSurrogate(victim);
                     }
+
                     //Log.Message("YOU KILLED END");
                     Utils.insideKillFuncSurrogate = false;
                 }

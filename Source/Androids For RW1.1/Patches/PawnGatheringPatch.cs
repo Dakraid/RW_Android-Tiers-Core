@@ -18,8 +18,9 @@ namespace MOARANDROIDS.Patches
 
             private static bool ReplacementForAndroids(Pawn p, out bool __result)
             {
-                __result = !p.Downed && (p.needs?.food == null || !p.needs.food.Starving) && p.health.hediffSet.BleedRateTotal <= 0f && (p.needs?.rest == null || p.needs.rest.CurCategory < RestCategory.Exhausted)
-                           && !p.health.hediffSet.HasTendableNonInjuryNonMissingPartHediff(false) && p.Awake() && !p.InAggroMentalState && !p.IsPrisoner;
+                __result = !p.Downed && (p.needs?.food == null || !p.needs.food.Starving) && p.health.hediffSet.BleedRateTotal <= 0f &&
+                           (p.needs?.rest == null || p.needs.rest.CurCategory < RestCategory.Exhausted)
+                           && !p.health.hediffSet.HasTendableNonInjuryNonMissingPartHediff() && p.Awake() && !p.InAggroMentalState && !p.IsPrisoner;
                 return false;
             }
         }

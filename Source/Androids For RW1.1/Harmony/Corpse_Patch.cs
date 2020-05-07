@@ -1,11 +1,8 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
+﻿using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -15,7 +12,7 @@ namespace MOARANDROIDS
          * PostFix servant à annuler les moods du butchering d'un android de Android Tiers
          */
         [HarmonyPatch(typeof(Corpse), "ButcherProducts")]
-        public class ButcherProducts_Patch                   
+        public class ButcherProducts_Patch
         {
             [HarmonyPostfix]
             public static void Listener(Pawn butcher, float efficiency, Corpse __instance, ref IEnumerable<Thing> __result)
@@ -23,21 +20,18 @@ namespace MOARANDROIDS
                 Utils.lastButcheredPawnIsAndroid = false;
 
                 //Si Surrogate T4 butcherisé alors on supprime le IA-Core des produits 
-                if(__instance.InnerPawn != null && __instance.InnerPawn.def.defName == Utils.T4 && __instance.InnerPawn.TryGetComp<CompAndroidState>() != null && __result != null)
+                if (__instance.InnerPawn != null && __instance.InnerPawn.def.defName == Utils.T4 && __instance.InnerPawn.TryGetComp<CompAndroidState>() != null && __result != null)
                 {
-                    CompAndroidState cas = __instance.InnerPawn.TryGetComp<CompAndroidState>();
+                    var cas = __instance.InnerPawn.TryGetComp<CompAndroidState>();
                     if (cas.isSurrogate)
                     {
-                        List<Thing> res = new List<Thing>();
-                        foreach(var r in __result.ToList())
-                        {
+                        var res = new List<Thing>();
+                        foreach (var r in __result.ToList())
                             if (r.def != null && r.def.defName != "AIPersonaCore")
                                 res.Add(r);
-                        }
                         __result = res;
                     }
                 }
-
             }
         }
 
@@ -53,9 +47,7 @@ namespace MOARANDROIDS
             {
                 if (__instance.InnerPawn.RaceProps.Humanlike
                     && Utils.ExceptionAndroidList.Contains(__instance.InnerPawn.def.defName))
-                {
                     __result = null;
-                }
             }
         }
 
@@ -68,14 +60,11 @@ namespace MOARANDROIDS
             [HarmonyPostfix]
             public static void Listener(Corpse __instance, ref bool __result)
             {
-                if ((__instance.InnerPawn.RaceProps.Humanlike
-                    && Utils.ExceptionAndroidList.Contains(__instance.InnerPawn.def.defName))
+                if (__instance.InnerPawn.RaceProps.Humanlike
+                    && Utils.ExceptionAndroidList.Contains(__instance.InnerPawn.def.defName)
                     || Utils.ExceptionAndroidAnimals.Contains(__instance.InnerPawn.def.defName))
-                {
-                        __result = false;
-                }
+                    __result = false;
             }
         }
-
     }
 }

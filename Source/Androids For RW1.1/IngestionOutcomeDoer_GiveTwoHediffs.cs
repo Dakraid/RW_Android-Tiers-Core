@@ -1,65 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using RimWorld;
 using Verse;
 
 namespace MOARANDROIDS
 {
-    class IngestionOutcomeDoer_GiveTwoHediffs : IngestionOutcomeDoer
+    internal class IngestionOutcomeDoer_GiveTwoHediffs : IngestionOutcomeDoer
     {
-        protected override void DoIngestionOutcomeSpecial(Pawn pawn, Thing ingested)
-        {
-            if (pawn.IsAndroid() == false)
-            {
-                Hediff hediff = HediffMaker.MakeHediff(this.hediffDef_Human, pawn, null);
-                float num;
-                if (this.severity > 0f)
-                {
-                    num = this.severity;
-                }
-                else
-                {
-                    num = this.hediffDef_Human.initialSeverity;
-                }
-                if (this.divideByBodySize)
-                {
-                    num /= pawn.BodySize;
-                }
-                hediff.Severity = num;
-                pawn.health.AddHediff(hediff, null, null, null);
-            }
-            else
-            {
-                Hediff hediff = HediffMaker.MakeHediff(this.hediffDef_Android, pawn, null);
-                float num;
-                if (this.severity > 0f)
-                {
-                    num = this.severity;
-                }
-                else
-                {
-                    num = this.hediffDef_Android.initialSeverity;
-                }
-                if (this.divideByBodySize)
-                {
-                    num /= pawn.BodySize;
-                }
-                hediff.Severity = num;
-                pawn.health.AddHediff(hediff, null, null, null);
-            }
-        }
-
-        public override IEnumerable<StatDrawEntry> SpecialDisplayStats(ThingDef parentDef)
-        {
-            if (parentDef.IsDrug && this.chance >= 1f)
-            {
-                foreach (StatDrawEntry s in this.hediffDef_Human.SpecialDisplayStats(StatRequest.ForEmpty()))
-                {
-                    yield return s;
-                }
-            }
-            yield break;
-        }
+        private bool divideByBodySize;
 
         public HediffDef hediffDef_Android;
 
@@ -67,8 +14,39 @@ namespace MOARANDROIDS
 
         public float severity = -1f;
 
-        private bool divideByBodySize;
+        protected override void DoIngestionOutcomeSpecial(Pawn pawn, Thing ingested)
+        {
+            if (pawn.IsAndroid() == false)
+            {
+                var hediff = HediffMaker.MakeHediff(hediffDef_Human, pawn);
+                float num;
+                if (severity > 0f)
+                    num = severity;
+                else
+                    num = hediffDef_Human.initialSeverity;
+                if (divideByBodySize) num /= pawn.BodySize;
+                hediff.Severity = num;
+                pawn.health.AddHediff(hediff, null, null);
+            }
+            else
+            {
+                var hediff = HediffMaker.MakeHediff(hediffDef_Android, pawn);
+                float num;
+                if (severity > 0f)
+                    num = severity;
+                else
+                    num = hediffDef_Android.initialSeverity;
+                if (divideByBodySize) num /= pawn.BodySize;
+                hediff.Severity = num;
+                pawn.health.AddHediff(hediff, null, null);
+            }
+        }
+
+        public override IEnumerable<StatDrawEntry> SpecialDisplayStats(ThingDef parentDef)
+        {
+            if (parentDef.IsDrug && chance >= 1f)
+                foreach (var s in hediffDef_Human.SpecialDisplayStats(StatRequest.ForEmpty()))
+                    yield return s;
+        }
     }
 }
-
-

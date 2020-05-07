@@ -1,11 +1,7 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
+﻿using System;
 using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -15,25 +11,20 @@ namespace MOARANDROIDS
         [HarmonyPatch(typeof(StartingPawnUtility), "NewGeneratedStartingPawn")]
         public class NewGeneratedStartingPawn_Patch
         {
-            [HarmonyAfter(new string[] { "rimworld.rwmods.androidtiers" })]
+            [HarmonyAfter("rimworld.rwmods.androidtiers")]
             [HarmonyPostfix]
             public static void Listener(ref Pawn __result)
             {
-                if (__result == null)
-                {
-                    return;
-                }
+                if (__result == null) return;
                 if (Faction.OfPlayer.def.basicMemberKind.defName != "AndroidT2ColonistGeneral")
                 {
-                    return;
                 }
                 else
                 {
-                    Random rnd = new Random();
+                    var rnd = new Random();
                     PawnGenerationRequest request;
-                    string pkd = "";
+                    var pkd = "";
                     if (!Utils.TXSERIE_LOADED)
-                    {
                         switch (rnd.Next(1, 3))
                         {
                             case 1:
@@ -46,9 +37,7 @@ namespace MOARANDROIDS
                                 pkd = Faction.OfPlayer.def.basicMemberKind.defName;
                                 break;
                         }
-                    }
                     else
-                    {
                         switch (rnd.Next(1, 5))
                         {
                             case 1:
@@ -67,8 +56,9 @@ namespace MOARANDROIDS
                                 pkd = Faction.OfPlayer.def.basicMemberKind.defName;
                                 break;
                         }
-                    }
-                    request = new PawnGenerationRequest(DefDatabase<PawnKindDef>.GetNamed(pkd, false), Faction.OfPlayer, PawnGenerationContext.PlayerStarter, -1, true, false, false, false, true, TutorSystem.TutorialMode, 20f, false, true, true, false, false, false, false);
+
+                    request = new PawnGenerationRequest(DefDatabase<PawnKindDef>.GetNamed(pkd, false), Faction.OfPlayer, PawnGenerationContext.PlayerStarter, -1, true, false,
+                        false, false, true, TutorSystem.TutorialMode, 20f, false, true, true, false);
                     __result = null;
                     try
                     {
@@ -76,9 +66,10 @@ namespace MOARANDROIDS
                     }
                     catch (Exception e)
                     {
-                        Log.Error("[ATPP] StartingPawnUtility.NewGeneratedStartingPawn " + e.Message+" "+e.StackTrace, false);
+                        Log.Error("[ATPP] StartingPawnUtility.NewGeneratedStartingPawn " + e.Message + " " + e.StackTrace);
                         __result = PawnGenerator.GeneratePawn(request);
                     }
+
                     __result.relations.everSeenByPlayer = true;
                     PawnComponentsUtility.AddComponentsForSpawn(__result);
                 }

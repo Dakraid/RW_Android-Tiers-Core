@@ -1,6 +1,5 @@
-﻿using Verse;
-using RimWorld;
-
+﻿using RimWorld;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -15,5 +14,4 @@ namespace MOARANDROIDS
 
         public static ThingDef Mote_HealingCross;
     }
-
 }

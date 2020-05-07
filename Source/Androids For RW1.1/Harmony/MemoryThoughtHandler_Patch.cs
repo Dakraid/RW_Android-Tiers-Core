@@ -1,16 +1,22 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
+﻿using System;
 using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
+using Verse;
 
 namespace MOARANDROIDS
 {
     internal class MemoryThoughtHandler_Patch
     {
+        private static bool shouldSkipCurrentMemory(ThoughtDef memDef, MemoryThoughtHandler __instance)
+        {
+            var cas = __instance.pawn.TryGetComp<CompAndroidState>();
+            return Utils.IgnoredThoughtsByAllAndroids.Contains(memDef.defName) && Utils.ExceptionAndroidList.Contains(__instance.pawn.def.defName)
+                   || Utils.lastButcheredPawnIsAndroid
+                   || cas != null && cas.isSurrogate && cas.surrogateController == null
+                   || Utils.pawnCurrentlyControlRemoteSurrogate(__instance.pawn)
+                   || Utils.IgnoredThoughtsByBasicAndroids.Contains(memDef.defName) &&
+                   (Utils.ExceptionAndroidListBasic.Contains(__instance.pawn.def.defName) || __instance.pawn.story.traits.HasTrait(Utils.traitSimpleMinded));
+        }
 
         [HarmonyPatch(typeof(MemoryThoughtHandler), "TryGainMemoryFast")]
         public class TryGainMemoryFast
@@ -20,10 +26,7 @@ namespace MOARANDROIDS
             {
                 try
                 {
-                    if (shouldSkipCurrentMemory(mem, __instance))
-                    {
-                        return false;
-                    }
+                    if (shouldSkipCurrentMemory(mem, __instance)) return false;
                     return true;
                 }
                 catch (Exception e)
@@ -38,7 +41,7 @@ namespace MOARANDROIDS
         * Postfix evitant que les droids est le debuff "Eat without table"
         */
         [HarmonyPatch(typeof(MemoryThoughtHandler), "TryGainMemory")]
-        [HarmonyPatch(new Type[] { typeof(Thought_Memory), typeof(Pawn)}, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal })]
+        [HarmonyPatch(new[] {typeof(Thought_Memory), typeof(Pawn)}, new[] {ArgumentType.Normal, ArgumentType.Normal})]
         public class TryGainMemory_Patch
         {
             [HarmonyPrefix]
@@ -47,30 +50,17 @@ namespace MOARANDROIDS
                 try
                 {
                     //Log.Message(newThought.def.defName);
-                    
+
                     //Si android (en général) alors squeeze de certains moods OU alors si android surrogate suppression de TOUT les moods (si pas controllé) DE MEME si controlleur avec connection en cours désaction des MOODS
-                    if (shouldSkipCurrentMemory(newThought.def, __instance))
-                    {
-                        return false;
-                    }
+                    if (shouldSkipCurrentMemory(newThought.def, __instance)) return false;
                     return true;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
-                    Log.Message("[ATPP] MemoryThoughtHandler.TryGainMemory : " + e.Message+" - "+e.StackTrace);
+                    Log.Message("[ATPP] MemoryThoughtHandler.TryGainMemory : " + e.Message + " - " + e.StackTrace);
                     return true;
                 }
             }
-        }
-
-        private static bool shouldSkipCurrentMemory(ThoughtDef memDef, MemoryThoughtHandler __instance)
-        {
-            CompAndroidState cas = __instance.pawn.TryGetComp<CompAndroidState>();
-            return (Utils.IgnoredThoughtsByAllAndroids.Contains(memDef.defName) && Utils.ExceptionAndroidList.Contains(__instance.pawn.def.defName))
-                        || Utils.lastButcheredPawnIsAndroid
-                        || (cas != null && cas.isSurrogate && cas.surrogateController == null)
-                        || Utils.pawnCurrentlyControlRemoteSurrogate(__instance.pawn)
-                        || (Utils.IgnoredThoughtsByBasicAndroids.Contains(memDef.defName) && (Utils.ExceptionAndroidListBasic.Contains(__instance.pawn.def.defName) || __instance.pawn.story.traits.HasTrait(Utils.traitSimpleMinded)));
         }
     }
 }

@@ -1,45 +1,42 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
+﻿using System;
 using HarmonyLib;
 using RimWorld;
-using System;
 using RimWorld.Planet;
+using Verse;
 
 namespace MOARANDROIDS
 {
     internal class Pawn_HealthTracker_Patch
     {
-
         [HarmonyPatch(typeof(Pawn_HealthTracker), "AddHediff")]
-        [HarmonyPatch(new Type[] { typeof(Hediff), typeof(BodyPartRecord), typeof(DamageInfo?), typeof(DamageWorker.DamageResult) })]
+        [HarmonyPatch(new[] {typeof(Hediff), typeof(BodyPartRecord), typeof(DamageInfo?), typeof(DamageWorker.DamageResult)})]
         public class AddHediff_Patch
         {
             [HarmonyPostfix]
             public static void Listener(ref Pawn ___pawn, ref Hediff hediff, BodyPartRecord part)
             {
-                try { 
-
+                try
+                {
                     //Si il sagit d'une VX0 alors passation du pawn en mode surrogate
                     if (hediff.def.defName == "ATPP_HediffVX0Chip" && (___pawn.Faction == Faction.OfPlayer || ___pawn.IsPrisoner))
                     {
-                        CompAndroidState cas = ___pawn.TryGetComp<CompAndroidState>();
+                        var cas = ___pawn.TryGetComp<CompAndroidState>();
                         if (cas == null || cas.isSurrogate)
                             return;
 
                         if (___pawn.Faction.IsPlayer && !Utils.preventVX0Thought)
                         {
-
                             //Simulation mort surrogate organic
                             PawnDiedOrDownedThoughtsUtility.TryGiveThoughts(___pawn, null, PawnDiedOrDownedThoughtsKind.Died);
 
-                            Pawn spouse = ___pawn.GetSpouse();
+                            var spouse = ___pawn.GetSpouse();
                             if (spouse != null && !spouse.Dead && spouse.needs.mood != null)
                             {
-                                MemoryThoughtHandler memories = spouse.needs.mood.thoughts.memories;
+                                var memories = spouse.needs.mood.thoughts.memories;
                                 memories.RemoveMemoriesOfDef(ThoughtDefOf.GotMarried);
                                 memories.RemoveMemoriesOfDef(ThoughtDefOf.HoneymoonPhase);
                             }
+
                             Traverse.Create(___pawn.relations).Method("AffectBondedAnimalsOnMyDeath").GetValue();
 
                             ___pawn.health.NotifyPlayerOfKilled(null, null, null);
@@ -48,7 +45,7 @@ namespace MOARANDROIDS
                         {
                             //Si pas de la faction du player alors on va changer sa faction dans simuler de mort
                             if (!___pawn.Faction.IsPlayer)
-                                ___pawn.SetFaction(Faction.OfPlayer, null);
+                                ___pawn.SetFaction(Faction.OfPlayer);
                         }
 
                         cas.initAsSurrogate();
@@ -61,7 +58,7 @@ namespace MOARANDROIDS
                         ___pawn.relations = new Pawn_RelationsTracker(___pawn);
 
                         //TOuts les SX sont simple minded et ont aucuns autres traits
-                        TraitDef td = DefDatabase<TraitDef>.GetNamed("SimpleMindedAndroid", false);
+                        var td = DefDatabase<TraitDef>.GetNamed("SimpleMindedAndroid", false);
                         Trait t = null;
                         if (td != null)
                             t = new Trait(td);
@@ -95,19 +92,13 @@ namespace MOARANDROIDS
                         Utils.GCATPP.incNextSXID(0);
 
                         if (!Utils.preventVX0Thought)
-                        {
                             //Ajout du thought de PUPPET
-                            foreach (Pawn current in PawnsFinder.AllMapsCaravansAndTravelingTransportPods_Alive_FreeColonistsAndPrisoners)
-                            {
-                                current.needs.mood.thoughts.memories.TryGainMemory(ThoughtMaker.MakeThought(Utils.thoughtDefVX0Puppet, 0), null);
-                            }
-                        }
+                            foreach (var current in PawnsFinder.AllMapsCaravansAndTravelingTransportPods_Alive_FreeColonistsAndPrisoners)
+                                current.needs.mood.thoughts.memories.TryGainMemory(ThoughtMaker.MakeThought(Utils.thoughtDefVX0Puppet, 0));
 
                         if (___pawn.IsPrisoner)
-                        {
                             if (___pawn.guest != null)
-                                ___pawn.guest.SetGuestStatus(Faction.OfPlayer, false);
-                        }
+                                ___pawn.guest.SetGuestStatus(Faction.OfPlayer);
                         if (___pawn.workSettings == null)
                         {
                             ___pawn.workSettings = new Pawn_WorkSettings(___pawn);
@@ -115,7 +106,7 @@ namespace MOARANDROIDS
                         }
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Log.Message("[ATPP] Pawn_HealthTracker.AddHediffPostfix " + ex.Message + " " + ex.StackTrace);
                 }
@@ -123,11 +114,11 @@ namespace MOARANDROIDS
         }
 
         [HarmonyPatch(typeof(Pawn_HealthTracker), "AddHediff")]
-        [HarmonyPatch(new Type[] { typeof(Hediff), typeof(BodyPartRecord), typeof(DamageInfo?), typeof(DamageWorker.DamageResult) })]
+        [HarmonyPatch(new[] {typeof(Hediff), typeof(BodyPartRecord), typeof(DamageInfo?), typeof(DamageWorker.DamageResult)})]
         public class AddHediff_PatchPrefix
         {
             [HarmonyPrefix]
-            public static bool Listener(ref Pawn ___pawn, ref Hediff hediff, BodyPartRecord part )
+            public static bool Listener(ref Pawn ___pawn, ref Hediff hediff, BodyPartRecord part)
             {
                 try
                 {
@@ -140,16 +131,13 @@ namespace MOARANDROIDS
                     else
                     {
                         //PRevent "Part is null" issue for android tiers stuff added on non androids
-                        if (part == null && Utils.ExceptionAndroidOnlyHediffs.Contains(hediff.def.defName))
-                        {
-                            return false;
-                        }
+                        if (part == null && Utils.ExceptionAndroidOnlyHediffs.Contains(hediff.def.defName)) return false;
                     }
 
                     //gére le cas des empilements de chips afin de restituer celles déjà présentes
                     if (Utils.ExceptionNeuralChip.Contains(hediff.def.defName))
                     {
-                        CompAndroidState cas = ___pawn.TryGetComp<CompAndroidState>();
+                        var cas = ___pawn.TryGetComp<CompAndroidState>();
 
                         //Interdiction ajouté VX puces dans un surrogate, on restitue la puce et on se barre
                         if (cas != null && cas.isSurrogate)
@@ -167,11 +155,11 @@ namespace MOARANDROIDS
                                 map1 = ___pawn.Map;
                             }
 
-                            GenSpawn.Spawn(hediff.def.spawnThingOnRemoved, pos1, map1, WipeMode.Vanish);
+                            GenSpawn.Spawn(hediff.def.spawnThingOnRemoved, pos1, map1);
                             return false;
                         }
 
-                        Hediff he = ___pawn.HaveNotStackableVXChip();
+                        var he = ___pawn.HaveNotStackableVXChip();
                         //Avant l'ajout de la VXChip le colon possédés déjà une puce on va la restaurer au joueur
                         if (he != null)
                         {
@@ -190,13 +178,13 @@ namespace MOARANDROIDS
                                 map = ___pawn.Map;
                             }
 
-                            GenSpawn.Spawn(he.def.spawnThingOnRemoved, pos, map, WipeMode.Vanish);
+                            GenSpawn.Spawn(he.def.spawnThingOnRemoved, pos, map);
                         }
                     }
 
                     return true;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Log.Message("[ATPP] Pawn_HealthTracker.AddHediff " + ex.Message + " " + ex.StackTrace);
                     return true;
@@ -213,12 +201,12 @@ namespace MOARANDROIDS
                 //Si il sagit d'une VX0 
                 if (hediff.def.defName == "ATPP_HediffVX0Chip")
                 {
-                    CompAndroidState cas = ___pawn.TryGetComp<CompAndroidState>();
+                    var cas = ___pawn.TryGetComp<CompAndroidState>();
                     if (cas == null)
                         return;
 
                     //Mort de l'hote
-                    ___pawn.Kill(null, null);
+                    ___pawn.Kill(null);
                 }
             }
         }
@@ -236,16 +224,16 @@ namespace MOARANDROIDS
                     if (___pawn.IsSurrogateAndroid(true) && ___pawn.Faction.IsPlayer)
                     {
                         //Obtention controlleur
-                        CompAndroidState cas = ___pawn.TryGetComp<CompAndroidState>();
+                        var cas = ___pawn.TryGetComp<CompAndroidState>();
                         if (cas == null)
                             return;
 
                         //Arret du mode de control chez le controller
-                        CompSurrogateOwner cso = cas.surrogateController.TryGetComp<CompSurrogateOwner>();
+                        var cso = cas.surrogateController.TryGetComp<CompSurrogateOwner>();
                         cso.stopControlledSurrogate(null);
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Log.Message("[ATPP] Pawn_HealthTracker.MakeDowned : " + e.Message + " - " + e.StackTrace);
                 }
@@ -257,7 +245,7 @@ namespace MOARANDROIDS
         public class NotifyPlayerOfKilled
         {
             [HarmonyPrefix]
-            public static bool Listener(DamageInfo? dinfo, Hediff hediff, Caravan caravan,Pawn ___pawn)
+            public static bool Listener(DamageInfo? dinfo, Hediff hediff, Caravan caravan, Pawn ___pawn)
             {
                 try
                 {
@@ -268,7 +256,8 @@ namespace MOARANDROIDS
                     //Si surrogate
                     if (___pawn.IsSurrogateAndroid() && !___pawn.IsPrisoner)
                     {
-                        Find.LetterStack.ReceiveLetter("ATPP_LetterSurrogateDisabled".Translate(___pawn.LabelShortCap), "ATPP_LetterSurrogateDisabledDesc".Translate(___pawn.LabelShortCap), LetterDefOf.Death, ___pawn, null, null);
+                        Find.LetterStack.ReceiveLetter("ATPP_LetterSurrogateDisabled".Translate(___pawn.LabelShortCap),
+                            "ATPP_LetterSurrogateDisabledDesc".Translate(___pawn.LabelShortCap), LetterDefOf.Death, ___pawn);
                         return false;
                     }
 
@@ -290,7 +279,7 @@ namespace MOARANDROIDS
         public class GetFirstHediffOfDef
         {
             [HarmonyPostfix]
-            public static void Listener(HediffSet __instance,ref Hediff __result, HediffDef def, bool mustBeVisible = false)
+            public static void Listener(HediffSet __instance, ref Hediff __result, HediffDef def, bool mustBeVisible = false)
             {
                 try
                 {
@@ -303,19 +292,14 @@ namespace MOARANDROIDS
                     if (__instance.pawn.IsAndroidTier() && Utils.BlacklistedHediffsForAndroids.Contains(def.defName))
                     {
                         //Recherche d'un dummyHediff deja ajouté
-                        for (int i = 0; i < __instance.hediffs.Count; i++)
-                        {
+                        for (var i = 0; i < __instance.hediffs.Count; i++)
                             if (__instance.hediffs[i].def == def && (!mustBeVisible || __instance.hediffs[i].Visible))
                             {
                                 find = __instance.hediffs[i];
                                 break;
                             }
-                        }
 
-                        if(find == null)
-                        {
-                            find = __instance.pawn.health.AddHediff(DefDatabase<HediffDef>.GetNamed("ATPP_DummyHediff"));
-                        }
+                        if (find == null) find = __instance.pawn.health.AddHediff(DefDatabase<HediffDef>.GetNamed("ATPP_DummyHediff"));
                         //Log.Message("DummyHediff");
                         __result = find;
                     }

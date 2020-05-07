@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Verse;
 using RimWorld;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -10,47 +9,33 @@ namespace MOARANDROIDS
     {
         public override IEnumerable<BodyPartRecord> GetPartsToApplyOn(Pawn pawn, RecipeDef recipe)
         {
-            for (int i = 0; i < recipe.appliedOnFixedBodyParts.Count; i++)
+            for (var i = 0; i < recipe.appliedOnFixedBodyParts.Count; i++)
             {
-                BodyPartDef part = recipe.appliedOnFixedBodyParts[i];
-                List<BodyPartRecord> bpList = pawn.RaceProps.body.AllParts;
-                for (int j = 0; j < bpList.Count; j++)
+                var part = recipe.appliedOnFixedBodyParts[i];
+                var bpList = pawn.RaceProps.body.AllParts;
+                for (var j = 0; j < bpList.Count; j++)
                 {
-                    BodyPartRecord record = bpList[j];
+                    var record = bpList[j];
                     if (record.def == part)
                     {
-                        IEnumerable<Hediff> diffs = from x in pawn.health.hediffSet.hediffs
-                                                    where x.Part == record
-                                                    select x;
-                        if (diffs.Count<Hediff>() != 1 || diffs.First<Hediff>().def != recipe.addsHediff)
-                        {
-                            if (record.parent == null || pawn.health.hediffSet.GetNotMissingParts(BodyPartHeight.Undefined, BodyPartDepth.Undefined).Contains(record.parent))
-                            {
+                        var diffs = from x in pawn.health.hediffSet.hediffs
+                            where x.Part == record
+                            select x;
+                        if (diffs.Count() != 1 || diffs.First().def != recipe.addsHediff)
+                            if (record.parent == null || pawn.health.hediffSet.GetNotMissingParts().Contains(record.parent))
                                 if (!pawn.health.hediffSet.PartOrAnyAncestorHasDirectlyAddedParts(record) || pawn.health.hediffSet.HasDirectlyAddedPartFor(record))
-                                {
                                     yield return record;
-                                }
-                            }
-                        }
                     }
                 }
             }
-            yield break;
         }
 
         public override void ApplyOnPawn(Pawn pawn, BodyPartRecord part, Pawn billDoer, List<Thing> ingredients, Bill bill)
         {
             if (billDoer != null)
             {
-                if (base.CheckSurgeryFailAndroid(billDoer, pawn, ingredients, part, bill))
-                {
-                    return;
-                }
-                TaleRecorder.RecordTale(TaleDefOf.DidSurgery, new object[]
-                {
-                    billDoer,
-                    pawn
-                });
+                if (CheckSurgeryFailAndroid(billDoer, pawn, ingredients, part, bill)) return;
+                TaleRecorder.RecordTale(TaleDefOf.DidSurgery, billDoer, pawn);
                 MedicalRecipesUtility.RestorePartAndSpawnAllPreviousParts(pawn, part, billDoer.Position, billDoer.Map);
             }
             else if (pawn.Map != null)
@@ -59,10 +44,10 @@ namespace MOARANDROIDS
             }
             else
             {
-                pawn.health.RestorePart(part, null, true);
+                pawn.health.RestorePart(part);
             }
-            pawn.health.AddHediff(this.recipe.addsHediff, part, null);
+
+            pawn.health.AddHediff(recipe.addsHediff, part, null);
         }
     }
 }
-

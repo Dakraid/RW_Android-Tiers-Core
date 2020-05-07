@@ -1,15 +1,14 @@
-﻿using System;
-using Verse;
+﻿using Verse;
 
 namespace MOARANDROIDS
 {
     public class CompProperties_BlankAndroidSpawner : CompProperties
     {
+        public PawnKindDef Pawnkind;
+
         public CompProperties_BlankAndroidSpawner()
         {
-            this.compClass = typeof(CompBlankAndroidSpawner);
+            compClass = typeof(CompBlankAndroidSpawner);
         }
-
-        public PawnKindDef Pawnkind;
     }
 }

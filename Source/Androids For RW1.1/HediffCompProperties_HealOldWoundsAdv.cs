@@ -1,17 +1,16 @@
-﻿using System;
-using Verse;
+﻿using Verse;
 
 namespace MOARANDROIDS
 {
     public class HediffCompProperties_RegenWoundsAdv : HediffCompProperties
     {
-        public HediffCompProperties_RegenWoundsAdv()
-        {
-            this.compClass = typeof(HediffComp_RegenWoundsAdv);
-        }
+        public int Delay;
 
         public float HealingAmount;
 
-        public int Delay;
+        public HediffCompProperties_RegenWoundsAdv()
+        {
+            compClass = typeof(HediffComp_RegenWoundsAdv);
+        }
     }
 }

@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
+using RimWorld;
 using UnityEngine;
 using Verse;
-using RimWorld;
-using Verse.Sound;
 using Verse.AI.Group;
+using Verse.Sound;
 
 namespace MOARANDROIDS
 {
     public class Designator_SurrogateToHack : Designator
     {
+        private Map cmap;
+        private readonly int hackType;
+
+        private IntVec3 pos;
+        private Pawn target;
+
         public Designator_SurrogateToHack(int hackType)
         {
             this.hackType = hackType;
@@ -19,34 +24,37 @@ namespace MOARANDROIDS
             switch (hackType)
             {
                 case 1:
-                    this.defaultLabel = "ATPP_UploadVirus".Translate();
-                    this.defaultDesc = "ATPP_UploadVirusDesc".Translate();
-                    this.icon = Tex.PlayerVirus;
+                    defaultLabel = "ATPP_UploadVirus".Translate();
+                    defaultDesc = "ATPP_UploadVirusDesc".Translate();
+                    icon = Tex.PlayerVirus;
                     break;
                 case 2:
-                    this.defaultLabel = "ATPP_UploadExplosiveVirus".Translate();
-                    this.defaultDesc = "ATPP_UploadExplosiveVirusDesc".Translate();
-                    this.icon = Tex.PlayerExplosiveVirus;
+                    defaultLabel = "ATPP_UploadExplosiveVirus".Translate();
+                    defaultDesc = "ATPP_UploadExplosiveVirusDesc".Translate();
+                    icon = Tex.PlayerExplosiveVirus;
                     break;
                 case 3:
-                    this.defaultLabel = "ATPP_HackTemp".Translate();
-                    this.defaultDesc = "ATPP_HackTempDesc".Translate();
-                    this.icon = Tex.PlayerHackingTemp;
+                    defaultLabel = "ATPP_HackTemp".Translate();
+                    defaultDesc = "ATPP_HackTempDesc".Translate();
+                    icon = Tex.PlayerHackingTemp;
                     break;
                 case 4:
-                    this.defaultLabel = "ATPP_Hack".Translate();
-                    this.defaultDesc = "ATPP_HackDesc".Translate();
-                    this.icon = Tex.PlayerHacking;
+                    defaultLabel = "ATPP_Hack".Translate();
+                    defaultDesc = "ATPP_HackDesc".Translate();
+                    icon = Tex.PlayerHacking;
                     break;
             }
 
-            this.soundDragSustain = SoundDefOf.Designate_DragAreaDelete;
-            this.soundDragChanged = null;
-            this.soundSucceeded = SoundDefOf.Designate_ZoneDelete;
-            this.useMouseIcon = true;
-            this.hotKey = KeyBindingDefOf.Misc4;
-
+            soundDragSustain = SoundDefOf.Designate_DragAreaDelete;
+            soundDragChanged = null;
+            soundSucceeded = SoundDefOf.Designate_ZoneDelete;
+            useMouseIcon = true;
+            hotKey = KeyBindingDefOf.Misc4;
         }
+
+        public override int DraggableDimensions => 0;
+
+        public override bool DragDrawMeasurements => false;
 
         public override void DrawMouseAttachments()
         {
@@ -55,14 +63,8 @@ namespace MOARANDROIDS
 
         public override AcceptanceReport CanDesignateCell(IntVec3 c)
         {
-            if (!c.InBounds(base.Map))
-            {
-                return false;
-            }
-            if (!this.SXInCell(c))
-            {
-                return "ATPP_DesignatorNeedSelectSXToHack".Translate();
-            }
+            if (!c.InBounds(Map)) return false;
+            if (!SXInCell(c)) return "ATPP_DesignatorNeedSelectSXToHack".Translate();
             return true;
         }
 
@@ -81,8 +83,8 @@ namespace MOARANDROIDS
             if (!(t is Pawn))
                 return false;
 
-            Pawn cp = (Pawn)t;
-            CompAndroidState cas = cp.TryGetComp<CompAndroidState>();
+            var cp = (Pawn) t;
+            var cas = cp.TryGetComp<CompAndroidState>();
 
             //Si pas clone ou clone deja utilisé on degage
             if (cas == null || !cas.isSurrogate || cp.Faction == Faction.OfPlayer)
@@ -93,22 +95,6 @@ namespace MOARANDROIDS
             return true;
         }
 
-        public override int DraggableDimensions
-        {
-            get
-            {
-                return 0;
-            }
-        }
-
-        public override bool DragDrawMeasurements
-        {
-            get
-            {
-                return false;
-            }
-        }
-
         public override void DesignateMultiCell(IEnumerable<IntVec3> cells)
         {
             throw new NotImplementedException();
@@ -116,17 +102,17 @@ namespace MOARANDROIDS
 
         public override void DesignateSingleCell(IntVec3 c)
         {
-            this.pos = c;
-            this.cmap = Current.Game.CurrentMap;
+            pos = c;
+            cmap = Current.Game.CurrentMap;
         }
 
         protected override void FinalizeDesignationSucceeded()
         {
             base.FinalizeDesignationSucceeded();
 
-            CompSkyMind csm = target.TryGetComp<CompSkyMind>();
-            CompAndroidState cas = target.TryGetComp<CompAndroidState>();
-            string surrogateName = target.LabelShortCap;
+            var csm = target.TryGetComp<CompSkyMind>();
+            var cas = target.TryGetComp<CompAndroidState>();
+            var surrogateName = target.LabelShortCap;
             CompSurrogateOwner cso = null;
 
             if (cas.externalController != null)
@@ -135,9 +121,9 @@ namespace MOARANDROIDS
                 cso = cas.externalController.TryGetComp<CompSurrogateOwner>();
             }
 
-            Lord clord = target.GetLord();
-            int nbp = Utils.GCATPP.getNbHackingPoints();
-            int nbpToConsume = 0;
+            var clord = target.GetLord();
+            var nbp = Utils.GCATPP.getNbHackingPoints();
+            var nbpToConsume = 0;
 
             //Check points
             switch (hackType)
@@ -156,17 +142,14 @@ namespace MOARANDROIDS
                     break;
             }
 
-            if(nbpToConsume > nbp)
+            if (nbpToConsume > nbp)
             {
                 Messages.Message("ATPP_CannotHackNotEnoughtHackingPoints".Translate(), MessageTypeDefOf.NegativeEvent);
                 return;
             }
 
             //Si faction alliée ou neutre ==> pénalitée
-            if (target.Faction.RelationKindWith(Faction.OfPlayer) != FactionRelationKind.Hostile)
-            {
-                target.Faction.TryAffectGoodwillWith(Faction.OfPlayer, -1*Rand.Range(5, 36));
-            }
+            if (target.Faction.RelationKindWith(Faction.OfPlayer) != FactionRelationKind.Hostile) target.Faction.TryAffectGoodwillWith(Faction.OfPlayer, -1 * Rand.Range(5, 36));
 
             //Application effet
             switch (hackType)
@@ -193,24 +176,22 @@ namespace MOARANDROIDS
 
                     lordJob = new LordJob_AssistColony(Faction.OfAncients, fallbackLocation);
                     if (lordJob != null)
-                        lord = LordMaker.MakeNewLord(Faction.OfAncients, lordJob, Current.Game.CurrentMap, null);
+                        lord = LordMaker.MakeNewLord(Faction.OfAncients, lordJob, Current.Game.CurrentMap);
 
                     if (clord != null)
-                    {
-                        if(clord.ownedPawns.Contains(target))
+                        if (clord.ownedPawns.Contains(target))
                             clord.Notify_PawnLost(target, PawnLostCondition.IncappedOrKilled, null);
-                    }
 
                     lord.AddPawn(target);
 
                     //Si virus explosive enclenchement de la détonnation
-                    if(hackType == 2)
-                        csm.infectedExplodeGT = Find.TickManager.TicksGame + (Settings.nbSecExplosiveVirusTakeToExplode * 60);
+                    if (hackType == 2)
+                        csm.infectedExplodeGT = Find.TickManager.TicksGame + Settings.nbSecExplosiveVirusTakeToExplode * 60;
                     break;
                 case 3:
                 case 4:
-                    bool wasPrisonner = target.IsPrisoner;
-                    Faction prevFaction = target.Faction;
+                    var wasPrisonner = target.IsPrisoner;
+                    var prevFaction = target.Faction;
                     target.SetFaction(Faction.OfPlayer);
 
                     if (target.workSettings == null)
@@ -220,23 +201,19 @@ namespace MOARANDROIDS
                     }
 
                     if (clord != null)
-                    {
                         if (clord.ownedPawns.Contains(target))
                             clord.Notify_PawnLost(target, PawnLostCondition.ChangedFaction, null);
-                    }
 
                     if (cso != null)
                         cso.disconnectControlledSurrogate(null);
 
                     if (hackType == 4)
-                    {
                         //Contorle definitif on jerte l'externalController
                         if (cas != null)
                             cas.externalController = null;
-                    }
 
                     target.Map.attackTargetsCache.UpdateTarget(target);
-                    PawnComponentsUtility.AddAndRemoveDynamicComponents(target, false);
+                    PawnComponentsUtility.AddAndRemoveDynamicComponents(target);
                     Find.ColonistBar.MarkColonistsDirty();
 
                     if (hackType == 3)
@@ -247,7 +224,7 @@ namespace MOARANDROIDS
                             csm.hackWasPrisoned = true;
                         else
                             csm.hackWasPrisoned = false;
-                        csm.hackEndGT = Find.TickManager.TicksGame + (Settings.nbSecDurationTempHack * 60);
+                        csm.hackEndGT = Find.TickManager.TicksGame + Settings.nbSecDurationTempHack * 60;
                     }
                     else
                     {
@@ -256,16 +233,12 @@ namespace MOARANDROIDS
                         {
                             csm.Infected = -1;
 
-                            if (target.skills != null && target.skills.skills  != null)
-                            {
+                            if (target.skills != null && target.skills.skills != null)
                                 foreach (var sr in target.skills.skills)
-                                {
                                     sr.levelInt = 0;
-                                }
-                            }
                         }
                     }
-                    
+
 
                     break;
             }
@@ -288,16 +261,12 @@ namespace MOARANDROIDS
         [DebuggerHidden]
         private bool SXInCell(IntVec3 c)
         {
-            if (!c.Fogged(base.Map))
+            if (!c.Fogged(Map))
             {
-                List<Thing> thingList = c.GetThingList(base.Map);
-                for (int i = 0; i < thingList.Count; i++)
-                {
-                    if (thingList[i] is Pawn && this.CanDesignateThing(thingList[i]).Accepted)
-                    {
+                var thingList = c.GetThingList(Map);
+                for (var i = 0; i < thingList.Count; i++)
+                    if (thingList[i] is Pawn && CanDesignateThing(thingList[i]).Accepted)
                         return true;
-                    }
-                }
             }
 
             return false;
@@ -306,12 +275,6 @@ namespace MOARANDROIDS
         protected override void FinalizeDesignationFailed()
         {
             base.FinalizeDesignationFailed();
-
         }
-
-        private IntVec3 pos;
-        private Pawn target;
-        private Map cmap;
-        private int hackType;
     }
 }

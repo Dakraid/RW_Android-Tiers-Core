@@ -1,18 +1,17 @@
-﻿using System;
-using RimWorld;
+﻿using RimWorld;
 
 namespace MOARANDROIDS
 {
-        [DefOf]
-        public static class TraitDefOf
+    [DefOf]
+    public static class TraitDefOf
+    {
+        public static TraitDef FeelingsTowardHumanity;
+
+        public static TraitDef Transhumanist;
+
+        static TraitDefOf()
         {
-            static TraitDefOf()
-            {
-                DefOfHelper.EnsureInitializedInCtor(typeof(TraitDefOf));
-            }
-
-            public static TraitDef FeelingsTowardHumanity;
-
-            public static TraitDef Transhumanist;
+            DefOfHelper.EnsureInitializedInCtor(typeof(TraitDefOf));
+        }
     }
 }

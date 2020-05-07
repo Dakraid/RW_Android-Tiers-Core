@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace MOARANDROIDS.Patches
+﻿namespace MOARANDROIDS.Patches
 {
-    class AndroidLabelOverwrite
+    internal class AndroidLabelOverwrite
     {
     }
 }

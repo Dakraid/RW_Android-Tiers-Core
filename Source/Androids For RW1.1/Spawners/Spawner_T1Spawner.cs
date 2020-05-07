@@ -1,37 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using Verse;
+﻿using System.Collections.Generic;
 using RimWorld;
+using Verse;
 
 namespace MOARANDROIDS
 {
     public class CompAndroidSpawner1T : ThingComp
     {
-        
         public override void CompTick()
         {
-            this.CheckShouldSpawn();
+            CheckShouldSpawn();
         }
-        
+
         private void CheckShouldSpawn()
         {
             if (true)
             {
-                this.SpawnDude();
-                this.parent.Destroy();
+                SpawnDude();
+                parent.Destroy();
             }
         }
 
         public void SpawnDude()
         {
-            PawnKindDef pawnKindDef = new List<PawnKindDef>
+            var pawnKindDef = new List<PawnKindDef>
             {
                 PawnKindDefOf.AndroidT1Colonist
-            }.RandomElement<PawnKindDef>();
-            PawnGenerationRequest request = new PawnGenerationRequest(pawnKindDef, Faction.OfPlayer, PawnGenerationContext.NonPlayer);
-            Pawn pawn = PawnGenerator.GeneratePawn(request);
-            
+            }.RandomElement();
+            var request = new PawnGenerationRequest(pawnKindDef, Faction.OfPlayer);
+            var pawn = PawnGenerator.GeneratePawn(request);
+
             //TODO: Implement, make wor k, test.
             //Pawn originalCloned = parent.TryGetComp<ThingyHolderThatsHoldingAClonedPawn>();
             //pawn.story = originalCloned.story;

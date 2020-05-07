@@ -1,11 +1,7 @@
-﻿using Verse;
-using Verse.AI;
-using Verse.AI.Group;
+﻿using System;
 using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
-using System;
+using Verse;
 
 namespace MOARANDROIDS
 {
@@ -23,17 +19,18 @@ namespace MOARANDROIDS
                     if (!__result.Active)
                         return;
 
-                    CompSurrogateOwner cso = p.TryGetComp<CompSurrogateOwner>();
+                    var cso = p.TryGetComp<CompSurrogateOwner>();
 
-                    Pawn otherPawn = LovePartnerRelationUtility.ExistingMostLikedLovePartnerRel(p, false).otherPawn;
+                    var otherPawn = LovePartnerRelationUtility.ExistingMostLikedLovePartnerRel(p, false).otherPawn;
                     CompSurrogateOwner cso2 = null;
                     if (otherPawn != null)
                         cso2 = otherPawn.TryGetComp<CompSurrogateOwner>();
 
-                    if ((p.IsAndroidTier() || p.IsSurrogateAndroid() || (cso != null && cso.skyCloudHost != null)) || (otherPawn != null && (otherPawn.IsAndroidTier() || otherPawn.IsSurrogateAndroid() || (cso2 != null && cso2.skyCloudHost != null))))
+                    if (p.IsAndroidTier() || p.IsSurrogateAndroid() || cso != null && cso.skyCloudHost != null || otherPawn != null &&
+                        (otherPawn.IsAndroidTier() || otherPawn.IsSurrogateAndroid() || cso2 != null && cso2.skyCloudHost != null))
                         __result = false;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Log.Message("[ATTP] ThoughtWorker_WantToSleepWithSpouseOrLover.CurrentStateInternal " + e.Message + " " + e.StackTrace);
                 }

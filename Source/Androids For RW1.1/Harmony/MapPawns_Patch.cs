@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using HarmonyLib;
 using RimWorld;
-using UnityEngine;
 using Verse;
-using Verse.AI;
 
 namespace MOARANDROIDS
 {
@@ -20,16 +17,17 @@ namespace MOARANDROIDS
                 //Si retour pas true alors check s'il y a de la correction a faire
                 if (!__result)
                 {
-                    Faction ofPlayer = Faction.OfPlayer;
-                    for (int i = 0; i < ___pawnsSpawned.Count; i++)
+                    var ofPlayer = Faction.OfPlayer;
+                    for (var i = 0; i < ___pawnsSpawned.Count; i++)
                     {
                         if (___pawnsSpawned[i] == null)
                             continue;
 
-                        CompAndroidState cas = ___pawnsSpawned[i].TryGetComp<CompAndroidState>();
+                        var cas = ___pawnsSpawned[i].TryGetComp<CompAndroidState>();
 
                         //Si pawn non décédé mais est un surrogate inactif
-                        if (!___pawnsSpawned[i].Dead && ___pawnsSpawned[i].Faction != null && ___pawnsSpawned[i].Faction.IsPlayer && cas != null && cas.isSurrogate && cas.externalController == null)
+                        if (!___pawnsSpawned[i].Dead && ___pawnsSpawned[i].Faction != null && ___pawnsSpawned[i].Faction.IsPlayer && cas != null && cas.isSurrogate &&
+                            cas.externalController == null)
                         {
                             __result = true;
                             return;
@@ -59,21 +57,19 @@ namespace MOARANDROIDS
                         list = new List<Pawn>();
                         ___freeHumanlikesOfFactionResult.Add(Faction.OfPlayer, list);
                     }
+
                     list.Clear();
-                    List<Pawn> allPawns = __instance.AllPawns;
-                    for (int i = 0; i < allPawns.Count; i++)
-                    {
-                        if (allPawns[i].Faction == Faction.OfPlayer && allPawns[i].HostFaction == null && allPawns[i].RaceProps.Humanlike && !allPawns[i].IsSurrogateAndroid(false, true))
-                        {
+                    var allPawns = __instance.AllPawns;
+                    for (var i = 0; i < allPawns.Count; i++)
+                        if (allPawns[i].Faction == Faction.OfPlayer && allPawns[i].HostFaction == null && allPawns[i].RaceProps.Humanlike &&
+                            !allPawns[i].IsSurrogateAndroid(false, true))
                             list.Add(allPawns[i]);
-                        }
-                    }
 
                     __result = list;
 
                     return false;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Log.Message("[ATPP] MapPawns.get_FreeColonists " + e.Message + " " + e.StackTrace);
 

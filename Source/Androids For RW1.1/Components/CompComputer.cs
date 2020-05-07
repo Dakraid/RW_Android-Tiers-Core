@@ -1,23 +1,23 @@
-﻿using System;
-using System.Text;
-using Verse;
+﻿using System.Collections.Generic;
 using RimWorld;
 using UnityEngine;
+using Verse;
 using Verse.Sound;
-using System.Collections.Generic;
 
 namespace MOARANDROIDS
 {
     public class CompComputer : ThingComp
     {
-        public CompProperties_Computer Props
-        {
-            get
-            {
-                return (CompProperties_Computer)this.props;
-            }
+        private SoundDef ambiance;
+        private bool isHackingServer;
 
-        }
+        private bool isSecurityServer;
+        private bool isSkillServer;
+        private CompPowerTrader powerComp;
+
+        private Sustainer sustainer;
+
+        public CompProperties_Computer Props => (CompProperties_Computer) props;
 
         public override void PostExposeData()
         {
@@ -27,58 +27,52 @@ namespace MOARANDROIDS
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
             base.PostSpawnSetup(respawningAfterLoad);
-            this.powerComp = this.parent.GetComp<CompPowerTrader>();
+            powerComp = parent.GetComp<CompPowerTrader>();
 
-            if (this.Props.ambiance != "None")
-                this.ambiance = SoundDef.Named(this.Props.ambiance);
+            if (Props.ambiance != "None")
+                ambiance = SoundDef.Named(Props.ambiance);
 
             if (Utils.ExceptionSkillServers.Contains(parent.def.defName))
             {
                 isSkillServer = true;
-                Utils.GCATPP.pushSkillServer((Building)this.parent);
+                Utils.GCATPP.pushSkillServer((Building) parent);
             }
 
             if (Utils.ExceptionSecurityServers.Contains(parent.def.defName))
             {
                 isSecurityServer = true;
-                Utils.GCATPP.pushSecurityServer((Building)this.parent);
+                Utils.GCATPP.pushSecurityServer((Building) parent);
             }
 
             if (Utils.ExceptionHackingServers.Contains(parent.def.defName))
             {
                 isHackingServer = true;
-                Utils.GCATPP.pushHackingServer((Building)this.parent);
+                Utils.GCATPP.pushHackingServer((Building) parent);
             }
 
             if (respawningAfterLoad)
-            {
-                if (this.powerComp.PowerOn)
-                    this.StartSustainer();
-            }
+                if (powerComp.PowerOn)
+                    StartSustainer();
         }
 
         public override void CompTick()
         {
             base.CompTick();
-            int GT = Find.TickManager.TicksGame;
+            var GT = Find.TickManager.TicksGame;
 
             //TOutes les 30sec incrémentation points de sécurité
-            if(isHackingServer && GT % 1800 == 0 && !(((Building)parent).IsBrokenDown() || !((Building)parent).TryGetComp<CompPowerTrader>().PowerOn))
-            {
-                 Utils.GCATPP.incHackingPoints(Utils.nbHackingPointsGeneratedBy((Building)parent));
-            }
+            if (isHackingServer && GT % 1800 == 0 && !(((Building) parent).IsBrokenDown() || !((Building) parent).TryGetComp<CompPowerTrader>().PowerOn))
+                Utils.GCATPP.incHackingPoints(Utils.nbHackingPointsGeneratedBy((Building) parent));
 
-            if (isSkillServer && GT % 1800 == 0 && !(((Building)parent).IsBrokenDown() || !((Building)parent).TryGetComp<CompPowerTrader>().PowerOn))
-            {
-                Utils.GCATPP.incSkillPoints(Utils.nbSkillPointsGeneratedBy((Building)parent));
-            }
+            if (isSkillServer && GT % 1800 == 0 && !(((Building) parent).IsBrokenDown() || !((Building) parent).TryGetComp<CompPowerTrader>().PowerOn))
+                Utils.GCATPP.incSkillPoints(Utils.nbSkillPointsGeneratedBy((Building) parent));
         }
 
         public override void ReceiveCompSignal(string signal)
         {
-            Building host = (Building)parent;
+            var host = (Building) parent;
             //Arret manuel ou  composant endommagé => arret ambiance
-            if (signal == "FlickedOff" || signal == "ScheduledOff" || signal == "Breakdown" || signal == "PowerTurnedOff" )
+            if (signal == "FlickedOff" || signal == "ScheduledOff" || signal == "Breakdown" || signal == "PowerTurnedOff")
             {
                 if (isSkillServer)
                     Utils.GCATPP.popSkillServer(host);
@@ -87,7 +81,7 @@ namespace MOARANDROIDS
                 if (isHackingServer)
                     Utils.GCATPP.popHackingServer(host);
                 //if (signal != "Virused" && signal != "Hacked")
-                this.StopSustainer();
+                StopSustainer();
             }
 
             //Redemarrage ambiance
@@ -99,31 +93,30 @@ namespace MOARANDROIDS
                     Utils.GCATPP.pushSecurityServer(host);
                 if (isHackingServer)
                     Utils.GCATPP.pushHackingServer(host);
-                this.StartSustainer();
+                StartSustainer();
             }
         }
 
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
         {
-            Building build = (Building)parent;
+            var build = (Building) parent;
 
             //Si brokendown ou pas alimenté on degage ou partie sécurité désactivée
             if (Settings.disableSkyMindSecurityStuff || build.IsBrokenDown() || !build.TryGetComp<CompPowerTrader>().PowerOn)
                 yield break;
 
-            int nbp = Utils.GCATPP.getNbHackingPoints();
+            var nbp = Utils.GCATPP.getNbHackingPoints();
 
             bool canVirus, canVirusExplosive, canHack, canTempHack;
             canVirus = canVirusExplosive = canHack = canTempHack = false;
 
-            bool powered = !parent.Map.gameConditionManager.ConditionIsActive(GameConditionDefOf.SolarFlare) && !build.IsBrokenDown() && build.TryGetComp<CompPowerTrader>().PowerOn;
-            
+            var powered = !parent.Map.gameConditionManager.ConditionIsActive(GameConditionDefOf.SolarFlare) && !build.IsBrokenDown() && build.TryGetComp<CompPowerTrader>().PowerOn;
+
             Texture2D tex;
 
 
             if (isHackingServer)
             {
-
                 if (nbp - Settings.costPlayerVirus >= 0)
                     canVirus = true && powered;
 
@@ -137,7 +130,7 @@ namespace MOARANDROIDS
                     icon = tex,
                     defaultLabel = "ATPP_UploadVirus".Translate(),
                     defaultDesc = "ATPP_UploadVirusDesc".Translate(),
-                    action = delegate ()
+                    action = delegate
                     {
                         if (canVirus)
                             showFloatMapHackMenu(1);
@@ -159,7 +152,7 @@ namespace MOARANDROIDS
                     icon = tex,
                     defaultLabel = "ATPP_UploadExplosiveVirus".Translate(),
                     defaultDesc = "ATPP_UploadExplosiveVirusDesc".Translate(),
-                    action = delegate ()
+                    action = delegate
                     {
                         if (canVirusExplosive)
                             showFloatMapHackMenu(2);
@@ -182,7 +175,7 @@ namespace MOARANDROIDS
                     icon = tex,
                     defaultLabel = "ATPP_HackTemp".Translate(),
                     defaultDesc = "ATPP_HackTempDesc".Translate(),
-                    action = delegate ()
+                    action = delegate
                     {
                         if (canTempHack)
                             showFloatMapHackMenu(3);
@@ -204,7 +197,7 @@ namespace MOARANDROIDS
                     icon = tex,
                     defaultLabel = "ATPP_Hack".Translate(),
                     defaultDesc = "ATPP_HackDesc".Translate(),
-                    action = delegate ()
+                    action = delegate
                     {
                         if (canHack)
                             showFloatMapHackMenu(4);
@@ -213,15 +206,13 @@ namespace MOARANDROIDS
                     }
                 };
             }
-
-            yield break;
         }
 
         private void showFloatMapHackMenu(int hackType)
         {
             //Listing map de destination
-            List<FloatMenuOption> opts = new List<FloatMenuOption>();
-            string lib = "";
+            var opts = new List<FloatMenuOption>();
+            var lib = "";
             foreach (var m in Find.Maps)
             {
                 if (m == Find.CurrentMap)
@@ -232,30 +223,29 @@ namespace MOARANDROIDS
                 opts.Add(new FloatMenuOption(lib, delegate
                 {
                     Current.Game.CurrentMap = m;
-                    Designator_SurrogateToHack x = new Designator_SurrogateToHack(hackType);
+                    var x = new Designator_SurrogateToHack(hackType);
                     Find.DesignatorManager.Select(x);
-
-                }, MenuOptionPriority.Default, null, null, 0f, null, null));
+                }));
             }
+
             if (opts.Count != 0)
             {
                 if (opts.Count == 1)
                 {
-                    Designator_SurrogateToHack x = new Designator_SurrogateToHack(hackType);
+                    var x = new Designator_SurrogateToHack(hackType);
                     Find.DesignatorManager.Select(x);
                 }
                 else
                 {
-                    FloatMenu floatMenuMap = new FloatMenu(opts);
+                    var floatMenuMap = new FloatMenu(opts);
                     Find.WindowStack.Add(floatMenuMap);
                 }
             }
-
         }
 
         public override string CompInspectStringExtra()
         {
-            string ret = "";
+            var ret = "";
 
             if (parent.Map == null)
                 return base.CompInspectStringExtra();
@@ -263,21 +253,21 @@ namespace MOARANDROIDS
             if (isSecurityServer)
             {
                 ret += "ATPP_SecurityServersSynthesis".Translate(Utils.GCATPP.getNbSlotSecurisedAvailable(), Utils.GCATPP.getNbThingsConnected()) + "\n";
-                ret += "ATTP_SecuritySlotsAdded".Translate(Utils.nbSecuritySlotsGeneratedBy((Building)parent)) + "\n";
+                ret += "ATTP_SecuritySlotsAdded".Translate(Utils.nbSecuritySlotsGeneratedBy((Building) parent)) + "\n";
             }
 
             if (isHackingServer)
             {
                 ret += "ATPP_HackingServersSynthesis".Translate(Utils.GCATPP.getNbHackingPoints(), Utils.GCATPP.getNbHackingSlotAvailable()) + "\n";
-                ret += "ATTP_HackingProducedPoints".Translate(Utils.nbHackingPointsGeneratedBy((Building)parent)) + "\n";
-                ret += "ATTP_HackingSlotsAdded".Translate(Utils.nbHackingSlotsGeneratedBy((Building)parent)) + "\n";
+                ret += "ATTP_HackingProducedPoints".Translate(Utils.nbHackingPointsGeneratedBy((Building) parent)) + "\n";
+                ret += "ATTP_HackingSlotsAdded".Translate(Utils.nbHackingSlotsGeneratedBy((Building) parent)) + "\n";
             }
 
             if (isSkillServer)
             {
                 ret += "ATPP_SkillServersSynthesis".Translate(Utils.GCATPP.getNbSkillPoints(), Utils.GCATPP.getNbSkillSlotAvailable()) + "\n";
-                ret += "ATTP_SkillProducedPoints".Translate(Utils.nbSkillPointsGeneratedBy((Building)parent)) + "\n";
-                ret += "ATTP_SkillSlotsAdded".Translate(Utils.nbSkillSlotsGeneratedBy((Building)parent)) + "\n";
+                ret += "ATTP_SkillProducedPoints".Translate(Utils.nbSkillPointsGeneratedBy((Building) parent)) + "\n";
+                ret += "ATTP_SkillSlotsAdded".Translate(Utils.nbSkillSlotsGeneratedBy((Building) parent)) + "\n";
             }
 
             return ret.TrimEnd('\r', '\n') + base.CompInspectStringExtra();
@@ -286,31 +276,22 @@ namespace MOARANDROIDS
         public override void PostDeSpawn(Map map)
         {
             base.PostDeSpawn(map);
-            this.StopSustainer();
+            StopSustainer();
 
-            if (isSecurityServer)
-            {
-                Utils.GCATPP.popSecurityServer((Building)this.parent);
-            }
+            if (isSecurityServer) Utils.GCATPP.popSecurityServer((Building) parent);
 
-            if (isHackingServer)
-            {
-                Utils.GCATPP.popHackingServer((Building)this.parent);
-            }
+            if (isHackingServer) Utils.GCATPP.popHackingServer((Building) parent);
 
-            if (isSkillServer)
-            {
-                Utils.GCATPP.popSkillServer((Building)this.parent);
-            }
+            if (isSkillServer) Utils.GCATPP.popSkillServer((Building) parent);
         }
 
 
         private void StartSustainer()
         {
-            if (this.sustainer == null && this.Props.ambiance != "None" && !Settings.disableServersAmbiance)
+            if (sustainer == null && Props.ambiance != "None" && !Settings.disableServersAmbiance)
             {
-                SoundInfo info = SoundInfo.InMap(this.parent, MaintenanceType.None);
-                this.sustainer = this.ambiance.TrySpawnSustainer(info);
+                var info = SoundInfo.InMap(parent);
+                sustainer = ambiance.TrySpawnSustainer(info);
                 //this.sustainer = SoundDefOf.GeyserSpray.TrySpawnSustainer(info);
 
                 //this.sustainerHot = SoundDefOf.GeyserSpray.TrySpawnSustainer(info);
@@ -319,21 +300,13 @@ namespace MOARANDROIDS
 
         private void StopSustainer()
         {
-            if (this.sustainer != null && this.Props.ambiance != "None")
+            if (sustainer != null && Props.ambiance != "None")
             {
-                this.sustainer.End();
-                this.sustainer = null;
+                sustainer.End();
+                sustainer = null;
                 // SoundInfo info = SoundInfo.InMap(this.parent, MaintenanceType.None);
                 //this.ambiance.sustainStopSound.PlayOneShot(info);
             }
         }
-
-        private Sustainer sustainer;
-        private CompPowerTrader powerComp;
-        private SoundDef ambiance;
-
-        private bool isSecurityServer = false;
-        private bool isHackingServer = false;
-        private bool isSkillServer = false;
     }
 }
