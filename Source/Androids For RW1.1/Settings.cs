@@ -393,9 +393,9 @@ namespace MOARANDROIDS
             GUI.color = Color.yellow;
             list.Label("ATPP_SettingsDefaultAndroidGeneratorMode".Translate());
             GUI.color = Color.white;
-            if (list.RadioButton("ATPP_SettingsDefaultAndroidGeneratorModeBiomass".Translate(), defaultGeneratorMode == 1))
+            if (list.RadioButton_NewTemp("ATPP_SettingsDefaultAndroidGeneratorModeBiomass".Translate(), defaultGeneratorMode == 1))
                 defaultGeneratorMode = 1;
-            if (list.RadioButton("ATPP_SettingsDefaultAndroidGeneratorModeBattery".Translate(), defaultGeneratorMode == 2))
+            if (list.RadioButton_NewTemp("ATPP_SettingsDefaultAndroidGeneratorModeBattery".Translate(), defaultGeneratorMode == 2))
                 defaultGeneratorMode = 2;
 
             list.Label("ATPP_SettingsPercentageOfAndroidBatteryReloadedEachXSec".Translate((int) (percentageOfBatteryChargedEach6Sec * 100)));
@@ -587,11 +587,11 @@ namespace MOARANDROIDS
             GUI.color = Color.yellow;
             list.Label("ATPP_SettingsUploadMindToSkyCloudCoreMode".Translate());
             GUI.color = Color.white;
-            if (list.RadioButton("ATTP_SettingsUploadMindToSkyCloudCoreModeNothing".Translate(), skyCloudUploadModeForSourceMind == 0))
+            if (list.RadioButton_NewTemp("ATTP_SettingsUploadMindToSkyCloudCoreModeNothing".Translate(), skyCloudUploadModeForSourceMind == 0))
                 skyCloudUploadModeForSourceMind = 0;
-            if (list.RadioButton("ATTP_SettingsUploadMindToSkyCloudCoreModeVX0".Translate(), skyCloudUploadModeForSourceMind == 1))
+            if (list.RadioButton_NewTemp("ATTP_SettingsUploadMindToSkyCloudCoreModeVX0".Translate(), skyCloudUploadModeForSourceMind == 1))
                 skyCloudUploadModeForSourceMind = 1;
-            if (list.RadioButton("ATTP_SettingsUploadMindToSkyCloudCoreModeLethal".Translate(), skyCloudUploadModeForSourceMind == 2))
+            if (list.RadioButton_NewTemp("ATTP_SettingsUploadMindToSkyCloudCoreModeLethal".Translate(), skyCloudUploadModeForSourceMind == 2))
                 skyCloudUploadModeForSourceMind = 2;
 
             list.Gap();
