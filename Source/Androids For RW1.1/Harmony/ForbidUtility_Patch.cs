@@ -58,8 +58,6 @@ namespace MOARANDROIDS
                         __result = !Utils.ExceptionSurrogatePodGuest.Contains(t.def.defName);
                     else
                         __result = Utils.ExceptionSurrogatePodGuest.Contains(t.def.defName);
-
-                    //Log.Message(">>"+pawn.LabelShort+" "+t.def.defName+" "+__result);
                 }
                 catch (Exception e)
                 {

@@ -8,10 +8,9 @@ namespace MOARANDROIDS
 {
     public class StockGenerator_SlaveAndroids : StockGenerator
     {
-        private PawnKindDef pawnKind = null;
-        private bool randomisePawnKind = false;
-
         private readonly bool respectPopulationIntent = false;
+        private readonly PawnKindDef pawnKind = null;
+        private readonly bool randomisePawnKind = false;
 
         public override IEnumerable<Thing> GenerateThings(int forTile, Faction faction = null)
         {

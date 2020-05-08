@@ -9,18 +9,18 @@ namespace MOARANDROIDS
     public static class CanSetForcedTarget_Patch
     {
         private static readonly FieldInfo mannableComp = AccessTools.Field(typeof(Building_TurretGun), "mannableComp");
-        //private static readonly FieldInfo PlayerControlled = AccessTools.Field(typeof(Building_TurretGun), "PlayerControlled");
+
 
         [HarmonyPostfix]
         public static void Listener(Building_TurretGun __instance, ref bool __result)
         {
             var crt = __instance.TryGetComp<CompRemotelyControlledTurret>();
-            //Si pas de controlleur alors on ne peut pas controller la tourelle
+
             if (crt?.controller == null)
                 return;
 
             var mannable = (CompMannable) mannableComp.GetValue(__instance);
-            // bool controlled = (bool)PlayerControlled.GetValue(__instance);
+
             __result = __result || mannable == null;
         }
     }
@@ -32,7 +32,7 @@ namespace MOARANDROIDS
         public static void Listener(Building_TurretGun __instance)
         {
             var crt = __instance.TryGetComp<CompRemotelyControlledTurret>();
-            //Si pas de controlleur alors on ne peut pas controller la tourelle
+
             if (crt?.controller == null)
                 return;
 

@@ -23,12 +23,12 @@ namespace MOARANDROIDS
 
         private CompSkyMind csm;
 
-        //AndroidPaintColor
+
         public int customColor = (int) AndroidPaintColor.Default;
 
         public bool dontRust;
 
-        //Stocke le pawn externe (n'appartenant pas au joueur) controllant le surrogate (le cas des groupes de factions alliés/neutre/ennemis)
+
         public Pawn externalController;
         public int forcedDamageLevel = -1;
 
@@ -43,7 +43,7 @@ namespace MOARANDROIDS
 
         public bool isBlankAndroid;
 
-        //Sert a identifier les surrogates biologiques
+
         public bool isOrganic;
         public bool isSurrogate;
 
@@ -65,14 +65,13 @@ namespace MOARANDROIDS
         public Pawn uploadRecipient;
         public int uploadStartGT;
 
-        //Stock le signal indiquant si le pawn à été attribué par le systeme de job pour faire du guarding ou non
+
         public bool useBattery;
 
         public bool UseBattery
         {
             get
             {
-                //SI M7 surrogate forcé à utilsier la recharge en directe
                 if (parent.def.defName == Utils.M7 && isSurrogate)
                     return true;
 
@@ -120,7 +119,7 @@ namespace MOARANDROIDS
 
             if (uploadEndingGT != -1 || showUploadProgress)
                 avatar = Tex.UploadInProgress;
-            else 
+            else
                 switch (Find.DesignatorManager.SelectedDesignator)
                 {
                     case Designator_AndroidToControl _ when isSurrogate && surrogateController == null && csm != null && csm.Infected == -1:
@@ -138,7 +137,7 @@ namespace MOARANDROIDS
                 }
 
             if (avatar == null) return;
-            
+
             var vector = parent.TrueCenter();
             vector.y = AltitudeLayer.MetaOverlays.AltitudeFor() + 0.28125f;
             vector.z += 1.4f;
@@ -152,7 +151,7 @@ namespace MOARANDROIDS
         {
             base.PostDrawExtraSelectionOverlays();
 
-            //Dessin liaison entre controlleur et SX
+
             if (surrogateController != null && isSurrogate && surrogateController.Map == parent.Map)
                 GenDraw.DrawLineBetween(parent.TrueCenter(), surrogateController.TrueCenter(), SimpleColor.Blue);
 
@@ -169,7 +168,6 @@ namespace MOARANDROIDS
         {
             base.CompTick();
 
-            //bool reconnectDirectExternalController = false;
 
             if (parent.Map == null || !parent.Spawned)
                 return;
@@ -180,23 +178,22 @@ namespace MOARANDROIDS
             {
                 checkTXWithSkinFacialTextureUpdate();
                 init = true;
-                //Reconexion auto au LWPN le cas echeant
+
                 if (Utils.POWERPP_LOADED)
                     if (connectedLWPN != null && connectedLWPNActive)
                         if (!Utils.GCATPP.pushLWPNAndroid(connectedLWPN, (Pawn) parent))
                             connectedLWPNActive = false;
             }
 
-            //Reconnection auto de l'etranger à son surrogate que si pas de solar flare en cours et toujours dans un Lord (Si le cas d'un ennemis check de l'etat de son Lord)
+
             if (GT % 120 == 0 && externalController != null
                               && surrogateController == null
                               && csm != null && csm.hacked != 3
-                              //&& !externalController.Faction.HostileTo(Faction.OfPlayer)
                               && !parent.Map.gameConditionManager.ConditionIsActive(GameConditionDefOf.SolarFlare))
             {
                 var cp = (Pawn) parent;
-                //Log.Message("RepriseController "+(externalController != null)+" "+(surrogateController == null)+" "+(hacked != 3));
-                //Lord lordInvolved = Utils.LordOnMapWhereFactionIsInvolved(parent.Map, hackOrigFaction);
+
+
                 Lord lordInvolved = null;
                 if (cp.Map.mapPawns.SpawnedPawnsInFaction(cp.Faction).Any(p => p != cp))
                 {
@@ -212,20 +209,15 @@ namespace MOARANDROIDS
                 }
 
 
-                //Si controlleur non player du surrogate mort OU surrogate hacké avais un lors il existe tjr mais il n'est plus actif
                 if (externalController.Dead || csm != null && csm.hackOrigFaction.HostileTo(Faction.OfPlayer) && lordInvolved == null && !cp.IsPrisoner)
                 {
-                    //Rajout NoHost car comme en mode externalController on a pas remis le hediff pour eviter le bug bizard faisant que quand tentative integration ennemis hacké a un lord sa merdequand il a été down
                     addNoRemoteHostHediff();
                     externalController = null;
                 }
                 else
                 {
-                    //try
-                    //
                     try
                     {
-                        //Tentative de reconnection automatique du surrogate a son controlleur externe
                         var cso = externalController.TryGetComp<CompSurrogateOwner>();
                         cso.setControlledSurrogate((Pawn) parent, true);
                         cp.mindState.Reset();
@@ -241,17 +233,14 @@ namespace MOARANDROIDS
                     catch (Exception)
                     {
                     }
-                    //cp.ClearMind();
 
-                    //lordInvolved.AddPawn((Pawn)parent);
+
                     /*}
                     catch(Exception e)
                     {
 
                     }*/
 
-                    //****************************************** Traitement des conditions spéciale de reintegration a certain Lords *************************************************************
-                    //Log.Message("=>"+ lordInvolved.CurLordToil.ToString());
 
                     try
                     {
@@ -259,9 +248,9 @@ namespace MOARANDROIDS
                         {
                             var st = (LordToil_Siege) lordInvolved.CurLordToil;
 
-                            //Attribution job defender au pawn
+
                             var p = (Pawn) parent;
-                            //Traverse.Create( st ).Method("SetAsDefender").GetValue((Pawn)parent);
+
                             var data = (LordToilData_Siege) Traverse.Create(st).Property("Data").GetValue();
                             p.mindState.duty = new PawnDuty(DutyDefOf.Defend, data.siegeCenter) {radius = data.baseRadius};
                             st.UpdateAllDuties();
@@ -270,9 +259,6 @@ namespace MOARANDROIDS
                     catch (Exception)
                     {
                     }
-
-                    //Log.Message("Current duty ==>"+cp.mindState.duty.def.defName);
-                    //Log.Message("Current job ==>" + cp.CurJobDef.defName);
                 }
             }
 
@@ -284,7 +270,7 @@ namespace MOARANDROIDS
                 {
                     checkInterruptedUpload();
 
-                    //Atteinte d'un chargement d'upload de conscience
+
                     if (uploadRecipient != null && uploadEndingGT != -1 && uploadEndingGT < GT)
                     {
                         uploadEndingGT = -1;
@@ -300,16 +286,15 @@ namespace MOARANDROIDS
                         else
                             Utils.addSimpleMindedTraitForT1(uploadRecipient);
 
-                        //On realise effectivement la permutation puis le kill de la source
+
                         Utils.PermutePawn(cpawn, uploadRecipient);
 
                         Utils.clearBlankAndroid(uploadRecipient);
 
-                        //Report du blankAndroid pour le flagger dans la routine de kill
+
                         isBlankAndroid = true;
 
 
-                        //Si destinataire de la duplication prisonnier Et emetteur pas prisonier on enleve la condition 
                         if (!cpawn.IsPrisoner && uploadRecipient.IsPrisoner)
                         {
                             if (uploadRecipient.Faction != Faction.OfPlayer) uploadRecipient.SetFaction(Faction.OfPlayer);
@@ -317,7 +302,7 @@ namespace MOARANDROIDS
                             if (uploadRecipient.guest != null) uploadRecipient.guest.SetGuestStatus(null);
                         }
 
-                        //SI destinataire de la duplication colon regular et emetteur prisonnier 
+
                         if (cpawn.IsPrisoner && !uploadRecipient.IsPrisoner)
                         {
                             if (uploadRecipient.Faction != cpawn.Faction) uploadRecipient.SetFaction(cpawn.Faction);
@@ -340,16 +325,15 @@ namespace MOARANDROIDS
                     return;
                 }
 
-                //Atteinte fin application des nanites sur un androide
+
                 if (frameworkNaniteEffectGTEnd != -1 && GT >= frameworkNaniteEffectGTEnd && !cpawn.Dead)
                 {
                     var chance = false;
                     var nb = 0;
 
-                    //Chance que nanite fail
+
                     if (!Rand.Chance(Settings.percentageNanitesFail))
                     {
-                        //Le cas echeant on enleve le rusting
                         clearRusted();
 
                         nb = cpawn.health.hediffSet.hediffs.RemoveAll(h => Utils.AndroidOldAgeHediffFramework.Contains(h.def.defName));
@@ -360,14 +344,10 @@ namespace MOARANDROIDS
                     }
 
                     if (nb == 0)
-                    {
                         Messages.Message(chance ? "ATPP_NoBrokenStuffFound".Translate(cpawn.LabelShort) : "ATPP_BrokenStuffRepairFailed".Translate(cpawn.LabelShort), cpawn,
                             MessageTypeDefOf.NegativeEvent);
-                    }
                     else
-                    {
                         Messages.Message("ATPP_BrokenFrameworkRepaired".Translate(cpawn.LabelShort), cpawn, MessageTypeDefOf.PositiveEvent);
-                    }
 
 
                     frameworkNaniteEffectGTEnd = -1;
@@ -376,7 +356,7 @@ namespace MOARANDROIDS
             }
 
             if (GT % 300 != 0) return;
-            
+
             {
                 var cp = (Pawn) parent;
 
@@ -391,15 +371,11 @@ namespace MOARANDROIDS
                     Log.Message(e.defName+" "+e.building.bed_maxBodySize+" "+e.GetStatValueAbstract(StatDefOf.MedicalTendQualityOffset, null));
                 }*/
 
-                //SI surrogate d'une conscience numérisée ET à un mentalbreak => déconnection et mise en place d'un timeout de fin de mentalbreak
 
-                //Recharge auto de la barre de need food
                 if (csm != null && csm.Infected == -1)
                 {
-                    //Recharge surrogate
                     if (Utils.androidIsValidPodForCharging(cp) && !isOrganic)
                     {
-                        //cpawn.needs.food.CurLevel = cpawn.needs.food.MaxLevel;
                         cp.needs.food.CurLevelPercentage += Settings.percentageOfBatteryChargedEach6Sec;
                         Utils.throwChargingMote(cp);
                     }
@@ -408,7 +384,7 @@ namespace MOARANDROIDS
                         addNoRemoteHostHediff();
                 }
 
-                //Atteinte du solarFlare que si android OU pucé (VXX)
+
                 checkSolarFlareStuff();
 
                 checkRusted();
@@ -419,7 +395,7 @@ namespace MOARANDROIDS
                 if (!Utils.POWERPP_LOADED) return;
 
                 if (connectedLWPNActive || connectedLWPN == null) return;
-                
+
                 if (Utils.GCATPP.pushLWPNAndroid(connectedLWPN, cp))
                     connectedLWPNActive = true;
             }
@@ -433,7 +409,7 @@ namespace MOARANDROIDS
             var cp = (Pawn) parent;
 
             if (csm == null || csm.Infected != 4 || cp.InMentalState) return;
-            
+
             csm.Infected = -1;
             var he = cp.health.hediffSet.GetFirstHediffOfDef(Utils.hediffNoHost);
             if (he == null) cp.health.AddHediff(Utils.hediffNoHost);
@@ -447,10 +423,10 @@ namespace MOARANDROIDS
 
 
                 if (!isAndroidWithSkin) return;
-                
+
                 Utils.lastResolveAllGraphicsHeadGraphicPath = null;
 
-                //Changement tete
+
                 if (!TXHurtedHeadSet && cp.health.summaryHealth.SummaryHealthPercent <= 0.85f && cp.health.summaryHealth.SummaryHealthPercent > 0.45f || forcedDamageLevel == 1)
                 {
                     TXHurtedHeadSet = true;
@@ -518,12 +494,10 @@ namespace MOARANDROIDS
                         cp.Drawer.renderer.graphics.ResolveAllGraphics();
                         PortraitsCache.SetDirty(cp);
                     }
-
-                    //(string)Traverse.Create(p1.story).Field("headGraphicPath").GetValue();
                 }
 
                 if (!Utils.RIMMSQOL_LOADED || Utils.lastResolveAllGraphicsHeadGraphicPath == null) return;
-                
+
                 cp.story.GetType().GetField("headGraphicPath", BindingFlags.NonPublic | BindingFlags.Instance)
                     ?.SetValue(cp.story, Utils.lastResolveAllGraphicsHeadGraphicPath);
                 Utils.lastResolveAllGraphicsHeadGraphicPath = null;
@@ -541,7 +515,7 @@ namespace MOARANDROIDS
             var cp = (Pawn) parent;
 
             if (cp.Dead || !isBlankAndroid) return;
-            
+
             var he = cp.health.hediffSet.GetFirstHediffOfDef(Utils.hediffBlankAndroid);
             if (he == null)
                 cp.health?.AddHediff(he);
@@ -553,7 +527,7 @@ namespace MOARANDROIDS
             {
                 var cp = (Pawn) parent;
 
-                //Entitées qui ne rust pas on degage et check avant de faire le menage des rust malplacés
+
                 if (!isAndroidTIer || isAndroidWithSkin || dontRust)
                 {
                     var he = cp.health.hediffSet.GetFirstHediffOfDef(Utils.hediffRusted);
@@ -578,7 +552,6 @@ namespace MOARANDROIDS
                 }
                 else
                 {
-                    //Reprise de la rouille interrompue
                     if (paintingRustGT == -3 && !paintingIsRusted) setRusted();
 
                     if (paintingRustGT != -1)
@@ -588,10 +561,9 @@ namespace MOARANDROIDS
                             paintingRustGT = 0;
                     }
 
-                    //Lancement paint auto 1jour avant la fin d'expiration du timeout
+
                     if (Settings.allowAutoRepaint && (!cp.IsPrisoner || Settings.allowAutoRepaintForPrisoners) && !autoPaintStarted && paintingRustGT <= 60000)
                     {
-                        //Déduction recipeDef
                         var color = (AndroidPaintColor) customColor;
                         var paintRecipeDefname = "";
 
@@ -644,13 +616,12 @@ namespace MOARANDROIDS
                         var recipe = DefDatabase<RecipeDef>.GetNamed(paintRecipeDefname, false);
                         if (recipe != null)
                         {
-                            //Renouvellement auto de la peinture (ajout operation auto)
                             cp.health.surgeryBills.AddBill(new Bill_Medical(recipe));
                             autoPaintStarted = true;
                         }
                     }
 
-                    //Rouille de la peinture ?
+
                     if (paintingRustGT == 0 || paintingRustGT == -1 && cp.health.hediffSet.GetFirstHediffOfDef(Utils.hediffRusted) == null)
                     {
                         paintingIsRusted = true;
@@ -663,7 +634,7 @@ namespace MOARANDROIDS
                     else
                     {
                         if (paintingIsRusted) return;
-                        //Cas aberrant (possede hediff de rusted alors que pas rusted)
+
                         var cRusted = cp.health.hediffSet.GetFirstHediffOfDef(Utils.hediffRusted);
                         if (cRusted != null) cp.health.RemoveHediff(cRusted);
                     }
@@ -696,7 +667,6 @@ namespace MOARANDROIDS
             if (Find.ColonistBar != null) PortraitsCache.SetDirty(pawn);
 
 
-            //Retire du hediff de rouille
             var he = pawn.health.hediffSet.GetFirstHediffOfDef(Utils.hediffRusted);
             if (he != null)
                 pawn.health.RemoveHediff(he);
@@ -708,7 +678,7 @@ namespace MOARANDROIDS
             {
                 var cp = (Pawn) parent;
 
-                //Androids avec une peau pas affectés par le solarflare
+
                 if (cp.def.defName == Utils.TX2 || cp.def.defName == Utils.TX3)
                     return;
 
@@ -716,7 +686,7 @@ namespace MOARANDROIDS
                 {
                     var solarFlareRunning = Utils.getRandomMapOfPlayer().gameConditionManager.ConditionIsActive(GameConditionDefOf.SolarFlare);
 
-                    //Si android surrogate actuellement controllé par un étranger externe on le deconnecte
+
                     /*if (externalController != null && surrogateController != null && solarFlareRunning)
                     {
                         CompSurrogateOwner cso = surrogateController.TryGetComp<CompSurrogateOwner>();
@@ -728,7 +698,6 @@ namespace MOARANDROIDS
 
                     if (Settings.disableSolarFlareEffect)
                     {
-                        //Retrait heddif si il avait été ajouté
                         if (solarFlareEffectApplied)
                         {
                             var cpawn = (Pawn) parent;
@@ -741,26 +710,26 @@ namespace MOARANDROIDS
                         return;
                     }
 
-                    //Application de l'effet
+
                     if (solarFlareRunning && !solarFlareEffectApplied)
                     {
                         var cpawn = (Pawn) parent;
-                        //Ajout heddif
+
                         cpawn.health.AddHediff(DefDatabase<HediffDef>.GetNamed("ATPP_SolarFlareAndroidImpact"));
 
                         solarFlareEffectApplied = true;
                     }
 
-                    //Suppression de l'effet
+
                     if (solarFlareRunning || !solarFlareEffectApplied) return;
                     {
                         var cpawn = (Pawn) parent;
-                        //Ajout heddif
+
                         var he = cpawn.health.hediffSet.GetFirstHediffOfDef(DefDatabase<HediffDef>.GetNamed("ATPP_SolarFlareAndroidImpact"));
                         if (he != null)
                             cpawn.health.RemoveHediff(he);
 
-                        //Suppression de l'heddif
+
                         solarFlareEffectApplied = false;
                     }
                 }
@@ -780,7 +749,7 @@ namespace MOARANDROIDS
         public void addNoRemoteHostHediff()
         {
             var cpawn = (Pawn) parent;
-            //Check si surrogate et pas de controlleur ET possede pas de noHost alors on l'ajoute (===> effet d'un item externe cleanant les heddifs)
+
             var he = cpawn.health.hediffSet.GetFirstHediffOfDef(Utils.hediffNoHost);
             if (he == null) cpawn.health.AddHediff(Utils.hediffNoHost);
         }
@@ -808,7 +777,7 @@ namespace MOARANDROIDS
             if (!respawningAfterLoad)
                 Utils.GCATPP.pushSurrogateAndroidNotifyMapChanged((Pawn) parent, MUID);
 
-            //Suppression traits blacklistés le cas echeant
+
             if (isAndroidTier && (!isSurrogate || isSurrogate && surrogateController != null && surrogateController.IsAndroidTier()))
                 Utils.removeMindBlacklistedTrait(pawn);
 
@@ -837,13 +806,13 @@ namespace MOARANDROIDS
                 if (pawn.ownership != null && pawn.ownership.OwnedBed != null)
                     if (pawn.ownership.OwnedBed.ForPrisoners != pawn.IsPrisoner)
                         pawn.ownership.UnclaimBed();
-                //Starting du délais de rusting
+
                 if (dontRust) return;
-                
+
                 if (paintingRustGT == -2) paintingRustGT = Rand.Range(Settings.minDaysAndroidPaintingCanRust, Settings.maxDaysAndroidPaintingCanRust) * 60000;
 
                 if (paintingRustGT != -1 || !paintingIsRusted || pawn.health == null) return;
-                    
+
                 var he = pawn.health.hediffSet.GetFirstHediffOfDef(Utils.hediffRusted);
                 if (he == null) pawn.health.AddHediff(Utils.hediffRusted);
             }
@@ -859,13 +828,13 @@ namespace MOARANDROIDS
 
                 var cpawn = pawn;
 
-                //Si VX0 dans une session en cours alors on chope le pawn permuté controleur
+
                 if (surrogateController != null)
                     cpawn = surrogateController;
 
-                //Reset du child et adulthood si VX0 organic
+
                 if (!isSurrogate || !isOrganic || cpawn.story == null || cpawn.story.adulthood == null) return;
-                
+
                 if (cpawn.story.childhood != null)
                 {
                     BackstoryDatabase.TryGetWithIdentifier("MercenaryRecruit", out var bs);
@@ -874,7 +843,7 @@ namespace MOARANDROIDS
                 }
 
                 cpawn.story.adulthood = null;
-                //Reset incapable of
+
                 Utils.ResetCachedIncapableOf(cpawn);
             }
         }
@@ -893,7 +862,7 @@ namespace MOARANDROIDS
                 connectedLWPNActive = false;
             }
 
-            //Si surrogate on notifis le changement de map de ce dernier pour qu'il soit correctement traqué
+
             if (!isSurrogate) return;
 
             var MUID = "caravan";
@@ -917,7 +886,7 @@ namespace MOARANDROIDS
                 Utils.GCATPP.popSurrogateAndroid((Pawn)parent);*/
 
             if (!isSurrogate || previousMap != null) return;
-            
+
             var MUID = "caravan";
             Utils.GCATPP.pushSurrogateAndroidNotifyMapChanged((Pawn) parent, MUID);
         }
@@ -931,7 +900,7 @@ namespace MOARANDROIDS
                 case "SkyMindNetworkUserConnected":
                     break;
                 case "SkyMindNetworkUserDisconnected":
-                    //On va  invoquer le checkInterruption pour les duplicate et permutation 
+
                     checkInterruptedUpload();
                     break;
             }
@@ -939,13 +908,11 @@ namespace MOARANDROIDS
 
         private bool isRegularM7()
         {
-            //Les M7Mech standard ne sont pas controlables
             return !isSurrogate && isM7();
         }
 
         private bool isM7()
         {
-            //Les M7Mech standard ne sont pas controlables
             return parent.def.defName == "M7Mech";
         }
 
@@ -956,7 +923,7 @@ namespace MOARANDROIDS
             var isPrisoner = pawn.IsPrisoner;
             var transfertAllowed = Utils.mindTransfertsAllowed((Pawn) parent);
 
-            //Si androide virusé (hacking) ajout boutton permettant de le shutdown
+
             if (csm != null && csm.Hacked == 1)
             {
                 yield return new Command_Action
@@ -972,8 +939,6 @@ namespace MOARANDROIDS
 
             if (!isOrganic && pawn.Faction == Faction.OfPlayer)
             {
-                //Ajout possibilité de lancer l'explosion d'un androide a distance
-
                 if (Utils.ResearchAndroidBatteryOverload.IsFinished)
                 {
                     var tex = Tex.ForceAndroidToExplode;
@@ -1001,7 +966,7 @@ namespace MOARANDROIDS
                     };
                 }
 
-                //Si POWER++ chargé ajout possibilité de rattaché android à un LWPN
+
                 if (Utils.POWERPP_LOADED && useBattery)
                 {
                     var tex = Tex.LWPNConnected;
@@ -1019,35 +984,37 @@ namespace MOARANDROIDS
                             FloatMenu floatMenuMap;
 
                             var opts = (from build in parent.Map.listerBuildings.allBuildingsColonist
-                                where (build.def.defName == "ARKPPP_LocalWirelessPowerEmitter" || build.def.defName == "ARKPPP_LocalWirelessPortablePowerEmitter") && !build.IsBrokenDown() && build.TryGetComp<CompPowerTrader>().PowerOn
+                                where (build.def.defName == "ARKPPP_LocalWirelessPowerEmitter" || build.def.defName == "ARKPPP_LocalWirelessPortablePowerEmitter") &&
+                                      !build.IsBrokenDown() && build.TryGetComp<CompPowerTrader>().PowerOn
                                 let compLWPNEmitter = Utils.TryGetCompByTypeName(build, "CompLocalWirelessPowerEmitter", "Power++")
                                 where compLWPNEmitter != null
                                 let lib = getConnectedLWPNLabel(build)
-                                select new FloatMenuOption("ARKPPP_WPNListRow".Translate(lib, ((int) Utils.getCurrentAvailableEnergy(build.PowerComp.PowerNet)).ToString()), delegate
-                                {
-                                    if (connectedLWPN != null)
+                                select new FloatMenuOption("ARKPPP_WPNListRow".Translate(lib, ((int) Utils.getCurrentAvailableEnergy(build.PowerComp.PowerNet)).ToString()),
+                                    delegate
                                     {
-                                        Utils.GCATPP.popLWPNAndroid(connectedLWPN, pawn);
-                                        connectedLWPNActive = false;
-                                        connectedLWPN = null;
-                                    }
+                                        if (connectedLWPN != null)
+                                        {
+                                            Utils.GCATPP.popLWPNAndroid(connectedLWPN, pawn);
+                                            connectedLWPNActive = false;
+                                            connectedLWPN = null;
+                                        }
 
-                                    if (Utils.GCATPP.pushLWPNAndroid(build, pawn))
-                                    {
-                                        connectedLWPN = build;
-                                        connectedLWPNActive = true;
-                                    }
-                                    else
-                                    {
-                                        Messages.Message("ATPP_MessageLWPNNoSlotAvailable".Translate(), MessageTypeDefOf.NegativeEvent);
-                                    }
-                                })).ToList();
+                                        if (Utils.GCATPP.pushLWPNAndroid(build, pawn))
+                                        {
+                                            connectedLWPN = build;
+                                            connectedLWPNActive = true;
+                                        }
+                                        else
+                                        {
+                                            Messages.Message("ATPP_MessageLWPNNoSlotAvailable".Translate(), MessageTypeDefOf.NegativeEvent);
+                                        }
+                                    })).ToList();
 
-                            //SI pas choix affichage de la raison 
+
                             if (opts.Count == 0)
                                 opts.Add(new FloatMenuOption("ATPP_NoAvailableLWPN".Translate(), null));
 
-                            //Si le recepteur est configuré pour se connecter a un LWPN définis on ajoute une option de deconnexion
+
                             if (connectedLWPN != null)
                                 opts.Add(new FloatMenuOption("ARKPPP_ClearCurrentWPNConnection".Translate(), delegate
                                 {
@@ -1117,7 +1084,7 @@ namespace MOARANDROIDS
                 }
             }
 
-            //Permet de deconnecter l'utilisateur connecté sur le robot
+
             if (isSurrogate)
             {
                 if (surrogateController != null)
@@ -1138,7 +1105,7 @@ namespace MOARANDROIDS
                 else
                 {
                     if (lastController != null)
-                        //Permet au surrogate de se relier au dernier controller
+
                         yield return new Command_Action
                         {
                             icon = Tex.AndroidSurrogateReconnectToLastController,
@@ -1156,7 +1123,6 @@ namespace MOARANDROIDS
                                 var cso = lastController.TryGetComp<CompSurrogateOwner>();
                                 if (cso != null)
                                 {
-                                    //Check so lastController est un mind dans ce cas check qu'il ne fait pas deja autre chose
                                     if (cso.skyCloudHost != null)
                                     {
                                         var csc = cso.skyCloudHost.TryGetComp<CompSkyCloudCore>();
@@ -1167,13 +1133,13 @@ namespace MOARANDROIDS
                                         }
                                     }
 
-                                    //Si controller deconnecté tenttive reconnection au SkyMind
+
                                     var isConnected = true;
                                     if (!Utils.GCATPP.isConnectedToSkyMind(lastController))
                                         if (!Utils.GCATPP.connectUser(lastController))
                                             isConnected = false;
 
-                                    //Deja en session le lastUser on jerte
+
                                     if (!isConnected || !VX3Owner && cso.isThereSX() || VX3Owner && cso.availableSX.Count + 1 > Settings.VX3MaxSurrogateControllableAtOnce ||
                                         !cso.controlMode)
                                     {
@@ -1189,13 +1155,11 @@ namespace MOARANDROIDS
             }
             else
             {
-                //Si pas un surrogate
-
                 if (!Utils.GCATPP.isConnectedToSkyMind(parent) || isBlankAndroid) yield break;
-                
+
                 var cso = parent.TryGetComp<CompSurrogateOwner>();
 
-                //Pas d'organique ou de controlleur de surrogate en corus de session peuvent faire l'operation d'augmentation de points
+
                 if (!isOrganic && (cso == null || !cso.isThereSX()))
                     yield return new Command_Action
                     {
@@ -1254,7 +1218,6 @@ namespace MOARANDROIDS
 
                     if (uploadEndingGT != -1 || showUploadProgress)
                     {
-                        //Calcul pourcentage de transfert
                         float p;
                         string action;
 
@@ -1285,7 +1248,7 @@ namespace MOARANDROIDS
                 }
 
                 if (!isSurrogate) return ret.TrimEnd('\r', '\n') + base.CompInspectStringExtra();
-                
+
                 if (surrogateController != null)
                     ret += "ATPP_RemotelyControlledBy".Translate(((Pawn) parent).LabelShortCap) + "\n";
 
@@ -1294,10 +1257,10 @@ namespace MOARANDROIDS
 
 
                 if (surrogateController == null) return ret.TrimEnd('\r', '\n') + base.CompInspectStringExtra();
-                    
+
                 var cso = surrogateController.TryGetComp<CompSurrogateOwner>();
                 if (cso == null || !surrogateController.VX3ChipPresent()) return ret.TrimEnd('\r', '\n') + base.CompInspectStringExtra();
-                        
+
                 if (cso.SX == parent)
                     ret += "ATPP_VX3SurrogateTypePrimary".Translate() + "\n";
                 else
@@ -1323,7 +1286,7 @@ namespace MOARANDROIDS
             var GCPPP = Traverse.Create(GC_PPP);
             var compLWPNEmitter = Utils.TryGetCompByTypeName(LWPNEmitter, "CompLocalWirelessPowerEmitter", "Power++");
             if (compLWPNEmitter == null) return ret;
-            
+
             var LWPNID = (string) Traverse.Create(compLWPNEmitter).Field("LWPNID").GetValue();
             ret = (string) GCPPP.Method("getLWPNLabel", LWPNID, false).GetValue();
 
@@ -1353,12 +1316,12 @@ namespace MOARANDROIDS
                 if (cso == null)
                     return;
 
-                //Surrogate en cours on check si clones toujours connecté
+
                 if (cso.isThereSX() && cso.availableSX != null)
                 {
                     var hostBadConn = false;
 
-                    //Si surrogateController stoclé dans le skyCloud
+
                     if (cso.skyCloudHost != null)
                         hostBadConn = !cso.skyCloudHost.TryGetComp<CompSkyCloudCore>().isRunning();
                     else
@@ -1368,8 +1331,6 @@ namespace MOARANDROIDS
 
                     if (hostBadConn || surrogateBadConn)
                     {
-                        //Log.Message("DDDDD==>"+ (!Utils.GCATPP.isConnectedToSkyMind(cpawn))+" "+ (!Utils.GCATPP.isConnectedToSkyMind(SX)));
-
                         var disconnectedPawn = cpawn;
                         var invertedPawn = surrogateController;
                         if (hostBadConn)
@@ -1378,19 +1339,19 @@ namespace MOARANDROIDS
                             invertedPawn = cpawn;
                         }
 
-                        //Notification de la deconnexion accidentelle
+
                         if (disconnectedPawn != null && invertedPawn != null && disconnectedPawn.Faction == Faction.OfPlayer)
                             Messages.Message("ATPP_SurrogateUnexpectedDisconnection".Translate(invertedPawn.LabelShortCap), disconnectedPawn, MessageTypeDefOf.NegativeEvent);
 
-                        //un ou les deux des composantes sont déconnectés ===> on lance la deconnection du SX
+
                         cso.stopControlledSurrogate(cpawn);
                     }
                 }
             }
 
-            //Si hote plus valide alors on arrete le processus et on kill les deux androids
-            if (uploadEndingGT == -1 || (!recipientDeadOrNull && !cpawn.Dead && emitterConnected && recipientConnected)) return;
-            
+
+            if (uploadEndingGT == -1 || !recipientDeadOrNull && !cpawn.Dead && emitterConnected && recipientConnected) return;
+
             var reason = "";
             if (recipientDeadOrNull)
             {
@@ -1424,7 +1385,6 @@ namespace MOARANDROIDS
 
         public void initAsSurrogate()
         {
-            // on va lui ajouter un hediff afin de le downer en permanence(pas d'hote)
             var cpawn = (Pawn) parent;
 
             isSurrogate = true;
@@ -1452,7 +1412,6 @@ namespace MOARANDROIDS
 
         private void OnPermuteConfirmed(Pawn source, Pawn dest)
         {
-            //Ajout hediff de transfert aux deux androids
             source.health.AddHediff(DefDatabase<HediffDef>.GetNamed("ATPP_ConsciousnessUpload"));
             dest.health.AddHediff(DefDatabase<HediffDef>.GetNamed("ATPP_ConsciousnessUpload"));
 

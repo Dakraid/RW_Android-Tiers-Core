@@ -20,9 +20,9 @@ namespace MOARANDROIDS
                 {
                     var isAndroidTier = __result.IsAndroidTier();
 
-                    //Pas d'application de filtrage de creation d'androide si le mode est playerStarter avec le pawnkindDef de base du scenario de AT
+
                     if (!(request.Context == PawnGenerationContext.PlayerStarter && Utils.ExceptionPlayerStartingAndroidPawnKindList.Contains(request.KindDef.defName))
-                    ) //Vire chance generation android
+                    )
                         if (Settings.androidsAreRare
                             && __result.IsAndroidTier()
                             && (Current.ProgramState == ProgramState.Entry || Current.ProgramState == ProgramState.Playing && request.Faction != Faction.OfPlayer)
@@ -42,7 +42,7 @@ namespace MOARANDROIDS
                             __result = PawnGenerator.GeneratePawn(r);
                         }
 
-                    //Remove illogiocal traits with androids
+
                     if (isAndroidTier)
                     {
                         if (__result.gender == Gender.Male)
@@ -63,7 +63,6 @@ namespace MOARANDROIDS
 
                         if (isAndroidWithSkin)
                         {
-                            //force not damaged face for skinned androids
                             Utils.changeHARCrownType(__result, "Average_Normal");
 
                             if (Utils.RIMMSQOL_LOADED && Utils.lastResolveAllGraphicsHeadGraphicPath != null)
@@ -75,7 +74,7 @@ namespace MOARANDROIDS
                         }
 
                         Utils.removeMindBlacklistedTrait(__result);
-                        //Chance that android can be painted (skinned androids excluded)
+
                         if (!isAndroidWithSkin && Rand.Chance(Settings.chanceGeneratedAndroidCanBePaintedOrRust))
                         {
                             var cas = __result.TryGetComp<CompAndroidState>();
@@ -98,7 +97,7 @@ namespace MOARANDROIDS
                         }
                     }
 
-                    //Prevent generation M7/T5 dans ecran style EBDPrep carefully
+
                     if (Settings.preventM7T5AppearingInCharacterScreen && Current.ProgramState == ProgramState.Entry)
                         if (__result.def.defName == Utils.M7 || __result.def.defName == Utils.T5)
                         {
@@ -117,16 +116,16 @@ namespace MOARANDROIDS
                         }
 
                     if (!Settings.notRemoveAllSkillPassionsForBasicAndroids)
-                        //Si T1/T2
+
                         if (__result.IsBasicAndroidTier() && __result.def.defName != "M7Mech" && __result.skills != null && __result.skills.skills != null)
                             foreach (var sr in __result.skills.skills)
                                 sr.passion = Passion.None;
                     if (!Settings.notRemoveAllTraitsFromT1T2)
-                        //Si T1/T2
+
                         if (__result.IsBasicAndroidTier() && __result.def.defName != "M7Mech")
                             Utils.removeAllTraits(__result);
 
-                    //Si GYNOID chargé changement sex android en fonction chance
+
                     if (Utils.ANDROIDTIERSGYNOID_LOADED
                         && isAndroidTier
                         && (__result.def.defName == Utils.T1 || __result.def.defName == Utils.T2 || __result.def.defName == Utils.T3 || __result.def.defName == Utils.T4)
@@ -144,7 +143,7 @@ namespace MOARANDROIDS
                         }
                     }
 
-                    //Définiton des traits pour les androides générés a destination du player
+
                     if (Current.ProgramState == ProgramState.Playing && !Settings.basicAndroidsRandomSKills && __result.Faction == Faction.OfPlayer)
                     {
                         SkillRecord sr = null;
@@ -355,7 +354,6 @@ namespace MOARANDROIDS
                     }
 
 
-                    //If TX3/4 then force not damaged head
                     if (__result.def.defName != Utils.TX3 && __result.def.defName != Utils.TX4) return;
 
                     Utils.changeHARCrownType(__result, "Average_Normal");

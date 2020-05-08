@@ -35,7 +35,7 @@ namespace MOARANDROIDS
                     avatar = Tex.RemotelyControlledNode;
 
             if (avatar == null) return;
-            
+
             var vector = parent.TrueCenter();
             vector.y = AltitudeLayer.MetaOverlays.AltitudeFor() + 0.28125f;
             vector.z += 1.4f;
@@ -72,7 +72,7 @@ namespace MOARANDROIDS
         {
             var cso = controller?.TryGetComp<CompSurrogateOwner>();
             if (cso?.skyCloudHost == null) return;
-                
+
             var csc = cso.skyCloudHost.TryGetComp<CompSkyCloudCore>();
             csc?.stopRemotelyControlledTurret(controller);
         }
@@ -80,7 +80,7 @@ namespace MOARANDROIDS
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
         {
             if (controller != null)
-                //Boutton permettant deconnection de la tourelle du pawn controller
+
                 yield return new Command_Action
                 {
                     icon = Tex.AndroidToControlTargetDisconnect,

@@ -48,7 +48,6 @@ namespace MOARANDROIDS
 
 
                 Utils.forceGeneratedAndroidToBeDefaultPainted = false;
-                //Utils.GCATPP.pushSurrogateAndroid(surrogate);
             }
             catch (Exception e)
             {

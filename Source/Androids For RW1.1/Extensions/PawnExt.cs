@@ -1,9 +1,7 @@
 ﻿using Verse;
 
-//Extension method, in RimWorld namespace
 namespace RimWorld
 {
-    //Make sure I bind to the Android fleshDef as early as possible AFTER they are loaded
     [StaticConstructorOnStartup]
     public static class PawnExt
     {

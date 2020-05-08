@@ -23,13 +23,13 @@ namespace MOARANDROIDS
             var ransomMsg = "";
             var nbConnectedClients = Utils.GCATPP.getNbThingsConnected();
             var nbUnsecurisedClients = nbConnectedClients - Utils.GCATPP.getNbSlotSecurisedAvailable();
-            //Déduction faction ennemis au hasard
+
             var faction = Find.FactionManager.RandomEnemyFaction();
 
             var letter = LetterDefOf.ThreatBig;
             var fee = 0;
 
-            //Si pas de config insécurisé alors on dégage
+
             if (nbUnsecurisedClients < 0)
                 return false;
 
@@ -41,12 +41,12 @@ namespace MOARANDROIDS
 
             cso.clearRansomwareVar();
 
-            //Bad traits added
+
             if (Rand.Chance(0.5f))
             {
                 var tr = Utils.RansomAddedBadTraits.ToList();
 
-                //Purge des traits deja possédé par la victime ET incompatibles avec ceux present
+
                 foreach (var t in Utils.RansomAddedBadTraits)
                 foreach (var t2 in victim.story.traits.allTraits.Where(t2 => t2.def == t || t.conflictingTraits != null && t.conflictingTraits.Contains(t2.def)))
                 {
@@ -54,7 +54,7 @@ namespace MOARANDROIDS
                     break;
                 }
 
-                //Selection trait aleatoire ajouté
+
                 cso.ransomwareTraitAdded = tr.RandomElement();
                 victim.story.traits.GainTrait(new Trait(cso.ransomwareTraitAdded, 0, true));
 
@@ -65,19 +65,16 @@ namespace MOARANDROIDS
                 if (cso.ransomwareTraitAdded.degreeDatas != null && cso.ransomwareTraitAdded.degreeDatas.First() != null)
                     traitLabel = cso.ransomwareTraitAdded.degreeDatas.First().label;
 
-                //Log.Message("=======>"+cso.ransomwareTraitAdded.defName);
 
                 msg = "ATPP_LetterFactionRansomwareBadTraitDownloadedDesc".Translate(faction.Name, victim.LabelShortCap, traitLabel);
                 ransomMsg = "ATPP_RansomNeedPayRansomDownloadedTrait".Translate(faction.Name, traitLabel, victim.LabelShortCap, fee);
             }
             else
             {
-                //Skill enlevé
-
                 SkillDef find = null;
                 SkillRecord sel = null;
                 var v = -1;
-                //Check tu plus gros skill de la victime
+
                 foreach (var s in victim.skills.skills.Where(s => s.levelInt >= v))
                 {
                     v = s.levelInt;
@@ -85,10 +82,10 @@ namespace MOARANDROIDS
                     sel = s;
                 }
 
-                //APplication effet négatif
+
                 if (sel != null) sel.levelInt = 0;
 
-                //Sauvegarde infos de skill pour restauration
+
                 cso.ransomwareSkillStolen = find;
                 cso.ransomwareSkillValue = v;
 

@@ -14,16 +14,13 @@ namespace MOARANDROIDS
             base.PostSpawnSetup(respawningAfterLoad);
 
             Utils.GCATPP.pushReloadStation((Building) parent);
-
-            //Au demarrage si l'emetteur on réapplique le retrait de ce courant convertis en sans fil
-            //substractPowerTransmitted();
         }
 
         public override void PostDeSpawn(Map map)
         {
             base.PostDeSpawn(map);
 
-            //Retire de la liste des emetteurs de la map
+
             Utils.GCATPP.popReloadStation((Building) parent, map);
         }
 
@@ -34,7 +31,6 @@ namespace MOARANDROIDS
 
         public override void ReceiveCompSignal(string signal)
         {
-            //Quand un WPN sans va ou revient on raffraichis les offres des factions uniquement
             if (signal == "PowerTurnedOff" || signal == "PowerTurnedOn")
             {
             }
@@ -53,7 +49,6 @@ namespace MOARANDROIDS
             if (ret != "")
                 ret += "\n";
 
-            //ret += "\n" + "ARKPPP_StormPerturbationInfo".Translate((int)(perturbation * 100));
 
             return ret;
         }
@@ -64,11 +59,11 @@ namespace MOARANDROIDS
 
             var CGT = Find.TickManager.TicksGame;
             if (CGT % 60 == 0)
-                //Rafraichissement qt de courant consommé
+
                 refreshPowerConsumed();
 
             if (CGT % 360 == 0)
-                //Augmentation énergie (barre de faim) des androids présents
+
                 incAndroidPower();
         }
 
@@ -90,8 +85,10 @@ namespace MOARANDROIDS
             {
                 var thingList = adjPos.GetThingList(parent.Map);
                 if (thingList == null) continue;
-                
-                foreach (var cp in thingList.Select(t => t as Pawn).Where(cp => cp != null && Utils.ExceptionAndroidCanReloadWithPowerList.Contains(cp.def.defName) && cp.CurJobDef.defName == "ATPP_GoReloadBattery").Where(cp => cp.needs.food.CurLevelPercentage < 1.0))
+
+                foreach (var cp in thingList.Select(t => t as Pawn)
+                    .Where(cp => cp != null && Utils.ExceptionAndroidCanReloadWithPowerList.Contains(cp.def.defName) && cp.CurJobDef.defName == "ATPP_GoReloadBattery")
+                    .Where(cp => cp.needs.food.CurLevelPercentage < 1.0))
                 {
                     cp.needs.food.CurLevelPercentage += Settings.percentageOfBatteryChargedEach6Sec;
                     Utils.throwChargingMote(cp);
@@ -106,14 +103,14 @@ namespace MOARANDROIDS
                 var ok = true;
                 var thingList = adjPos.GetThingList(parent.Map);
                 if (thingList == null) continue;
-                
+
                 if (thingList.Select(t => t as Pawn).Any(cp => cp != null && cp.IsColonist && Utils.ExceptionAndroidList.Contains(cp.def.defName))) ok = false;
 
-                //Si pas déjà d'android dessus
+
                 if (!ok) continue;
 
                 if (!android.CanReach(adjPos, PathEndMode.OnCell, Danger.Deadly)) continue;
-                    
+
                 if (!android.Map.pawnDestinationReservationManager.IsReserved(adjPos))
                     return adjPos;
             }
@@ -121,7 +118,7 @@ namespace MOARANDROIDS
             return IntVec3.Invalid;
         }
 
-        //Comptabilisation du nombre d'androids sur les bords directes du batiments en train de recharger
+
         public int getNbAndroidReloading(bool countOnly = false)
         {
             var ret = 0;
@@ -130,17 +127,16 @@ namespace MOARANDROIDS
             {
                 var thingList = adjPos.GetThingList(parent.Map);
                 if (thingList == null) continue;
-                
+
                 foreach (var t in thingList)
                 {
-                    //Il sagit d'un android 
                     if (!(t is Pawn cp) || !cp.IsColonist || !Utils.ExceptionAndroidList.Contains(cp.def.defName) ||
                         cp.CurJobDef.defName != "ATPP_GoReloadBattery") continue;
-                        
+
                     if (countOnly)
                         ret++;
                     else
-                        //Si son job est "reloading" alors incrémentation (il ne sagit pas d'un android ne faisant que passer)
+
                         ret += Utils.getConsumedPowerByAndroid(cp.def.defName);
                 }
             }

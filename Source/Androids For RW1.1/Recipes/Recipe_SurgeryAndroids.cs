@@ -6,16 +6,15 @@ namespace MOARANDROIDS
 {
     public class Recipe_SurgeryAndroids : RecipeWorker
     {
-        // Token: 0x04000B58 RID: 2904
         private const float CatastrophicFailChance = 0.5f;
 
-        // Token: 0x04000B59 RID: 2905
+
         private const float RidiculousFailChanceFromCatastrophic = 0.1f;
 
-        // Token: 0x04000B5A RID: 2906
+
         private const float InspiredSurgeryFailChanceFactor = 0.1f;
 
-        // Token: 0x04000B5B RID: 2907
+
         private static readonly SimpleCurve MedicineMedicalPotencyToSurgeryChanceFactor = new SimpleCurve
         {
             new CurvePoint(0f, 0.7f),
@@ -69,7 +68,7 @@ namespace MOARANDROIDS
             return true;
         }
 
-        // Token: 0x06001266 RID: 4710 RVA: 0x0008C4AD File Offset: 0x0008A8AD
+
         private void TryGainBotchedSurgeryThought(Pawn patient, Pawn surgeon)
         {
             if (!patient.RaceProps.Humanlike) return;
@@ -81,7 +80,7 @@ namespace MOARANDROIDS
         {
             var cas = pawn.TryGetComp<CompAndroidState>();
 
-            //Renouvellement délais de rouille
+
             cas?.clearRusted();
         }
     }

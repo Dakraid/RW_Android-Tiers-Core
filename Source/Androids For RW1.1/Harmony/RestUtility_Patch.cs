@@ -22,27 +22,24 @@ namespace MOARANDROIDS
                 {
                     var bedIsSurrogateM7Pod = Utils.ExceptionSurrogateM7Pod.Contains(bedThing.def.defName);
                     var bedIsSurrogatePod = Utils.ExceptionSurrogatePod.Contains(bedThing.def.defName);
-                    //bool sleeperIsNotControlledSurrogate = sleeper.IsSurrogateAndroid(false, true);
+
                     var sleeperIsSurrogate = sleeper.IsSurrogateAndroid();
                     var sleeperIsRegularAndroid = Utils.ExceptionRegularAndroidList.Contains(sleeper.def.defName);
                     var isSurrogateM7 = sleeper.def.defName == Utils.M7 && sleeperIsSurrogate;
                     var isSleepingSpot = bedThing.def.defName == "SleepingSpot" || bedThing.def.defName == "DoubleSleepingSpot";
 
-                    //Intediction aux non surrogates l'usage des PODS
-                    //PodM7
+
                     if (bedIsSurrogateM7Pod)
                     {
-                        //SI pas un surrogate M7 alors pas d'utilisation possible
                         if (!isSurrogateM7) __result = false;
                     }
                     else if (bedIsSurrogatePod)
                     {
-                        //Si pas un surrogate standard alors utilisation pas possible
                         if (!(sleeperIsRegularAndroid && sleeper.def.defName != Utils.M7))
                             __result = false;
                     }
 
-                    //Interdiction aux szurrogates de se servir des autres lits
+
                     if (bedIsSurrogatePod || bedIsSurrogateM7Pod || isSleepingSpot) return;
 
                     if (isSurrogateM7 || sleeperIsRegularAndroid)

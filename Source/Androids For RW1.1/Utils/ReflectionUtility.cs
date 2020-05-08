@@ -2,10 +2,8 @@
 
 namespace Androids
 {
-    // Token: 0x02000020 RID: 32
     public static class ReflectionUtility
     {
-        // Token: 0x06000078 RID: 120 RVA: 0x000052CC File Offset: 0x000034CC
         public static object CloneObjectShallowly(this object sourceObject)
         {
             var flag = sourceObject == null;

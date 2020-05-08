@@ -27,15 +27,15 @@ namespace MOARANDROIDS
             var nbUnsecurisedClients = nbConnectedClients - Utils.GCATPP.getNbSlotSecurisedAvailable();
 
             LetterDef letter;
-            //Selection type virus 
+
             var attackType = 1;
             var fee = 0;
 
-            //Check si sur lensemble des clients connecté il y a quand meme des surrogates
+
             if (nbSurrogates <= 0)
                 return false;
 
-            //Attaque virale faible
+
             if (nbUnsecurisedClients <= 0)
             {
                 if (!Rand.Chance(Settings.riskSecurisedSecuritySystemGetVirus))
@@ -48,7 +48,7 @@ namespace MOARANDROIDS
                 nb = nb != 0 ? Rand.Range(1, nb + 1) : 1;
 
                 letter = LetterDefOf.ThreatSmall;
-                //Obtention des victimes
+
                 victims = Utils.GCATPP.getRandomSurrogateAndroids(nb);
                 if (victims.Count == 0) return false;
 
@@ -61,7 +61,7 @@ namespace MOARANDROIDS
 
                     csm.Infected = 4;
 
-                    //Deconnection du contorlleur le cas echeant
+
                     if (cas.surrogateController != null)
                     {
                         var cso = cas.surrogateController.TryGetComp<CompSurrogateOwner>();
@@ -75,7 +75,6 @@ namespace MOARANDROIDS
                     Utils.ignoredPawnNotifications = v;
                     Utils.VirusedRandomMentalBreak.RandomElement().Worker.TryStart(v, null, false);
                     Utils.ignoredPawnNotifications = null;
-                    //v.mindState.mentalStateHandler.TryStartMentalState(  , null, false, false, null, false);
                 }
 
 
@@ -93,8 +92,6 @@ namespace MOARANDROIDS
 
                 if (attackType != 3)
                 {
-                    //Attaque virale douce
-                    //Obtention des victimes (qui peut allez de 1 victime a N/2 victimes
                     nb = nbSurrogates / 2;
                     nb = nb != 0 ? Rand.Range(1, nb + 1) : 1;
 
@@ -147,19 +144,18 @@ namespace MOARANDROIDS
 
                     switch (attackType)
                     {
-                        //Virus
                         case 1:
-                            //Devient hostile
+
                             if (lord != null)
                                 lord.AddPawn(v);
                             break;
-                        //Virus explosif
+
                         case 2:
-                            //Devient hostile
+
                             if (lord != null)
                                 lord.AddPawn(v);
                             break;
-                        //Virus cryptolocker
+
                         case 3:
                             cryptolockedThings.Add(v.GetUniqueLoadID());
 
@@ -193,7 +189,7 @@ namespace MOARANDROIDS
                     }
 
                     if (attackType != 1 && attackType != 2) continue;
-                    //On va attribuer aleatoirement des poids d'attaque aux surrogate
+
                     var shooting = v.skills.GetSkill(SkillDefOf.Shooting);
                     if (shooting != null && !shooting.TotallyDisabled) shooting.levelInt = Rand.Range(3, 19);
                     var melee = v.skills.GetSkill(SkillDefOf.Melee);
@@ -205,7 +201,7 @@ namespace MOARANDROIDS
 
 
             if (attackType != 3) return true;
-            //Déduction faction ennemis au hasard
+
             var faction = Find.FactionManager.RandomEnemyFaction();
 
             var ransom = (ChoiceLetter_RansomDemand) LetterMaker.MakeLetter(DefDatabase<LetterDef>.GetNamed("ATPP_CLPayCryptoRansom"));

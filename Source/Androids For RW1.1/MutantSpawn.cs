@@ -16,7 +16,7 @@ namespace MOARANDROIDS
                 var stringBuilder = new StringBuilder();
                 stringBuilder.Append(base.LabelInBrackets);
                 if (comps == null) return stringBuilder.ToString();
-                
+
                 foreach (var compLabelInBracketsExtra in comps.Select(t => t.CompLabelInBracketsExtra).Where(compLabelInBracketsExtra => !compLabelInBracketsExtra.NullOrEmpty()))
                 {
                     if (stringBuilder.Length != 0) stringBuilder.Append(", ");
@@ -32,7 +32,7 @@ namespace MOARANDROIDS
             get
             {
                 if (comps == null) return base.ShouldRemove;
-                
+
                 return Enumerable.Any(comps, t => t.CompShouldRemove) || base.ShouldRemove;
             }
         }
@@ -55,7 +55,8 @@ namespace MOARANDROIDS
                 stringBuilder.Append(base.TipStringExtra);
                 if (comps == null) return stringBuilder.ToString();
 
-                foreach (var compTipStringExtra in comps.Select(t => t.CompTipStringExtra).Where(compTipStringExtra => !compTipStringExtra.NullOrEmpty())) stringBuilder.AppendLine(compTipStringExtra);
+                foreach (var compTipStringExtra in comps.Select(t => t.CompTipStringExtra).Where(compTipStringExtra => !compTipStringExtra.NullOrEmpty()))
+                    stringBuilder.AppendLine(compTipStringExtra);
 
                 return stringBuilder.ToString();
             }
@@ -88,7 +89,7 @@ namespace MOARANDROIDS
         public override void PostAdd(DamageInfo? dinfo)
         {
             if (comps == null) return;
-            
+
             foreach (var diff in comps)
                 diff.CompPostPostAdd(dinfo);
         }
@@ -97,7 +98,7 @@ namespace MOARANDROIDS
         {
             base.PostRemoved();
             if (comps == null) return;
-            
+
             foreach (var diff in comps)
                 diff.CompPostPostRemoved();
         }
@@ -106,7 +107,7 @@ namespace MOARANDROIDS
         {
             base.PostTick();
             if (comps == null) return;
-            
+
             var num = 0f;
             foreach (var diff in comps)
                 diff.CompPostTick(ref num);
@@ -119,7 +120,7 @@ namespace MOARANDROIDS
             base.ExposeData();
             if (Scribe.mode == LoadSaveMode.LoadingVars) InitializeComps();
             if (comps == null) return;
-            
+
             foreach (var diff in comps)
                 diff.CompExposeData();
         }

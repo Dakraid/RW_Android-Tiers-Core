@@ -15,7 +15,6 @@ namespace MOARANDROIDS
             [HarmonyPostfix]
             public static void Listener(MapPawns __instance, ref bool __result, List<Pawn> ___pawnsSpawned)
             {
-                //Si retour pas true alors check s'il y a de la correction a faire
                 if (__result) return;
 
                 if (!(from pawn in ___pawnsSpawned

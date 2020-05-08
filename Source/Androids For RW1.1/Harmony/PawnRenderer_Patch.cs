@@ -85,15 +85,14 @@ namespace MOARANDROIDS
                              ___pawn.def.defName == Utils.TX4I)
                         type = 3;
 
-                    //Couleur yeux standard TX2
+
                     var color = new Color(0.9450f, 0.76862f, 0.05882f);
 
 
-                    //Couleur yeux TX3/TX4 standard (bleu cyan)
                     if (___pawn.def.defName == Utils.TX3 || ___pawn.def.defName == Utils.TX4 || ___pawn.def.defName == Utils.TX3I || ___pawn.def.defName == Utils.TX4I)
                         color = new Color(0f, 0.972549f, 0.972549f);
 
-                    // yeux rouges si drafté OU ennemis OU TX2K
+
                     if (___pawn.Drafted || ___pawn.Faction != null && ___pawn.Faction.HostileTo(Faction.OfPlayer) || ___pawn.def.defName == Utils.TX2K ||
                         ___pawn.def.defName == Utils.TX2KI)
                         color = new Color(0.75f, 0f, 0f, 1f);

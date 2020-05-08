@@ -2,7 +2,6 @@
 using RimWorld;
 using Verse;
 
-// TODO: Look into performance issues
 namespace MOARANDROIDS
 {
     internal class WorkGiver_TakeToBedToOperate_Patch

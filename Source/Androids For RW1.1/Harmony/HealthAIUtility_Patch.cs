@@ -22,7 +22,8 @@ namespace MOARANDROIDS
                     if (pawn.Faction != Faction.OfPlayer) return;
 
                     var cas = pawn.TryGetComp<CompAndroidState>();
-                    if (cas != null && pawn.health != null && pawn.health.summaryHealth.SummaryHealthPercent >= 0.80f && cas.isSurrogate && cas.surrogateController == null && pawn.ownership?.OwnedBed != null) //&& ReachabilityUtility.CanReach(pawn, pawn.ownership.OwnedBed, PathEndMode.OnCell, Danger.Deadly))
+                    if (cas != null && pawn.health != null && pawn.health.summaryHealth.SummaryHealthPercent >= 0.80f && cas.isSurrogate && cas.surrogateController == null &&
+                        pawn.ownership?.OwnedBed != null)
                         __result = false;
                 }
                 catch (Exception e)
@@ -41,7 +42,6 @@ namespace MOARANDROIDS
             {
                 try
                 {
-                    //On ne soccupe que des patient étant des androids
                     /*if (!)
                         return true;*/
 
@@ -65,7 +65,7 @@ namespace MOARANDROIDS
 
                     Predicate<Thing> predicate;
 
-                    //COmpatibilité avec pharmacist, le medoc renvoyé doit avoir une quantitée de soin inferieur ou egal à celui renvoyé par les appels précédents
+
                     float medicalPotency = 0;
                     if (__result != null) medicalPotency = __result.def.GetStatValueAbstract(StatDefOf.MedicalPotency);
 

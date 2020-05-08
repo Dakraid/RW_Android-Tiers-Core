@@ -17,7 +17,7 @@ namespace MOARANDROIDS
 
         private CompPowerTrader powerComp;
 
-        //private SoundDef soundDefHot;
+
         private Sustainer sustainerHot;
 
         private int ticksBeforeMelt;
@@ -38,9 +38,9 @@ namespace MOARANDROIDS
         {
             Material iconMat = null;
 
-            //Si temperature du device chaude
+
             if (!powerComp.PowerOn || parent.IsBrokenDown() || hotLevelInt == 0) return;
-            
+
             switch (hotLevelInt)
             {
                 case 1:
@@ -67,7 +67,7 @@ namespace MOARANDROIDS
             Graphics.DrawMesh(MeshPool.plane05, vector, Quaternion.identity, material, 0);
         }
 
-        // Token: 0x06002851 RID: 10321 RVA: 0x00133CC9 File Offset: 0x001320C9
+
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
             var rnd = new Random();
@@ -79,21 +79,20 @@ namespace MOARANDROIDS
             if (Utils.ExceptionSkyCloudCores.Contains(parent.def.defName))
                 isSkyCloudCore = true;
 
-            //this.nbTicksSinceHot3 = 0;
-            //this.hotLevelInt = 0;
-            //Génération durée aléatoire 
+
             if (ticksBeforeMelt == 0)
                 setNewExplosionThreshold();
-            //this.soundDefHot = SoundDef.Named(this.Props.hotSoundDef);
 
-            //Enregistrement dans la liste  dispositifs senseible a la temperature
+
             if (parent != null)
                 Utils.GCATPP.pushHeatSensitiveDevices((Building) parent);
         }
 
         public void setNewExplosionThreshold()
         {
-            ticksBeforeMelt = isSkyCloudCore ? Rand.Range(Settings.nbHoursMinSkyCloudServerRunningHotBeforeExplode * 2500, Settings.nbHoursMaxSkyCloudServerRunningHotBeforeExplode * 2500) : Rand.Range(Settings.nbHoursMinServerRunningHotBeforeExplode * 2500, Settings.nbHoursMaxServerRunningHotBeforeExplode * 2500);
+            ticksBeforeMelt = isSkyCloudCore
+                ? Rand.Range(Settings.nbHoursMinSkyCloudServerRunningHotBeforeExplode * 2500, Settings.nbHoursMaxSkyCloudServerRunningHotBeforeExplode * 2500)
+                : Rand.Range(Settings.nbHoursMinServerRunningHotBeforeExplode * 2500, Settings.nbHoursMaxServerRunningHotBeforeExplode * 2500);
         }
 
         public override void CompTick()
@@ -105,9 +104,8 @@ namespace MOARANDROIDS
 
         public override void ReceiveCompSignal(string signal)
         {
-            //Arret manuel ou  composant endommagé => arret ambiance
             if (signal != "FlickedOff" && signal != "Breakdown" && signal != "PowerTurnedOff") return;
-            
+
             if (hotLevelInt == 3)
                 StopSustainerHot();
 
@@ -129,13 +127,13 @@ namespace MOARANDROIDS
 
             var ambientTemperature = parent.AmbientTemperature;
 
-            //Détermine si le niveau de temperature du dispositif influe la hotLevelInt en fonction de ses props
+
             if (ambientTemperature >= Props.hot3)
             {
                 hotLevelInt = 3;
                 nbTicksSinceHot3 += 250;
 
-                //On plait le bip bip que si nouveau level différent du level précédent
+
                 if (currLevel != hotLevelInt) StartSustainerHot();
             }
             else
@@ -152,12 +150,12 @@ namespace MOARANDROIDS
                     hotLevelInt = 0;
             }
 
-            //Meltingdown condition remplie on fait péter le serveur
+
             if (nbTicksSinceHot3 < ticksBeforeMelt) return;
 
-            //Reset le meltdown counter
+
             nbTicksSinceHot3 = 0;
-            //Définition nouveau seuil d'explosion
+
             setNewExplosionThreshold();
 
             makeExplosion();
@@ -167,9 +165,8 @@ namespace MOARANDROIDS
 
         public void makeExplosion()
         {
-            //Passe le dispositif en broken
             if (parent == null) return;
-            
+
             var bd = parent.TryGetComp<CompBreakdownable>();
             bd?.DoBreakdown();
 
@@ -183,7 +180,7 @@ namespace MOARANDROIDS
         {
             StopSustainerHot();
 
-            //Desenregistrement dans la liste  dispositifs senseible a la temperature
+
             Utils.GCATPP.popHeatSensitiveDevices((Building) parent, map);
         }
 
@@ -212,7 +209,7 @@ namespace MOARANDROIDS
         private void StartSustainerHot()
         {
             if (sustainerHot != null || Settings.disableServersAlarm) return;
-            
+
             var info = SoundInfo.InMap(parent);
             sustainerHot = Props.hotSoundDef.TrySpawnSustainer(info);
         }
@@ -220,7 +217,7 @@ namespace MOARANDROIDS
         private void StopSustainerHot()
         {
             if (sustainerHot == null) return;
-            
+
             sustainerHot.End();
             sustainerHot = null;
         }

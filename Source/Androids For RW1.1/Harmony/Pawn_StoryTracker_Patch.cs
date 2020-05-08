@@ -17,7 +17,7 @@ namespace MOARANDROIDS
                 if (Utils.ExceptionAndroidWithoutSkinList.Contains(___pawn.def.defName))
                 {
                     if (___pawn.IsSurrogateAndroid())
-                        //Log.Message(___pawn.LabelCap);
+
                         __result = Utils.SXColor;
 
                     var cas = ___pawn.TryGetComp<CompAndroidState>();

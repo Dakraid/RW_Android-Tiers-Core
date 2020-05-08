@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -19,7 +18,7 @@ namespace MOARANDROIDS
                 if (!__result || !victim.IsSurrogateAndroid()) return;
 
                 var csm = victim.TryGetComp<CompSkyMind>();
-                //On previent le fait que les attaquant kidnappes leurs propres surrogates hackés temporairement
+
                 if (csm == null || csm.hacked != 3 || csm.hackOrigFaction != kidnapper.Faction) return;
 
                 if (!kidnapper.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation) ||
@@ -31,7 +30,10 @@ namespace MOARANDROIDS
 
                 bool Validator(Thing t)
                 {
-                    return t is Pawn pawn && (pawn.RaceProps.Humanlike && pawn.Downed && pawn.Faction == Faction.OfPlayer && !(pawn.IsSurrogateAndroid() && pawn.TryGetComp<CompAndroidState>() != null && pawn.TryGetComp<CompSkyMind>().hacked == 3 && pawn.TryGetComp<CompSkyMind>().hackOrigFaction == kidnapper.Faction) && pawn.Faction.HostileTo(kidnapper.Faction) && kidnapper.CanReserve(pawn) && (disallowed == null || !disallowed.Contains(pawn)));
+                    return t is Pawn pawn && pawn.RaceProps.Humanlike && pawn.Downed && pawn.Faction == Faction.OfPlayer &&
+                           !(pawn.IsSurrogateAndroid() && pawn.TryGetComp<CompAndroidState>() != null && pawn.TryGetComp<CompSkyMind>().hacked == 3 &&
+                             pawn.TryGetComp<CompSkyMind>().hackOrigFaction == kidnapper.Faction) && pawn.Faction.HostileTo(kidnapper.Faction) && kidnapper.CanReserve(pawn) &&
+                           (disallowed == null || !disallowed.Contains(pawn));
                 }
 
                 victim = (Pawn) GenClosest.ClosestThingReachable(kidnapper.Position, kidnapper.Map, ThingRequest.ForGroup(ThingRequestGroup.Pawn), PathEndMode.OnCell,

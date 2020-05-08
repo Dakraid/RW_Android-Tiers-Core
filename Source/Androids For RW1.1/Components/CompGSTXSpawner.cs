@@ -5,14 +5,11 @@ using Verse;
 
 namespace MOARANDROIDS
 {
-    // Token: 0x02000020 RID: 32
     public class CompGSTXSpawner : ThingComp
     {
-        // Token: 0x17000006 RID: 6
-        // (get) Token: 0x06000041 RID: 65 RVA: 0x00003478 File Offset: 0x00001678
         public CompProperties_GSTXSpawner Spawnprops => props as CompProperties_GSTXSpawner;
 
-        // Token: 0x06000042 RID: 66 RVA: 0x00003495 File Offset: 0x00001695
+
         public override void CompTick()
         {
             Spawn();
@@ -23,7 +20,6 @@ namespace MOARANDROIDS
         {
             try
             {
-                //Spawn GenomeSequencer programmer pour le modele d'androide specifié
                 ThingDef td = null;
                 td = DefDatabase<ThingDef>.GetNamed(Spawnprops.GSThing, false);
                 var pawnKind = "";
@@ -31,7 +27,7 @@ namespace MOARANDROIDS
                 var source = "";
 
                 if (td == null) return;
-                
+
                 var thing = ThingMaker.MakeThing(td);
                 GenSpawn.Spawn(thing, parent.Position, parent.Map);
 
@@ -79,8 +75,6 @@ namespace MOARANDROIDS
                 baseThing.Field("pawnKindDef").SetValue(DefDatabase<PawnKindDef>.GetNamed(pawnKind, false));
                 baseThing.Field("gender").SetValue(gender);
                 baseThing.Field("sourceName").SetValue(source);
-
-                //Utils.GCATPP.pushSurrogateAndroid(surrogate);
             }
             catch (Exception e)
             {

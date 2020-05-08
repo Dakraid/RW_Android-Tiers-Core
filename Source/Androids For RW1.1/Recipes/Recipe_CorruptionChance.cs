@@ -5,12 +5,11 @@ using Verse;
 
 namespace MOARANDROIDS
 {
-    // Token: 0x02000009 RID: 9
     public class Recipe_MemoryCorruptionChance : Recipe_SurgeryAndroids
     {
         private int upper;
 
-        // Token: 0x0600000C RID: 12 RVA: 0x000021D8 File Offset: 0x000003D8
+
         public override void ApplyOnPawn(Pawn pawn, BodyPartRecord part, Pawn billDoer, List<Thing> ingredients, Bill bill)
         {
             var flag = billDoer != null;

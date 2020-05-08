@@ -6,7 +6,7 @@ namespace MOARANDROIDS
 {
     internal class IngestionOutcomeDoer_GiveTwoHediffs : IngestionOutcomeDoer
     {
-        private bool divideByBodySize = false;
+        private readonly bool divideByBodySize = false;
 
         public HediffDef hediffDef_Android = null;
 

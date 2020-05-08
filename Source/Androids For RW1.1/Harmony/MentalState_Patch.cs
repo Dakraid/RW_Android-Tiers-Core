@@ -46,7 +46,7 @@ namespace MOARANDROIDS
                 var cso = cas?.surrogateController?.TryGetComp<CompSurrogateOwner>();
                 var csc = cso?.skyCloudHost?.TryGetComp<CompSkyCloudCore>();
 
-                //Ajout a une liste de minds boudant avec timeout
+
                 csc?.setMentalBreak(cas.surrogateController);
             }
         }

@@ -17,10 +17,9 @@ namespace MOARANDROIDS
 
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
         {
-            //Si pas de serveur principal alimenté on retourne rien
             if (!Utils.GCATPP.isThereSkyCloudCore() || !Utils.GCATPP.isConnectedToSkyMind(parent)) yield break;
 
-            //Si hors-ligne on retourne rien
+
             if (parent.TryGetComp<CompPowerTrader>() == null || !parent.TryGetComp<CompPowerTrader>().PowerOn
                                                              || parent.IsBrokenDown())
                 yield break;

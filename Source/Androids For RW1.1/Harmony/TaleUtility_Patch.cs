@@ -21,23 +21,22 @@ namespace MOARANDROIDS
                 {
                     if (victim.IsSurrogateAndroid())
                         Utils.insideKillFuncSurrogate = true;
-                    //Deconnecte le tué
+
                     Utils.GCATPP.disconnectUser(victim);
-                    //Log.Message("YOU KILLED "+__instance.LabelCap);
-                    //Is surrogate android used ?
+
+
                     if (victim.IsSurrogateAndroid(true))
                     {
-                        //Obtention controlleur
                         var cas = victim.TryGetComp<CompAndroidState>();
                         if (cas == null)
                             return;
 
-                        //Arret du mode de control chez le controller
+
                         var cso = cas.surrogateController.TryGetComp<CompSurrogateOwner>();
                         cso.stopControlledSurrogate(victim);
                     }
 
-                    //Log.Message("YOU KILLED END");
+
                     Utils.insideKillFuncSurrogate = false;
                 }
                 catch (Exception e)

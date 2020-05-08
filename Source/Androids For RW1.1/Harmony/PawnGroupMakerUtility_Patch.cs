@@ -19,7 +19,6 @@ namespace MOARANDROIDS
             {
                 try
                 {
-                    //If active solar flare then no surrogates are generated to prevent ridiculous spawn of dawned surrogates
                     if (!Settings.otherFactionsCanUseSurrogate || Utils.ExceptionBlacklistedFactionNoSurrogate.Contains(parms.faction.def.defName) ||
                         Utils.getRandomMapOfPlayer().gameConditionManager.ConditionIsActive(GameConditionDefOf.SolarFlare) || Settings.androidsAreRare && Rand.Chance(0.95f))
                         return;
@@ -27,29 +26,26 @@ namespace MOARANDROIDS
                     IEnumerable<Pawn> pawn = __result as Pawn[] ?? __result.ToArray();
                     var nbHumanoids = pawn.Where(e => e.def.race != null && e.def.race.Humanlike).Count(e => e.trader == null && e.TraderKind == null);
 
-                    //Si android T1/T2 suppression traits ==> Je suis bete cest a cause des surrogates que j'ai crus qu'il avais des traits
+
                     /*if(e.def.defName == Utils.T1 || e.def.defName == Utils.T2)
                         {
                             Utils.removeAllTraits(e);
                         }*/
 
-                    //Faction de niveau industriel et plus ET nb pawn généré supérieur ou égal à 5
+
                     if (parms.faction.def.techLevel < TechLevel.Industrial || nbHumanoids < 5) return;
 
                     {
                         var ret = new List<Pawn>();
                         var tmp = pawn.ToList();
 
-                        //On supprime les non humains ET trader
-                        //int nba = tmp.RemoveAll((Pawn x) => (x.def.race == null || !x.def.race.Humanlike || x.trader != null || x.TraderKind != null));
+
                         var other = tmp.Where(x => x.def.race == null || !x.def.race.Humanlike || x.trader != null || x.TraderKind != null).ToList();
 
-                        //Purge dans list de travail
+
                         foreach (var e in other) tmp.Remove(e);
 
-                        //Log.Message(other.Count + " animaux et traders virés");
 
-                        //Calcul nb pawn a recreer en mode surrogate
                         var nb = (int) (tmp.Count() * Rand.Range(Settings.percentageOfSurrogateInAnotherFactionGroupMin, Settings.percentageOfSurrogateInAnotherFactionGroup));
                         if (nb <= 0)
                         {
@@ -59,7 +55,7 @@ namespace MOARANDROIDS
                             nb = 1;
                         }
 
-                        //On va supprimer aleatoirement N pawns pour arriver a nb
+
                         while (tmp.Count > nb)
                         {
                             var p = tmp.RandomElement();
@@ -67,13 +63,9 @@ namespace MOARANDROIDS
                             tmp.Remove(p);
                         }
 
-                        //Log.Message("HERE");
-                        //On va se servir des nb pawn pregénéré par la fonction patché comme controller
+
                         for (var i = 0; i != nb; i++)
                         {
-                            //PawnGenerationRequest request = new PawnGenerationRequest(Utils.AndroidsPKD[3], parms.faction, PawnGenerationContext.NonPlayer, parms.tile, false, false, false, false, true, false, 1f, false, true, true, false, false, false, false, null, null, null, null, null, null, null, null);
-                            //Pawn surrogate = PawnGenerator.GeneratePawn(request);
-
                             PawnKindDef rpkd = null;
 
                             if (parms.groupKind == PawnGroupKindDefOf.Peaceful || parms.groupKind == PawnGroupKindDefOf.Trader)
@@ -155,10 +147,10 @@ namespace MOARANDROIDS
                                 }
                             }
 
-                            //Utils.AndroidsPKD.RandomElement();
+
                             var surrogate = Utils.generateSurrogate(parms.faction, rpkd, IntVec3.Invalid, null, false, true, parms.tile, true, parms.inhabitants);
 
-                            //Si en mode rare alors override de la creation d'androides en ancient, on squeeze l'init du pawn
+
                             if (!surrogate.IsAndroidTier())
                             {
                                 surrogate.Destroy();
@@ -166,9 +158,7 @@ namespace MOARANDROIDS
                                 continue;
                             }
 
-                            //Log.Message("--Surrogate generated pour "+tmp[i].def.defName);
 
-                            //On vire les equipements/inventaires/vetements du surrogate
                             if (surrogate.inventory != null && surrogate.inventory.innerContainer != null)
                                 surrogate.inventory.innerContainer.Clear();
 
@@ -185,8 +175,7 @@ namespace MOARANDROIDS
                                 cso?.setControlledSurrogate(surrogate, true);
                             }
 
-                            //Transfere equipement
-                            //Log.Message("--Traitement des equipements");
+
                             if (tmp[i].equipment != null && surrogate.equipment != null)
                             {
                                 /*Pawn_EquipmentTracker pet = tmp[i].equipment;
@@ -234,14 +223,11 @@ namespace MOARANDROIDS
                             }*/
 
 
-                            //Transfert vetements
                             if (tmp[i].apparel != null)
                                 try
                                 {
-                                    //Log.Message("--Traitement des vetements");
                                     foreach (var e in tmp[i].apparel.WornApparel.ToList())
                                     {
-                                        //Check si vetement peut etre porté par le surrogate
                                         var path = "";
                                         if (e.def.apparel.LastLayer == ApparelLayerDefOf.Overhead)
                                             path = e.def.apparel.wornGraphicPath;
@@ -249,7 +235,7 @@ namespace MOARANDROIDS
                                             path = e.def.apparel.wornGraphicPath + "_" + surrogate.story.bodyType.defName + "_south";
 
                                         Texture2D appFoundTex = null;
-                                        //CHeck dans les mods de la texture
+
                                         for (var j = LoadedModManager.RunningModsListForReading.Count - 1; j >= 0; j--)
                                         {
                                             var appTex = LoadedModManager.RunningModsListForReading[j].GetContentHolder<Texture2D>().Get(path);
@@ -259,16 +245,16 @@ namespace MOARANDROIDS
                                             break;
                                         }
 
-                                        //Check RW mods  de la texture
+
                                         if (appFoundTex == null)
                                         {
                                             path = GenFilePaths.ContentPath<Texture2D>() + path;
                                             appFoundTex = Resources.Load<Texture2D>(path);
                                         }
 
-                                        //SI pb avec texture on ne l'ajoute pas
+
                                         if (appFoundTex == null) continue;
-                                        
+
                                         tmp[i].apparel.Remove(e);
                                         surrogate.apparel.Wear(e);
                                     }
@@ -279,17 +265,14 @@ namespace MOARANDROIDS
                                 }
 
 
-                            //Log.Message((tmp[i].inventory == null)+" "+(tmp[i].inventory.innerContainer == null)+" "+(surrogate.inventory == null)+" "+(surrogate.inventory.innerContainer== null));
-                            //Inventaire
                             if (tmp[i].inventory != null && tmp[i].inventory.innerContainer != null && surrogate.inventory != null && surrogate.inventory.innerContainer != null)
-                                //foreach (var e in tmp[i].inventory.innerContainer.ToList())
-                                //{
-                                //Log.Message("Items transfered " + tmp[i].inventory.innerContainer.Count);
+
+
                                 try
                                 {
                                     tmp[i].inventory.innerContainer.TryTransferAllToContainer(surrogate.inventory.innerContainer);
 
-                                    //Suppression des drogues 
+
                                     foreach (var el in surrogate.inventory.innerContainer.ToList().Where(el => el.def.IsDrug))
                                         surrogate.inventory.innerContainer.Remove(el);
                                 }
@@ -297,12 +280,12 @@ namespace MOARANDROIDS
                                 {
                                     Log.Message("[ATPP] PawnGroupMakerUtility.GeneratePawns.transfertInventory " + ex.Message + " " + ex.StackTrace);
                                 }
-                            //}
+
 
                             ret.Add(surrogate);
                         }
 
-                        //On remet dans le ret les autres pawns non "surogatisés"
+
                         __result = other.Concat(ret);
                     }
                 }

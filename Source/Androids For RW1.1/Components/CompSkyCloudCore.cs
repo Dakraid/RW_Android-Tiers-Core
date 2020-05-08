@@ -45,7 +45,7 @@ namespace MOARANDROIDS
                 ref controlledTurretsValues);
 
             if (Scribe.mode != LoadSaveMode.PostLoadInit) return;
-            
+
             if (storedMinds == null)
                 storedMinds = new List<Pawn>();
 
@@ -63,13 +63,11 @@ namespace MOARANDROIDS
         {
             base.PostDrawExtraSelectionOverlays();
 
-            //Affichage minds connectés
-            foreach (var csx in storedMinds.Select(p => p.TryGetComp<CompSurrogateOwner>()).SelectMany(cso => cso.availableSX.Where(csx => parent.Map == csx.Map)))
-            {
-                GenDraw.DrawLineBetween(parent.TrueCenter(), csx.TrueCenter(), SimpleColor.Red);
-            }
 
-            //Affichage turets connectés
+            foreach (var csx in storedMinds.Select(p => p.TryGetComp<CompSurrogateOwner>()).SelectMany(cso => cso.availableSX.Where(csx => parent.Map == csx.Map)))
+                GenDraw.DrawLineBetween(parent.TrueCenter(), csx.TrueCenter(), SimpleColor.Red);
+
+
             foreach (var p in controlledTurrets.Where(p => parent.Map == p.Value.Map))
                 GenDraw.DrawLineBetween(parent.TrueCenter(), p.Value.TrueCenter(), SimpleColor.Red);
         }
@@ -89,7 +87,6 @@ namespace MOARANDROIDS
             Utils.GCATPP.pushSkyCloudCoreAbs((Building) parent);
 
 
-            //Application retroactive de la surppression de traits blacklistés pour les minds
             foreach (var m in storedMinds) Utils.removeMindBlacklistedTrait(m);
         }
 
@@ -99,7 +96,7 @@ namespace MOARANDROIDS
 
             stopAllMindsActivities();
 
-            //Retire de la liste des emetteurs de la map
+
             Utils.GCATPP.popSkyCloudCore((Building) parent);
             Utils.GCATPP.popSkyCloudCoreAbs((Building) parent);
         }
@@ -108,12 +105,12 @@ namespace MOARANDROIDS
         {
             base.PostDestroy(mode, previousMap);
 
-            //Kill de tous les hotes stockés
+
             if (storedMinds.Count == 0) return;
-            
+
             disconnectAllSurrogates();
             disconnectAllRemotelyControlledTurrets();
-            //ATPP_destroyedMindsDueToDestroyedSkyCloudCore
+
             Find.LetterStack.ReceiveLetter("ATPP_destroyedMindsDueToDestroyedSkyCloudCore".Translate(storedMinds.Count),
                 "ATPP_destroyedMindsDueToDestroyedSkyCloudCoreDesc".Translate(storedMinds.Count, getName()), LetterDefOf.ThreatBig);
 
@@ -126,7 +123,6 @@ namespace MOARANDROIDS
             {
                 case "PowerTurnedOff":
                 {
-                    //Su systeme booté le serveur dit le power Failure
                     if (bootGT == -1)
                         Utils.playVocal("soundDefSkyCloudPowerFailure");
 
@@ -135,8 +131,8 @@ namespace MOARANDROIDS
                     Utils.GCATPP.popSkyCloudCore((Building) parent);
                     break;
                 }
-                //Redemarrage ambiance
-                //Definition sec ou le core démarrera vraiment
+
+
                 case "PowerTurnedOn":
                     bootGT = Find.TickManager.TicksGame + Settings.secToBootSkyCloudCore * 60;
                     break;
@@ -148,7 +144,7 @@ namespace MOARANDROIDS
         {
             var build = (Building) parent;
 
-            //Si aucun mind stocké
+
             if (!storedMinds.Any() || !build.TryGetComp<CompPowerTrader>().PowerOn || !Booted()) yield break;
 
             yield return new Command_Action
@@ -217,14 +213,13 @@ namespace MOARANDROIDS
                 action = delegate
                 {
                     var opts = new List<FloatMenuOption>();
-                    //Affichage des minds affectés à l'assistement
+
                     opts.Add(new FloatMenuOption("ATPP_ProcessAssistAssignedMinds".Translate(), delegate
                     {
                         List<FloatMenuOption> optsAdd = null;
 
-                        //Check s'il y a lieu d'jaouter l'option (il y a au moin 1+ minds assigné à supprimer
+
                         if (assistingMinds.Count > 0)
-                        {
                             optsAdd = new List<FloatMenuOption>
                             {
                                 new FloatMenuOption("-" + "ATPP_ProcessAssistUnassignAll".Translate(), delegate
@@ -240,7 +235,6 @@ namespace MOARANDROIDS
                                         Messages.Message("ATPP_ProcessMassUnassist".Translate(nb), parent, MessageTypeDefOf.PositiveEvent);
                                 })
                             };
-                        }
 
                         showFloatMenuMindsStored(delegate(Pawn p)
                         {
@@ -250,14 +244,13 @@ namespace MOARANDROIDS
                         }, false, false, false, false, optsAdd, false, true);
                     }));
 
-                    //Affichage des minds non affectés à l'assistement
+
                     opts.Add(new FloatMenuOption("ATPP_ProcessAssistUnassignedMinds".Translate(), delegate
                     {
                         List<FloatMenuOption> optsAdd = null;
 
-                        //Check s'il y a lieu d'jaouter l'option (il y a des minds et des minds non ajoutés)
+
                         if (storedMinds.Count > 0 && getNbUnassistingMinds() > 0)
-                        {
                             optsAdd = new List<FloatMenuOption>
                             {
                                 new FloatMenuOption("-" + "ATPP_ProcessAssistAssignAll".Translate(), delegate
@@ -274,7 +267,6 @@ namespace MOARANDROIDS
                                         Messages.Message("ATPP_ProcessMassAssist".Translate(nb), parent, MessageTypeDefOf.PositiveEvent);
                                 })
                             };
-                        }
 
                         showFloatMenuMindsStored(delegate(Pawn p)
                         {
@@ -326,7 +318,6 @@ namespace MOARANDROIDS
                 {
                     showFloatMenuMindsStored(delegate(Pawn p)
                     {
-                        //Listing map de destination
                         var opts = new List<FloatMenuOption>();
                         foreach (var m in Find.Maps)
                         {
@@ -345,7 +336,7 @@ namespace MOARANDROIDS
                         }
 
                         if (opts.Count == 0) return;
-                        
+
                         {
                             if (opts.Count == 1)
                             {
@@ -363,7 +354,7 @@ namespace MOARANDROIDS
             };
 
             if (Utils.isThereNotControlledSurrogateInCaravan())
-                //Si drones SX no controllés dans une caravane
+
                 yield return new Command_Action
                 {
                     icon = Tex.AndroidToControlTargetRecovery,
@@ -380,7 +371,7 @@ namespace MOARANDROIDS
                                     return;
 
                                 if (!Utils.GCATPP.isConnectedToSkyMind(sSX))
-                                    //Tentative connection au skymind 
+
                                     if (!Utils.GCATPP.connectUser(sSX))
                                         return;
 
@@ -431,11 +422,11 @@ namespace MOARANDROIDS
             ret += "ATPP_CentralCoreNbAssistingMinds".Translate(assistingMinds.Count) + "\n";
 
             if (!build.TryGetComp<CompPowerTrader>().PowerOn) return ret.TrimEnd('\r', '\n') + base.CompInspectStringExtra();
-            
+
             if (!Booted())
                 ret += "ATPP_SkyCloudCoreBooting".Translate((int) Math.Max(0, bootGT - Find.TickManager.TicksGame).TicksToSeconds());
             else
-                //Check migration en cours de mind
+
                 foreach (var m in storedMinds)
                 {
                     var cso = m.TryGetComp<CompSurrogateOwner>();
@@ -449,7 +440,7 @@ namespace MOARANDROIDS
 
                         ret += "=>" + "ATPP_CentralCoreReplicationInProgress".Translate(m.LabelShortCap, ((int) (p * 100)).ToString()) + "\n";
                     }
-                    //ATPP_CentralCoreReplicationInProgress
+
 
                     else if (cso.migrationEndingGT != -1 && cso.migrationSkyCloudHostDest != null)
                     {
@@ -480,23 +471,21 @@ namespace MOARANDROIDS
             var CGT = Find.TickManager.TicksGame;
             if (CGT % 60 == 0)
             {
-                //Rafraichissement qt de courant consommé
                 refreshPowerConsumed();
 
-                //Check si demarrage du core
+
                 if (bootGT > 0 && bootGT < CGT)
                 {
-                    //On rend accessible les controles
                     bootGT = -1;
 
                     if (((Building) parent).TryGetComp<CompPowerTrader>().PowerOn)
                         Utils.GCATPP.pushSkyCloudCore((Building) parent);
 
-                    //ATPP_SkyCloudCoreBooted
+
                     Find.LetterStack.ReceiveLetter("ATPP_SkyCloudCoreBooted".Translate(getName()), "ATPP_SkyCloudCoreBootedDesc".Translate(getName()), LetterDefOf.NeutralEvent,
                         parent);
 
-                    //Play sound
+
                     Utils.playVocal("soundDefSkyCloudPrimarySystemsOnline");
                 }
             }
@@ -510,7 +499,7 @@ namespace MOARANDROIDS
                 {
                     cso.checkInterruptedUpload();
 
-                    //Atteinte fin attente de la replication d'un mind
+
                     if (cso.replicationEndingGT != -1 && cso.replicationEndingGT < CGT)
                     {
                         if (replicationDone == null)
@@ -519,7 +508,7 @@ namespace MOARANDROIDS
                     }
 
                     if (cso.migrationEndingGT == -1 || cso.migrationEndingGT >= CGT) continue;
-                    
+
                     if (migrationsDone == null)
                         migrationsDone = new List<CompSurrogateOwner>();
                     migrationsDone.Add(cso);
@@ -543,13 +532,13 @@ namespace MOARANDROIDS
             if (CGT % 600 != 0) return;
 
             if (!((Building) parent).TryGetComp<CompPowerTrader>().PowerOn || inMentalBreak.Count <= 0) return;
-            
+
             var keys = new List<Pawn>(inMentalBreak.Keys);
             foreach (var ck in keys)
             {
                 inMentalBreak[ck] -= 600;
                 if (inMentalBreak[ck] > 0) continue;
-                        
+
                 inMentalBreak.Remove(ck);
 
                 Messages.Message("ATPP_ProcessNoLongerInMentalBreak".Translate(ck.LabelShortCap, getName()), parent, MessageTypeDefOf.PositiveEvent);
@@ -561,10 +550,10 @@ namespace MOARANDROIDS
             if (!storedMinds.Contains(mind) || inMentalBreak.ContainsKey(mind))
                 return;
 
-            //Arret du mental state
+
             mind.mindState.Reset();
 
-            //Si surrogate founris resolution du controleur
+
             if (mind.IsSurrogateAndroid())
             {
                 var cas = mind.TryGetComp<CompAndroidState>();
@@ -574,7 +563,7 @@ namespace MOARANDROIDS
                 mind = cas.surrogateController;
             }
 
-            //Arret des activitées
+
             stopMindActivities(mind);
 
             inMentalBreak[mind] = Rand.Range(Settings.minDurationMentalBreakOfDigitisedMinds, Settings.maxDurationMentalBreakOfDigitisedMinds) * 2500;
@@ -693,24 +682,23 @@ namespace MOARANDROIDS
 
             if (supOpts != null) opts = opts.Concat(supOpts).ToList();
 
-            //Listing des SkyCloud Cores
+
             foreach (var m in storedMinds)
             {
-                //Log.Message("Suspended => " +m.LabelCap+" "+ m.Suspended);
                 var cso = m.TryGetComp<CompSurrogateOwner>();
                 var isSurrogateController = cso != null && cso.isThereSX();
                 var turretController = controlledTurrets.ContainsKey(m);
                 var isAssistingMind = assistingMinds.Contains(m);
 
-                //Si mind dans un mental break
+
                 if (inMentalBreak.ContainsKey(m))
                     continue;
 
-                //Si mind en cours de replication on le masque
+
                 if (replicatingMinds.Contains(m))
                     continue;
 
-                //Si migration en cours sur un mind on le jerte de la liste des minds consultables
+
                 if (cso != null && cso.migrationEndingGT != -1)
                     continue;
 
@@ -727,7 +715,6 @@ namespace MOARANDROIDS
 
                 if (isSurrogateController)
                 {
-                    //On affiche le nom du colon numérisé car il est permuté avec le surrogate
                     if (!cso.isThereSX())
                         name = m.LabelShortCap;
                     else

@@ -28,10 +28,9 @@ namespace MOARANDROIDS
                     {
                         Utils.anyPlayerColonnyPaySilver(fee);
 
-                        //Check si la faction tient parole
+
                         if (Rand.Chance(1.0f - Settings.riskCryptolockerScam))
                         {
-                            //Suppression cryptolocker des surrogates
                             foreach (var t in Find.Maps.SelectMany(map => map.listerThings.AllThings.Where(t => cryptolockedThings.Contains(t.GetUniqueLoadID()))))
                                 try
                                 {
@@ -60,7 +59,6 @@ namespace MOARANDROIDS
                         }
                         else
                         {
-                            //ATPP_LetterFactionScamCryptolocker
                             Find.LetterStack.ReceiveLetter("ATPP_LetterFactionScam".Translate(), "ATPP_LetterFactionScamCryptolockerDesc".Translate(faction.Name),
                                 LetterDefOf.ThreatBig);
                         }

@@ -66,13 +66,11 @@ namespace MOARANDROIDS
         public static void Hopistality_FindBedForPrefix(Pawn guest)
         {
             HospitalityPatchInsideFindBedFor = true;
-            //Log.Message("H1");
         }
 
         public static void Hopistality_FindBedForPostfix(Pawn guest)
         {
             HospitalityPatchInsideFindBedFor = false;
-            //Log.Message("H2");
         }
 
 
@@ -148,7 +146,7 @@ namespace MOARANDROIDS
             {
                 var BUID = __instance.GetUniqueLoadID();
 
-                //Creation clone reussie 
+
                 if (__result)
                 {
                     var to = (ThingOwner) Traverse.Create(__instance).Field("innerContainer").GetValue();
@@ -195,7 +193,6 @@ namespace MOARANDROIDS
         {
             try
             {
-                //Affichage controles que VAT en mode idle
                 var status = (int) Traverse.Create(__instance).Field("status").GetValue();
 
                 if (status != 0)
@@ -237,7 +234,8 @@ namespace MOARANDROIDS
                     icon = Tex.ColorPicker,
                     action = delegate
                     {
-                        var opts = Utils.ExceptionHairColors.Select(h => new FloatMenuOption(("ATPP_HairColor" + h).Translate(), delegate { Utils.GCATPP.QEEAndroidHairColor[BUID] = h.ToLower(); })).ToList();
+                        var opts = Utils.ExceptionHairColors.Select(h =>
+                            new FloatMenuOption(("ATPP_HairColor" + h).Translate(), delegate { Utils.GCATPP.QEEAndroidHairColor[BUID] = h.ToLower(); })).ToList();
 
                         opts.SortBy(x => x.Label);
 
@@ -255,7 +253,8 @@ namespace MOARANDROIDS
                     icon = Tex.ColorPicker,
                     action = delegate
                     {
-                        var opts = Utils.ExceptionSkinColors.Select(h => new FloatMenuOption(("ATPP_SkinColor" + h).Translate(), delegate { Utils.GCATPP.QEESkinColor[BUID] = h.ToLower(); })).ToList();
+                        var opts = Utils.ExceptionSkinColors
+                            .Select(h => new FloatMenuOption(("ATPP_SkinColor" + h).Translate(), delegate { Utils.GCATPP.QEESkinColor[BUID] = h.ToLower(); })).ToList();
 
                         opts.SortBy(x => x.Label);
 
@@ -293,10 +292,10 @@ namespace MOARANDROIDS
             if (TargetGSequencer == null || !__result) return;
 
             var target = __instance.Map.listerThings.AllThings.FirstOrDefault(el => el != null && el.GetUniqueLoadID() == TargetGSequencer);
-            //Recherche et destruction du sequence de genome TX si succés TryExtractProduct
+
 
             if (target == null) return;
-            //Si surrogate on va traficoter le pawnBeingGrown pour être un surrogate
+
             var source = (string) Traverse.Create(target).Field("sourceName").GetValue();
 
             if (source.ToLower().Contains("(surrogate)"))
@@ -319,12 +318,11 @@ namespace MOARANDROIDS
             {
                 var BUID = __instance.GetUniqueLoadID();
 
-                //Si plus de refgerence au pawnBeingGrown (suite a un rechargement) on essait de reresoudre ce dernier
+
                 if (Utils.GCATPP.VatGrowerLastPawnIsTX.ContainsKey(BUID) && Utils.GCATPP.VatGrowerLastPawnIsTX[BUID] && !Utils.GCATPP.VatGrowerLastPawnInProgress.ContainsKey(BUID))
                     Utils.GCATPP.VatGrowerLastPawnInProgress[BUID] = (Pawn) Traverse.Create(__instance).Field("pawnBeingGrown").GetValue();
 
 
-                //Si le GS chargé dans le VAT est un exosquelette d'androide TX alors pas de reduction
                 if (!Utils.GCATPP.VatGrowerLastPawnInProgress.ContainsKey(BUID) || Utils.GCATPP.VatGrowerLastPawnInProgress[BUID] == null) return;
 
                 var cas = Utils.GCATPP.VatGrowerLastPawnInProgress[BUID].TryGetComp<CompAndroidState>();

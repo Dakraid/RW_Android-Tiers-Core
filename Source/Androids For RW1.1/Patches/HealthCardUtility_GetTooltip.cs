@@ -23,8 +23,8 @@ namespace BlueLeakTest
 
                 if (code.opcode != OpCodes.Callvirt || (MethodInfo) code.operand != tipStringExtraGetter) continue;
 
-                yield return new CodeInstruction(OpCodes.Ldarg_1); //string, Pawn on stack
-                yield return new CodeInstruction(OpCodes.Call, labelHelper); //Consume 2, leave string
+                yield return new CodeInstruction(OpCodes.Ldarg_1);
+                yield return new CodeInstruction(OpCodes.Call, labelHelper);
             }
         }
 

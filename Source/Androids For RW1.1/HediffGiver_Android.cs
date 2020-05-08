@@ -4,19 +4,17 @@ using Verse;
 
 namespace MOARANDROIDS
 {
-    // Token: 0x02000C7D RID: 3197
     public class HediffGiver_BirthdayMechanical : HediffGiver
     {
-        // Token: 0x04002E99 RID: 11929
         private static readonly List<Hediff> addedHediffs = new List<Hediff>();
 
-        // Token: 0x04002E97 RID: 11927
+
         public SimpleCurve ageFractionChanceCurve;
 
-        // Token: 0x04002E98 RID: 11928
+
         public float averageSeverityPerDayBeforeGeneration;
 
-        // Token: 0x06004370 RID: 17264 RVA: 0x001E87A0 File Offset: 0x001E6BA0
+
         public void TryApplyAndSimulateSeverityChange(Pawn pawn, float gotAtAge, bool tryNotToKillPawn)
         {
             addedHediffs.Clear();
@@ -38,7 +36,7 @@ namespace MOARANDROIDS
             addedHediffs.Clear();
         }
 
-        // Token: 0x06004371 RID: 17265 RVA: 0x001E8860 File Offset: 0x001E6C60
+
         private void SimulateSeverityChange(Pawn pawn, Hediff hediff, float daysPassed, bool tryNotToKillPawn)
         {
             var num = averageSeverityPerDayBeforeGeneration * daysPassed;
@@ -49,7 +47,7 @@ namespace MOARANDROIDS
             pawn.health.Notify_HediffChanged(hediff);
         }
 
-        // Token: 0x06004372 RID: 17266 RVA: 0x001E88C4 File Offset: 0x001E6CC4
+
         private void AvoidLifeThreateningStages(ref float severity, List<HediffStage> stages)
         {
             if (stages.NullOrEmpty()) return;
@@ -65,7 +63,7 @@ namespace MOARANDROIDS
             if (num >= 0) severity = num == 0 ? Mathf.Min(severity, stages[num].minSeverity) : Mathf.Min(severity, (stages[num].minSeverity + stages[num - 1].minSeverity) / 2f);
         }
 
-        // Token: 0x06004373 RID: 17267 RVA: 0x001E8960 File Offset: 0x001E6D60
+
         public float DebugChanceToHaveAtAge(Pawn pawn, int age)
         {
             var num = 1f;
@@ -80,7 +78,6 @@ namespace MOARANDROIDS
 
         public override bool OnHediffAdded(Pawn pawn, Hediff hediff)
         {
-            //Remove any disease from affecting.
             if (!hediff.def.makesSickThought && hediff.def != RimWorld.HediffDefOf.FoodPoisoning && hediff.def != RimWorld.HediffDefOf.CryptosleepSickness) return true;
 
             pawn.health.RemoveHediff(hediff);

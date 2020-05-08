@@ -11,7 +11,7 @@ namespace MOARANDROIDS
 
             var build = (Building) parent;
 
-            //if (this.parent.TryGetComp<CompPowerTrader>().PowerOn)
+
             Utils.GCATPP.popSkyMindWANServer(build, map);
         }
 

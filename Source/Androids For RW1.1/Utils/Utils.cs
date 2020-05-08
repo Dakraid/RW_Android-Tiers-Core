@@ -152,7 +152,7 @@ namespace MOARANDROIDS
 
         public static List<TraitDef> RansomAddedBadTraits = new List<TraitDef>();
 
-        //public static Color SXColor = new Color(0.463f, 0.62f, 0.463f);
+
         public static Color SXColor = new Color(0.280f, 0.280f, 0.280f);
 
         public static Color androidCustomColorKhaki = new Color(0.29411f, 0.356862f, 0.16470f);
@@ -195,15 +195,15 @@ namespace MOARANDROIDS
         public static List<string> ExceptionCooler = new List<string> {"Cooler"};
 
         public static List<string> ExceptionHeater = new List<string> {"Heater"};
-        //public static List<string> ExceptionTurrets = new List<string> { "Turret_MiniTurret", "Turret_Autocannon", "StandardTurretGun", "SniperTurretGun", "LazerTurretGun", "EnergyTurretGun" };
+
 
         public static List<string> ExceptionBlacklistedFactionNoSurrogate = new List<string>
         {
-            "RRY_Yautja_JungleClan", "RRY_Yautja_BadBloodFaction", "RRY_Xenomorph", //AVP
-            "ElderThing_Faction", //ElderThings
-            "Harrowed", //Harrowed
-            "FriendlyConstruct", "Crystal", //Crystalloid 
-            "Imouto_Civil", "ImoutoTribe" //ImoutoTribe
+            "RRY_Yautja_JungleClan", "RRY_Yautja_BadBloodFaction", "RRY_Xenomorph",
+            "ElderThing_Faction",
+            "Harrowed",
+            "FriendlyConstruct", "Crystal",
+            "Imouto_Civil", "ImoutoTribe"
         };
 
 
@@ -416,17 +416,15 @@ namespace MOARANDROIDS
         }
 
 
-        //Try give available android pod on map pwoerOn
         public static Building_Bed getAvailableAndroidPodForCharging(Pawn android, bool M7 = false)
         {
             var map = android.Map;
             Building_Bed ret = null;
             float dist = -1;
-            //bool alreadyOwnBed = false;
+
 
             if (android.ownership != null && android.ownership.OwnedBed != null)
             {
-                //alreadyOwnBed = true;
                 if ((!M7 && android.ownership.OwnedBed.def.defName == "ATPP_AndroidPod"
                      || M7 && android.ownership.OwnedBed.def.defName == "ATPP_AndroidPodMech")
                     && android.CanReserveAndReach(android.ownership.OwnedBed, PathEndMode.OnCell, Danger.Deadly)
@@ -439,16 +437,15 @@ namespace MOARANDROIDS
             }
 
             foreach (var el in map.listerBuildings.allBuildingsColonistElecFire)
-                //Selection android pod valide et alimenté
+
                 if ((!M7 && el.def.defName == "ATPP_AndroidPod" || M7 && el.def.defName == "ATPP_AndroidPodMech")
                     && !el.Destroyed && el.TryGetComp<CompPowerTrader>() != null)
                 {
                     var bed = (Building_Bed) el;
 
-                    if (bed.Medical || android.IsPrisoner != bed.ForPrisoners ||
-                        (bed.GetCurOccupant(0) != null || bed.OwnersForReading.Count() != 0 && !bed.OwnersForReading.Contains(android)) ||
-                        !el.TryGetComp<CompPowerTrader>().PowerOn || !el.Position.InAllowedArea(android) ||
-                        !android.CanReserveAndReach(el, PathEndMode.OnCell, Danger.Deadly)) continue;
+                    if (bed.Medical || android.IsPrisoner != bed.ForPrisoners || bed.GetCurOccupant(0) != null ||
+                        bed.OwnersForReading.Count() != 0 && !bed.OwnersForReading.Contains(android) || !el.TryGetComp<CompPowerTrader>().PowerOn ||
+                        !el.Position.InAllowedArea(android) || !android.CanReserveAndReach(el, PathEndMode.OnCell, Danger.Deadly)) continue;
 
                     var cdist = android.Position.DistanceTo(el.Position);
 
@@ -456,12 +453,9 @@ namespace MOARANDROIDS
 
                     ret = (Building_Bed) el;
                     dist = cdist;
-
-                    //break;
                 }
 
 
-            //Si android possede pas de lit et pas un lit medical on lui affecte le lit 
             if (ret != null) android.ownership.ClaimBedIfNonMedical(ret);
 
             return ret;
@@ -551,7 +545,7 @@ namespace MOARANDROIDS
         {
             if (_DynamicMedicalCareSetter_NoAndroidSelected()) return true;
 
-            //Android selectionné on affiche les infos de medecine du mod
+
             MedicalCareUtility_Patch.MedicalCareSetter_Patch.Listener(rect, ref medCare);
             return false;
         }
@@ -583,7 +577,7 @@ namespace MOARANDROIDS
         public static bool FindBestMedicinePrefix(Pawn healer, Pawn patient, out int totalCount)
         {
             totalCount = 0;
-            //Log.Message("LOL !!! ICI");
+
             FindBestMedicinePatient = patient;
             return true;
         }
@@ -598,13 +592,12 @@ namespace MOARANDROIDS
         {
             if (!Settings.androidsCanOnlyBeHealedByCrafter)
             {
-                //Si les jobs fake de docteur en mode crafter on les jertes
                 if (__instance.def.workType == WorkTypeDefSmithing && CrafterDoctorJob.Contains(__instance.def)) __result = false;
 
                 return;
             }
 
-            //Medecin normal on jerte si t est un android
+
             if (__instance.def.workType == WorkTypeDefOf.Doctor)
             {
                 if (t is Pawn tPawn && tPawn.IsAndroidTier())
@@ -613,7 +606,7 @@ namespace MOARANDROIDS
             else
             {
                 if (!CrafterDoctorJob.Contains(__instance.def)) return;
-                //Crafteur on jerte si patient pas un android
+
                 if (t is Pawn tPawn && tPawn.IsAndroidTier())
                 {
                     var cso = pawn.TryGetComp<CompSurrogateOwner>();
@@ -646,11 +639,9 @@ namespace MOARANDROIDS
                         var he = p.health.hediffSet.GetFirstHediffOfDef(hediffLowNetworkSignal);
                         if (he != null)
                             p.health.RemoveHediff(he);
-                        //p.health.hediffSet.hediffs.Remove(he);
-                        //he.PostRemoved();
                     }
 
-            //Traitement des caravanes
+
             foreach (var e in Find.WorldObjects.Caravans)
             foreach (var p in e.pawns)
                 if (p.IsSurrogateAndroid())
@@ -680,7 +671,6 @@ namespace MOARANDROIDS
             return map.lordManager.lords.FirstOrDefault(l => l.faction == faction);
         }
 
-        //public static List<string> RelationsException = new List<string> { "Bond" , "Lover", "Fiance", "Stepparent", "Stepchild", "ParentInLaw", "ChildInLaw", "ExSpouse", "ExLover", "Spouse" };
 
         public static Map getRandomMapOfPlayer()
         {
@@ -688,7 +678,6 @@ namespace MOARANDROIDS
         }
 
 
-        //Restauration d'un nom sauvegarder
         public static void restoreSavedSurrogateName(Pawn surrogate)
         {
             var cas = surrogate.TryGetComp<CompAndroidState>();
@@ -730,13 +719,12 @@ namespace MOARANDROIDS
 
         public static void initBodyAsSurrogate(Pawn surrogate, bool addSimpleMinded = true)
         {
-            //SKills vierges
             surrogate.skills = new Pawn_SkillTracker(surrogate);
             surrogate.needs = new Pawn_NeedsTracker(surrogate);
 
             surrogate.story.traits.allTraits.Clear();
 
-            //TOuts les SX sont simple minded et ont aucuns autres traits
+
             if (addSimpleMinded)
             {
                 var td = DefDatabase<TraitDef>.GetNamed("SimpleMindedAndroid", false);
@@ -750,7 +738,7 @@ namespace MOARANDROIDS
 
             notifTraitsChanged(surrogate);
 
-            //S'il sagit d'un M7 on vire sa batterie à la con
+
             if (surrogate.kindDef.defName != "M7MechPawn") return;
 
             var he = surrogate.health.hediffSet.GetFirstHediffOfDef(DefDatabase<HediffDef>.GetNamed("BatteryChargeMech", false));
@@ -774,7 +762,6 @@ namespace MOARANDROIDS
             setSurrogateName(surrogate, external);
 
 
-            //On va le définir comme étant un surrogate 
             var cas = surrogate.TryGetComp<CompAndroidState>();
             cas?.initAsSurrogate();
 
@@ -834,7 +821,6 @@ namespace MOARANDROIDS
 
             if (!external)
             {
-                //On définis un nom séquentiel
                 surrogate.Name = new NameTriple("", "S" + prefix + SXVer + "-" + GCATPP.getNextSXID(SXVer), "");
                 GCATPP.incNextSXID(SXVer);
             }
@@ -846,7 +832,6 @@ namespace MOARANDROIDS
 
         public static string TranslateTicksToTextIRLSeconds(int ticks)
         {
-            //Si moins d'une heure ingame alors affichage secondes
             return ticks < 2500 ? ticks.ToStringSecondsFromTicks() : ticks.ToStringTicksToPeriodVerbose();
         }
 
@@ -874,7 +859,8 @@ namespace MOARANDROIDS
         {
             foreach (var el in Find.Selector.SelectedObjects)
                 if (el is Building b)
-                    if (b.def.defName == "ATPP_SkyMindLAN" || b.def.defName == "ATPP_SkyMindWAN") return true;
+                    if (b.def.defName == "ATPP_SkyMindLAN" || b.def.defName == "ATPP_SkyMindWAN")
+                        return true;
 
             return false;
         }
@@ -1011,12 +997,15 @@ namespace MOARANDROIDS
 
         public static void ShowFloatMenuAndroidCandidate(Pawn emitter, Action<Pawn> onClick)
         {
-            //Listing des colons sauf ceux présents dans la liste d'exception (exp)
-            var opts = (from colon in emitter.Map.mapPawns.FreeColonistsAndPrisoners where colon != emitter && !colon.Dead && GCATPP.isConnectedToSkyMind(colon) && !colon.Destroyed && colon.IsAndroid() && !colon.IsSurrogateAndroid() let cab = colon.TryGetComp<CompAndroidState>() where !cab.showUploadProgress && cab.uploadEndingGT == -1 select new FloatMenuOption(colon.LabelShortCap, delegate { onClick(colon); })).ToList();
+            var opts = (from colon in emitter.Map.mapPawns.FreeColonistsAndPrisoners
+                where colon != emitter && !colon.Dead && GCATPP.isConnectedToSkyMind(colon) && !colon.Destroyed && colon.IsAndroid() && !colon.IsSurrogateAndroid()
+                let cab = colon.TryGetComp<CompAndroidState>()
+                where !cab.showUploadProgress && cab.uploadEndingGT == -1
+                select new FloatMenuOption(colon.LabelShortCap, delegate { onClick(colon); })).ToList();
 
             opts.SortBy(x => x.Label);
 
-            //SI pas choix affichage de la raison 
+
             if (opts.Count == 0)
                 opts.Add(new FloatMenuOption("ATPP_ConsciousnessUploadNoRecipient".Translate(), null));
 
@@ -1027,12 +1016,19 @@ namespace MOARANDROIDS
 
         public static void ShowFloatMenuPermuteOrDuplicateCandidate(Pawn emitter, Action<Pawn> onClick, bool excludeBlankAndroid = false)
         {
-            //Listing des colons sauf ceux présents dans la liste d'exception (exp)
-            var opts = (from colon in emitter.Map.mapPawns.FreeColonistsAndPrisoners let cas = colon.TryGetComp<CompAndroidState>() where colon != emitter && !colon.Dead && (colon.VX2ChipPresent() || colon.VX3ChipPresent()) && (!excludeBlankAndroid || (cas != null && !cas.isBlankAndroid)) && !colon.Destroyed && GCATPP.isConnectedToSkyMind(colon) && !colon.IsSurrogateAndroid() let csm = colon.TryGetComp<CompSkyMind>() where csm == null || csm.Infected == -1 let cso = colon.TryGetComp<CompSurrogateOwner>() where cso.duplicateEndingGT == -1 && cso.permuteEndingGT == -1 && !cso.showPermuteProgress && !cso.showDuplicateProgress && (!cso.controlMode || !cso.isThereSX()) select new FloatMenuOption(colon.LabelShortCap, delegate { onClick(colon); })).ToList();
+            var opts = (from colon in emitter.Map.mapPawns.FreeColonistsAndPrisoners
+                let cas = colon.TryGetComp<CompAndroidState>()
+                where colon != emitter && !colon.Dead && (colon.VX2ChipPresent() || colon.VX3ChipPresent()) && (!excludeBlankAndroid || cas != null && !cas.isBlankAndroid) &&
+                      !colon.Destroyed && GCATPP.isConnectedToSkyMind(colon) && !colon.IsSurrogateAndroid()
+                let csm = colon.TryGetComp<CompSkyMind>()
+                where csm == null || csm.Infected == -1
+                let cso = colon.TryGetComp<CompSurrogateOwner>()
+                where cso.duplicateEndingGT == -1 && cso.permuteEndingGT == -1 && !cso.showPermuteProgress && !cso.showDuplicateProgress && (!cso.controlMode || !cso.isThereSX())
+                select new FloatMenuOption(colon.LabelShortCap, delegate { onClick(colon); })).ToList();
 
             opts.SortBy(x => x.Label);
 
-            //SI pas choix affichage de la raison 
+
             if (opts.Count == 0)
                 opts.Add(new FloatMenuOption("ATPP_NoVX2Recipient".Translate(), null));
 
@@ -1043,12 +1039,16 @@ namespace MOARANDROIDS
 
         public static void ShowFloatMenuSkyCloudCores(Action<Building> onClick, Building self = null)
         {
-            //Listing des SkyCloud Cores
-            var opts = (from core in GCATPP.getAvailableSkyCloudCores() where core != self where !core.Destroyed && core.TryGetComp<CompPowerTrader>().PowerOn let ccore = core.TryGetComp<CompSkyCloudCore>() where ccore != null select new FloatMenuOption(ccore.getName(), delegate { onClick(core); })).ToList();
+            var opts = (from core in GCATPP.getAvailableSkyCloudCores()
+                where core != self
+                where !core.Destroyed && core.TryGetComp<CompPowerTrader>().PowerOn
+                let ccore = core.TryGetComp<CompSkyCloudCore>()
+                where ccore != null
+                select new FloatMenuOption(ccore.getName(), delegate { onClick(core); })).ToList();
 
             opts.SortBy(x => x.Label);
 
-            //SI pas choix affichage de la raison 
+
             if (opts.Count == 0)
                 opts.Add(new FloatMenuOption("ATPP_NoSkyCloudCoreAvailable".Translate(), null));
 
@@ -1062,31 +1062,30 @@ namespace MOARANDROIDS
             {
                 var destOrigLabelShort = dest.LabelShortCap;
 
-                //Log.Message("Source => " + source.Label + " Dest => " + dest.Label);
-                //********************* Duplication de la story
+
                 var st = new Pawn_StoryTracker(dest) {melanin = dest.story.melanin};
-                //Recopie atraits physique de la destination
+
                 var hair = new Color {a = dest.story.hairColor.a, r = dest.story.hairColor.r, g = dest.story.hairColor.g, b = dest.story.hairColor.b};
                 st.hairColor = hair;
                 st.crownType = dest.story.crownType;
                 st.hairDef = dest.story.hairDef;
-                //duplication adultHood de la source
+
                 if (source.story?.adulthood != null)
                 {
                     BackstoryDatabase.TryGetWithIdentifier(source.story.adulthood.identifier, out var ah);
                     st.adulthood = ah;
                 }
 
-                //duplication childHood de la source
+
                 if (source.story != null)
                 {
                     BackstoryDatabase.TryGetWithIdentifier(source.story.childhood.identifier, out var ch);
                     st.childhood = ch;
-                    //Recopie attraits du corp de la destination
+
                     st.bodyType = dest.story.bodyType;
-                    //duplication des traits de la source 
+
                     foreach (var nt in source.story.traits.allTraits.Select(trait => new Trait(trait.def, trait.Degree)))
-                        //st1.traits.GainTrait(nt);
+
                         gainDirectTrait(st, nt);
 
                     st.title = dest.story.title;
@@ -1101,7 +1100,7 @@ namespace MOARANDROIDS
                 notifTraitsChanged(dest);
 
                 var ps = new Pawn_SkillTracker(source);
-                //****************************  Duplication skills de la source
+
                 var allDefsListForReading = DefDatabase<SkillDef>.AllDefsListForReading;
                 foreach (var skillDef in allDefsListForReading)
                 {
@@ -1118,7 +1117,7 @@ namespace MOARANDROIDS
 
                 dest.skills = ps;
 
-                //Simulation mort player
+
                 if (overwriteAsDeath)
                 {
                     PawnDiedOrDownedThoughtsUtility.TryGiveThoughts(dest, null, PawnDiedOrDownedThoughtsKind.Died);
@@ -1139,7 +1138,7 @@ namespace MOARANDROIDS
 
                 var pn = new Pawn_NeedsTracker(dest);
 
-                //Rajout des memoires personalisées
+
                 foreach (var x in source.needs.mood.thoughts.memories.Memories)
                 {
                     if (x.otherPawn != null && x.otherPawn == source)
@@ -1150,7 +1149,7 @@ namespace MOARANDROIDS
 
                 dest.needs = pn;
 
-                //Affichage message de mort fake du destinataire
+
                 if (overwriteAsDeath)
                     dest.health.NotifyPlayerOfKilled(null, null, null);
 
@@ -1158,8 +1157,6 @@ namespace MOARANDROIDS
                 dest.Name = new NameTriple(nam.First, nam.Nick, nam.Last);
 
                 dest.Drawer.renderer.graphics.ResolveAllGraphics();
-
-                //Ajout malus de la mort du destinataire
             }
             catch (Exception e)
             {
@@ -1174,64 +1171,62 @@ namespace MOARANDROIDS
                 if (p1 == null || p2 == null)
                     return;
 
-                //Duplication story 1
+
                 var st1 = new Pawn_StoryTracker(p2) {melanin = p2.story.melanin};
-                //Recopie atraits physique de la destination
+
 
                 var hair1 = new Color {a = p2.story.hairColor.a, r = p2.story.hairColor.r, g = p2.story.hairColor.g, b = p2.story.hairColor.b};
-                //Log.Message("L1");
+
                 st1.hairColor = hair1;
                 st1.crownType = p2.story.crownType;
                 st1.hairDef = p2.story.hairDef;
-                //duplication adultHood de la source
+
                 if (p1.story?.adulthood != null)
                 {
                     BackstoryDatabase.TryGetWithIdentifier(p1.story.adulthood.identifier, out var ah);
                     st1.adulthood = ah;
-                    //duplication childHood de la source
                 }
 
                 if (p1.story != null)
                 {
                     BackstoryDatabase.TryGetWithIdentifier(p1.story.childhood.identifier, out var ch);
                     st1.childhood = ch;
-                    //Log.Message("L2");
-                    //Recopie attraits du corp de la destination
+
+
                     if (p2.story?.bodyType != null)
                         st1.bodyType = p2.story.bodyType;
 
-                    //duplication des traits de la source 
+
                     foreach (var nt in p1.story.traits.allTraits.Select(trait => new Trait(trait.def, trait.Degree)))
-                        //st1.traits.GainTrait(nt);
+
                         gainDirectTrait(st1, nt);
 
                     st1.title = p2.story.title;
 
-                    //Log.Message("L3");
-                    //Duplication story 2
+
                     var st2 = new Pawn_StoryTracker(p1) {melanin = p1.story.melanin};
-                    //Recopie atraits physique de la destination
+
                     var hair2 = new Color {a = p1.story.hairColor.a, r = p1.story.hairColor.r, g = p1.story.hairColor.g, b = p1.story.hairColor.b};
                     st2.hairColor = hair2;
-                    //Log.Message("L4");
+
                     st2.crownType = p1.story.crownType;
                     st2.hairDef = p1.story.hairDef;
-                    //duplication adultHood de la source
+
                     if (p2.story?.adulthood != null)
                     {
                         BackstoryDatabase.TryGetWithIdentifier(p2.story.adulthood.identifier, out var ah2);
                         st2.adulthood = ah2;
                     }
 
-                    //duplication childHood de la source
+
                     BackstoryDatabase.TryGetWithIdentifier(p2.story.childhood.identifier, out var ch2);
                     st2.childhood = ch2;
-                    //Log.Message("L5");
-                    //Recopie attraits du corp de la destination
+
+
                     st2.bodyType = p1.story.bodyType;
-                    //duplication des traits de la source 
+
                     foreach (var nt in p2.story.traits.allTraits.Select(trait => new Trait(trait.def, trait.Degree)))
-                        //st2.traits.GainTrait(nt);
+
                         gainDirectTrait(st2, nt);
 
                     st2.title = p1.story.title;
@@ -1248,8 +1243,6 @@ namespace MOARANDROIDS
                     Traverse.Create(p2.story).Field("headGraphicPath").SetValue(vhg2);
                 }
 
-                //Log.Message("L6");
-
 
                 notifTraitsChanged(p1);
                 notifTraitsChanged(p2);
@@ -1259,7 +1252,7 @@ namespace MOARANDROIDS
 
                 invertRelations(p1, p2);
 
-                //Repercution des changements sur les worldPawns
+
                 /*foreach (var wp in Find.WorldPawns.AllPawnsAlive)
                 {
                     foreach(var rel in wp.relations.DirectRelations.ToList())
@@ -1277,9 +1270,8 @@ namespace MOARANDROIDS
                         }
                     }
                 }*/
-                //Repercution des changements sur les colons
 
-                //Log.Message("L10");
+
                 /************ SKILLS ****************/
 
                 var ps1 = new Pawn_SkillTracker(p1);
@@ -1293,24 +1285,21 @@ namespace MOARANDROIDS
                     var skillSource = p1.skills.GetSkill(skillDef);
                     skill.levelInt = skillSource.levelInt;
 
-                    //if (!skillSource.TotallyDisabled)
-                    //{
+
                     skill.passion = skillSource.passion;
                     skill.xpSinceLastLevel = skillSource.xpSinceLastLevel;
                     skill.xpSinceMidnight = skillSource.xpSinceMidnight;
-                    //}
+
 
                     var skillDef2 = skills;
                     var skill2 = ps1.GetSkill(skillDef);
                     var skillSource2 = p2.skills.GetSkill(skillDef);
                     skill2.levelInt = skillSource2.levelInt;
 
-                    //if (!skillSource2.TotallyDisabled)
-                    //{
+
                     skill2.passion = skillSource2.passion;
                     skill2.xpSinceLastLevel = skillSource2.xpSinceLastLevel;
                     skill2.xpSinceMidnight = skillSource2.xpSinceMidnight;
-                    //}
                 }
 
                 p1.skills = ps1;
@@ -1347,18 +1336,16 @@ namespace MOARANDROIDS
 
                         tlog.Field("initiator").SetValue(initiator);
                         tlog.Field("recipient").SetValue(recipient);
-
-                        //Log.Message("IIC");
                     }
 
 
                 /****************** memoires ****************************/
 
-                //Recreer les moods et les attribués de maniere croisée
+
                 var pn1 = new Pawn_NeedsTracker(p1);
                 var pn2 = new Pawn_NeedsTracker(p2);
 
-                //Rajout des memoires personalisées
+
                 foreach (var x in p1.needs.mood.thoughts.memories.Memories)
                 {
                     if (x.otherPawn != null && x.otherPawn == p2)
@@ -1375,14 +1362,18 @@ namespace MOARANDROIDS
                     pn1.mood.thoughts.memories.Memories.Add(x);
                 }
 
-                //Changement des memories de l'ensemble des pawns si une memoire avec les protagonistes locaux et wp
 
-                foreach (var mem in Find.Maps.SelectMany(map => from colon in map.mapPawns.AllPawns where colon != p1 && colon != p2 && colon.needs.mood != null from mem in colon.needs.mood.thoughts.memories.Memories.Where(mem => mem.otherPawn != null) select mem))
+                foreach (var mem in Find.Maps.SelectMany(map =>
+                    from colon in map.mapPawns.AllPawns
+                    where colon != p1 && colon != p2 && colon.needs.mood != null
+                    from mem in colon.needs.mood.thoughts.memories.Memories.Where(mem => mem.otherPawn != null)
+                    select mem))
                     if (mem.otherPawn == p1)
                         mem.otherPawn = p2;
                     else if (mem.otherPawn == p2) mem.otherPawn = p1;
 
-                foreach (var mem in Find.WorldPawns.AllPawnsAlive.Where(wp => wp.needs.mood != null).SelectMany(wp => wp.needs.mood.thoughts.memories.Memories.Where(mem => mem.otherPawn != null)))
+                foreach (var mem in Find.WorldPawns.AllPawnsAlive.Where(wp => wp.needs.mood != null)
+                    .SelectMany(wp => wp.needs.mood.thoughts.memories.Memories.Where(mem => mem.otherPawn != null)))
                     if (mem.otherPawn == p1)
                         mem.otherPawn = p2;
                     else if (mem.otherPawn == p2) mem.otherPawn = p1;
@@ -1391,35 +1382,33 @@ namespace MOARANDROIDS
                 /******************* NEEDS *******************************/
 
 
-                //Log.Message("KJJJ");
-                //Report des indicateurs des corps
                 if (p1.needs.food != null && p2.needs.food != null)
                 {
                     pn1.food.CurLevel = p1.needs.food.CurLevel;
                     pn2.food.CurLevel = p2.needs.food.CurLevel;
                 }
 
-                //Log.Message("KJJJ2");
+
                 if (p1.needs.joy != null && p2.needs.joy != null)
                 {
                     pn1.joy.CurLevel = p1.needs.joy.CurLevel;
                     pn2.joy.CurLevel = p2.needs.joy.CurLevel;
                 }
 
-                //Log.Message("KJJJ3");
+
                 if (p1.needs.comfort != null && p2.needs.comfort != null)
                 {
                     pn1.comfort.CurLevel = p1.needs.comfort.CurLevel;
                     pn2.comfort.CurLevel = p2.needs.comfort.CurLevel;
                 }
-                //Log.Message("KJJJ4");
+
 
                 if (p1.needs.roomsize != null && p2.needs.roomsize != null)
                 {
                     pn1.roomsize.CurLevel = p1.needs.roomsize.CurLevel;
                     pn2.roomsize.CurLevel = p2.needs.roomsize.CurLevel;
                 }
-                //Log.Message("KJJJ5");
+
 
                 if (p1.needs.rest != null && p2.needs.rest != null)
                 {
@@ -1435,12 +1424,12 @@ namespace MOARANDROIDS
 
                 p1.needs = pn1;
                 p2.needs = pn2;
-                //Log.Message("KJJJ6");
-                //Ajout des needs de base relatifs au corp et a la personnalité
+
+
                 pn1.AddOrRemoveNeedsAsAppropriate();
                 pn2.AddOrRemoveNeedsAsAppropriate();
 
-                //Log.Message("KJJJ7");
+
                 /*foreach(var mem in p1.needs.mood.thoughts.memories.Memories)
                 {
                     if (mem.otherPawn != null && mem.otherPawn == p1)
@@ -1460,7 +1449,7 @@ namespace MOARANDROIDS
                 /*ThingDef p1TD = p1.def;
                 p1.def = p2.def;
                 p2.def = p1TD;*/
-                //Log.Message("KJJJ8");
+
                 var nam = p1.Name;
                 p1.Name = p2.Name;
                 p2.Name = nam;
@@ -1489,7 +1478,7 @@ namespace MOARANDROIDS
                 if (bedP1 != null) p2.ownership.ClaimBedIfNonMedical(bedP1);
                 if (bedP2 != null) p1.ownership.ClaimBedIfNonMedical(bedP2);
 
-                //Log.Message("KJJJ9");
+
                 /*Log.Message("P2 => " + p2.Label);
                 foreach (Pawn current in p2.relations.pawnsWithDirectRelationsWithMe)
                 {
@@ -1521,7 +1510,7 @@ namespace MOARANDROIDS
             pawn.ClearCachedDisabledSkillRecords();
             var combinedDisabledWorkTags = pawn.CombinedDisabledWorkTags;
             if (combinedDisabledWorkTags == WorkTags.None) return;
-            
+
             var list = (IEnumerable<WorkTags>) typeof(CharacterCardUtility).GetMethod("WorkTagsFrom", BindingFlags.Static | BindingFlags.NonPublic)
                 ?.Invoke(null, new object[] {combinedDisabledWorkTags});
             if (list == null) return;
@@ -1537,7 +1526,7 @@ namespace MOARANDROIDS
         public static void ClearCachedDisabledSkillRecords(this Pawn pawn)
         {
             if (pawn.skills?.skills == null) return;
-            
+
             var field = typeof(SkillRecord).GetField("cachedTotallyDisabled", BindingFlags.NonPublic | BindingFlags.Instance);
             foreach (var record in pawn.skills.skills.Where(record => field != null))
                 if (field != null)
@@ -1556,8 +1545,8 @@ namespace MOARANDROIDS
                 p1.relations = pr1;
                 p2.relations = pr2;
                 Pawn tmp1;
-                //Log.Message("L7");
-                //Suppression relations des worldPawns avec p1 et p2
+
+
                 foreach (var wp in Find.WorldPawns.AllPawnsAlive)
                 {
                     if (wp?.relations?.DirectRelations == null)
@@ -1567,38 +1556,35 @@ namespace MOARANDROIDS
                     {
                         if (rel.otherPawn == p1)
                         {
-                            //rel.otherPawn = p2;
                             wp.relations.TryRemoveDirectRelation(rel.def, p1);
                             wp.relations.AddDirectRelation(rel.def, p2);
                         }
 
                         if (rel.otherPawn != p2) continue;
-                        //rel.otherPawn = p1;
+
                         wp.relations.TryRemoveDirectRelation(rel.def, p2);
                         wp.relations.AddDirectRelation(rel.def, p1);
                     }
                 }
 
-                //Log.Message("L8");
-                //Constitution nouvelle liste des relations de P1
+
                 foreach (var rel in pro2.DirectRelations.ToList())
                 {
                     if (rel.otherPawn?.relations != null && rel.otherPawn != p1 && rel.otherPawn != p2)
                         rel.otherPawn.relations.TryRemoveDirectRelation(rel.def, p2);
-                    //Log.Message(rel.def.defName + " " + rel.otherPawn.Label);
+
 
                     tmp1 = rel.otherPawn == p1 ? p2 : rel.otherPawn;
 
                     pr1.AddDirectRelation(rel.def, tmp1);
                 }
 
-                //Log.Message("L9");
-                //Consitution nouvelle liste des relations de P2
+
                 foreach (var rel in pro1.DirectRelations.ToList())
                 {
                     if (rel.otherPawn != null && rel.otherPawn.relations != null && rel.otherPawn != p1 && rel.otherPawn != p2)
                         rel.otherPawn.relations.TryRemoveDirectRelation(rel.def, p1);
-                    //Log.Message(rel.def.defName + " " + rel.otherPawn.Label);
+
 
                     tmp1 = rel.otherPawn == p2 ? p1 : rel.otherPawn;
 
@@ -1633,7 +1619,6 @@ namespace MOARANDROIDS
         {
             pawn.Notify_DisabledWorkTypesChanged();
 
-            //Traverse.Create(pawn.story).Method("Notify_TraitChanged").GetValue();
 
             pawn.skills?.Notify_SkillDisablesChanged();
             if (!pawn.Dead && pawn.RaceProps.Humanlike) pawn.needs.mood.thoughts.situational.Notify_SituationalThoughtsDirty();
@@ -1650,7 +1635,7 @@ namespace MOARANDROIDS
         {
             Hediff he;
 
-            //On eleve le hediff
+
             if (cpawn != null)
             {
                 he = cpawn.health.hediffSet.GetFirstHediffOfDef(DefDatabase<HediffDef>.GetNamed("ATPP_ConsciousnessUpload"));
@@ -1709,18 +1694,15 @@ namespace MOARANDROIDS
         {
             var opts = new List<FloatMenuOption>();
 
-            foreach(var c in Find.World.worldObjects.Caravans) //Listing des colons sauf ceux présents dans la liste d'exception (exp)
+            foreach (var c in Find.World.worldObjects.Caravans)
             foreach (var colon in c.pawns)
-                //SI colon vivant et relié au RimNet et pas dans la liste d'exception et possede une PUCE RIMNET
+
                 if (colon != emitter && !colon.Dead
                                      && !colon.Destroyed && colon.IsSurrogateAndroid(false, true))
-                    opts.Add(new FloatMenuOption(colon.LabelShortCap, delegate
-                    {
-                        onClick(colon);
-                    }, MenuOptionPriority.Default, null, null, 0f, null, null));
-            opts.SortBy((x) => x.Label);
+                    opts.Add(new FloatMenuOption(colon.LabelShortCap, delegate { onClick(colon); }));
+            opts.SortBy(x => x.Label);
 
-            //SI pas choix affichage de la raison 
+
             if (opts.Count == 0)
                 return;
 
@@ -1747,8 +1729,8 @@ namespace MOARANDROIDS
             if (p == null) return p;
 
             p.Rotation = pawn.Rotation;
-            //duplication apparence physique
-            //p.gender = pawn.gender;
+
+
             p.story.melanin = pawn.story.melanin;
             p.story.bodyType = pawn.story.bodyType;
             var hair = new Color {a = pawn.story.hairColor.a, r = pawn.story.hairColor.r, g = pawn.story.hairColor.g, b = pawn.story.hairColor.b};
@@ -1779,26 +1761,24 @@ namespace MOARANDROIDS
                         Log.Message("[ATPP] Utils.SpawnCorpse.transfertEquipment " + ex.Message + " " + ex.StackTrace);
                     }
 
-            //Transfert vetements
+
             if (pawn.apparel != null)
-            {
                 if (p.apparel != null)
                 {
                     p.apparel.DestroyAll();
 
-                    //Log.Message("--Traitement des vetements");
+
                     foreach (var e in pawn.apparel.WornApparel.ToList())
                     {
                         pawn.apparel.Remove(e);
                         p.apparel.Wear(e);
                     }
                 }
-            }
 
 
             p.health.hediffSet.Clear();
 
-            //Ajout des hediffs
+
             foreach (var h in pawn.health.hediffSet.hediffs)
                 try
                 {
@@ -1811,11 +1791,10 @@ namespace MOARANDROIDS
 
             GenSpawn.Spawn(p, pawn.Position, pawn.Map);
 
-            //Duplication mental de la source
-            Duplicate(pawn, p, false);
-            //Traverse.Create(p.story).Field("headGraphicPath").SetValue(pawn.story.HeadGraphicPath);
 
-            //Report crownType stocké dans le comp d'alien race
+            Duplicate(pawn, p, false);
+
+
             var alienComp = TryGetCompByTypeName(pawn, "AlienComp", "AlienRace");
             if (alienComp != null)
             {
@@ -1825,12 +1804,9 @@ namespace MOARANDROIDS
                 if (alienComp2 != null) Traverse.Create(alienComp2).Field("crownType").SetValue(crownType);
             }
 
-            //headGraphicPathToUse = pawn.story.HeadGraphicPath;
-            p.Drawer.renderer.graphics.ResolveAllGraphics();
-            //headGraphicPathToUse = "";
 
-            //p.Drawer.renderer.graphics.headGraphic = GraphicDatabaseHeadRecords.GetHeadNamed(pawn.story.HeadGraphicPath, p.story.SkinColor);
-            //Traverse.Create(p.story).Field("headGraphicPath").SetValue(GraphicDatabaseHeadRecords.GetHeadNamed(pawn.story.HeadGraphicPath, p.story.SkinColor).GraphicPath);
+            p.Drawer.renderer.graphics.ResolveAllGraphics();
+
 
             if (kill)
             {
@@ -1843,7 +1819,7 @@ namespace MOARANDROIDS
 
                 p.SetFaction(Faction.OfPlayer);
 
-                //Tentative de connexion au SkyMind
+
                 GCATPP.connectUser(p);
             }
 
@@ -1856,7 +1832,7 @@ namespace MOARANDROIDS
                 return Settings.securitySlotForOldSecurityServers;
             if (build.def.defName == defNameBasicSecurityServer)
                 return Settings.securitySlotForBasicSecurityServers;
-            
+
             return build.def.defName == defNameAdvancedSecurityServer ? Settings.securitySlotForAdvancedSecurityServers : 0;
         }
 
@@ -1866,7 +1842,7 @@ namespace MOARANDROIDS
                 return Settings.hackingSlotsForOldHackingServers;
             if (build.def.defName == defNameBasicHackingServer)
                 return Settings.hackingSlotsForBasicHackingServers;
-            
+
             return build.def.defName == defNameAdvancedHackingServer ? Settings.hackingSlotsForAdvancedHackingServers : 0;
         }
 
@@ -1974,7 +1950,7 @@ namespace MOARANDROIDS
         {
             target.story.traits.allTraits.Clear();
 
-            //Si T1 rajout du trait simpleMinded
+
             if (target.def.defName == T1)
             {
                 var td = DefDatabase<TraitDef>.GetNamed("SimpleMindedAndroid", false);
@@ -1985,7 +1961,7 @@ namespace MOARANDROIDS
                     target.story.traits.allTraits.Add(t);
             }
 
-            //Notif changement des traits
+
             notifTraitsChanged(target);
         }
 
@@ -2044,7 +2020,7 @@ namespace MOARANDROIDS
         public static void removeSimpleMindedTrait(Pawn cpawn)
         {
             if (!Settings.removeSimpleMindedTraitOnUpload || !cpawn.story.traits.HasTrait(traitSimpleMinded)) return;
-            
+
             var toDel = cpawn.story.traits.allTraits.FirstOrDefault(t => t.def == traitSimpleMinded);
 
             if (toDel != null) cpawn.story.traits.allTraits.Remove(toDel);
@@ -2081,10 +2057,10 @@ namespace MOARANDROIDS
         public static void clearBlankAndroid(Pawn android)
         {
             if (!android.IsBlankAndroid()) return;
-            
+
             var cas = android.TryGetComp<CompAndroidState>();
             if (cas == null) return;
-                
+
             cas.isBlankAndroid = false;
             var he = android.health.hediffSet.GetFirstHediffOfDef(hediffBlankAndroid);
             if (he != null)
@@ -2093,14 +2069,13 @@ namespace MOARANDROIDS
 
         public static bool androidIsValidPodForCharging(Pawn android)
         {
-            //Recharge surrogate
             if (!android.InBed()) return false;
-            
+
             var bed = android.CurrentBed();
-            if (bed == null || (!ExceptionSurrogatePod.Contains(bed.def.defName) && !ExceptionSurrogateM7Pod.Contains(bed.def.defName))) return false;
-                
+            if (bed == null || !ExceptionSurrogatePod.Contains(bed.def.defName) && !ExceptionSurrogateM7Pod.Contains(bed.def.defName)) return false;
+
             var cpt = bed.TryGetComp<CompPowerTrader>();
-            //Recharge que si alimenté
+
             return !bed.IsBrokenDown() && cpt != null && cpt.PowerOn;
         }
 
@@ -2114,7 +2089,8 @@ namespace MOARANDROIDS
                 if (thingList == null) continue;
 
                 foreach (var t in thingList)
-                    if (t is Building station && station.Faction == Faction.OfPlayer && station.def.defName == "ATPP_ReloadStation") return true;
+                    if (t is Building station && station.Faction == Faction.OfPlayer && station.def.defName == "ATPP_ReloadStation")
+                        return true;
             }
 
             return false;

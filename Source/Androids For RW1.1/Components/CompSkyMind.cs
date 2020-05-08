@@ -15,13 +15,13 @@ namespace MOARANDROIDS
         public int hackEndGT = -1;
         public Faction hackOrigFaction;
         public bool hackWasPrisoned;
-        private int infected = -1; // -1 : pas d'infection, 1: infection virus std, 2: virus explosif, 3: virus cryptolocker => android inutilisable
+        private int infected = -1;
 
         public int infectedEndGT = -1;
 
         public int infectedExplodeGT = -1;
 
-        //Stocke le state precedent des composants piraté (du casting de type a prevoir)
+
         private string infectedPreviousState = "";
         public int lastRemoteFlickGT;
 
@@ -53,20 +53,19 @@ namespace MOARANDROIDS
                 {
                     switch (value)
                     {
-                        //Virus
                         case 1:
-                            //Devient hostile
+
                             parent.SetFaction(Faction.OfAncientsHostile);
                             break;
-                        //Virus explosif
+
                         case 2:
-                            //Devient hostile
+
                             parent.SetFaction(Faction.OfAncientsHostile);
                             infectedExplodeGT = Find.TickManager.TicksGame + Settings.nbSecExplosiveVirusTakeToExplode * 60;
                             break;
-                        //Virus cryptolocker
+
                         case 3:
-                            //Rend inutilisable batiment
+
                             parent.SetFaction(Faction.OfAncientsHostile);
                             break;
                     }
@@ -79,24 +78,22 @@ namespace MOARANDROIDS
                         if (cas == null)
                             return;
 
-                        //Deconnection du contorlleur le cas echeant
+
                         if (cas.surrogateController != null)
                         {
                             var cso = cas.surrogateController.TryGetComp<CompSurrogateOwner>();
                             if (cso != null)
                             {
-                                //Cryptolocker on force la remise du NoHost de down du surrogate
                                 if (value == 3)
                                     cso.disconnectControlledSurrogate(p);
                                 else
-                                    //AUssinon on evite qu'il down pour eviter  quil fasse tomber son arme dans le cadre des virus lambda
+
                                     cso.disconnectControlledSurrogate(p, false, true);
                             }
                         }
 
                         if (value != 3)
                         {
-                            //On eneleve le hediff NoHostConnected
                             var he = p.health.hediffSet.GetFirstHediffOfDef(Utils.hediffNoHost);
                             if (he != null)
                                 p.health.RemoveHediff(he);
@@ -104,14 +101,13 @@ namespace MOARANDROIDS
 
                         switch (value)
                         {
-                            //Virus
                             case 1:
-                                //Devient hostile
+
                                 parent.SetFactionDirect(Faction.OfAncientsHostile);
                                 break;
-                            //Virus explosif
+
                             case 2:
-                                //Devient hostile
+
                                 parent.SetFactionDirect(Faction.OfAncientsHostile);
                                 infectedExplodeGT = Find.TickManager.TicksGame + Settings.nbSecExplosiveVirusTakeToExplode * 60;
                                 break;
@@ -121,7 +117,6 @@ namespace MOARANDROIDS
                     }
                     else
                     {
-                        //Si device emerdant alors application effet negatif
                         if (Utils.ExceptionCooler.Contains(parent.def.defName))
                         {
                             infectedPreviousState = parent.TryGetComp<CompTempControl>().targetTemperature.ToString();
@@ -137,7 +132,6 @@ namespace MOARANDROIDS
                         }
                         else
                         {
-                            //Sinon le truc enmerdant ces que le dispositif est desactivé
                             var cf = parent.TryGetComp<CompFlickable>();
                             if (cf != null) cf.SwitchIsOn = false;
                         }
@@ -250,7 +244,7 @@ namespace MOARANDROIDS
             }
 
             if (avatar == null) return;
-            
+
             var vector = parent.TrueCenter();
             vector.y = AltitudeLayer.MetaOverlays.AltitudeFor() + 0.28125f;
             vector.z += 1.4f;
@@ -262,10 +256,7 @@ namespace MOARANDROIDS
 
         public bool canBeConnectedToSkyMind()
         {
-            if (parent is Pawn pawn)
-            {
-                return pawn.VXChipPresent() || pawn.IsAndroidTier();
-            }
+            if (parent is Pawn pawn) return pawn.VXChipPresent() || pawn.IsAndroidTier();
 
             var c = parent.TryGetComp<CompPowerTrader>();
             return c != null && c.PowerOn;
@@ -275,16 +266,15 @@ namespace MOARANDROIDS
         {
             var casx = parent.TryGetComp<CompAndroidState>();
 
-            //Si infecté ou un surrogate ennemis alors pas de possibilité de le connecté/déconnecté du réseau du joueur
+
             if (infected != -1 || parent.Faction != Faction.OfPlayer && casx != null && casx.isSurrogate)
                 yield break;
 
             switch (parent)
             {
-                //Si ni un humain ou robot pucé ET pas un android Tier alors pas de possibilité de connection au SkyMind
                 case Pawn pawn when !pawn.VXChipPresent() && !pawn.IsAndroidTier():
                     yield break;
-                //Les M7Mech standard ne sont pas controlables
+
                 case Pawn pawn:
                 {
                     var cas = parent.TryGetComp<CompAndroidState>();
@@ -292,7 +282,7 @@ namespace MOARANDROIDS
                         yield break;
                     break;
                 }
-                //Si batiment et il n'y a pas de skyCloud placé on masque les controles sur les batiments
+
                 case Building _ when !Utils.GCATPP.isThereSkyCloudCore():
                     yield break;
             }
@@ -339,11 +329,11 @@ namespace MOARANDROIDS
             switch (signal)
             {
                 case "SkyMindNetworkUserConnected":
-                    //Log.Message(parent.LabelCap + " => SkyMindConnectedUser");
+
                     connected = true;
                     break;
                 case "SkyMindNetworkUserDisconnected":
-                    //Log.Message(parent.LabelCap + " => SkyMindDisconnectedUser");
+
                     connected = false;
                     break;
             }
@@ -353,7 +343,7 @@ namespace MOARANDROIDS
         {
             if (hacked != 3)
                 return;
-            //Fin du hack temporaire du surrogate on deconnecte le joueur
+
             var cp = (Pawn) parent;
 
             var cas = cp.TryGetComp<CompAndroidState>();
@@ -364,7 +354,7 @@ namespace MOARANDROIDS
             }
 
             cp.SetFaction(hackOrigFaction);
-            //Si le surrogate été un prisonnier on le restaure en tant que tel
+
             if (hackWasPrisoned)
                 if (cp.guest != null)
                 {
@@ -396,7 +386,7 @@ namespace MOARANDROIDS
                 var aim = p.mindState?.enemyTarget;
 
                 if (aim == null || !(aim is Pawn pawnTarget)) continue;
-                //Log.Message("=>" + aim.def.defName);
+
 
                 if (pawnTarget != cp) continue;
 

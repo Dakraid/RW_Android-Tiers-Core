@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using RimWorld;
-using UnityEngine;
 using Verse;
 using Verse.Sound;
 
@@ -51,7 +50,7 @@ namespace MOARANDROIDS
             }
 
             if (!respawningAfterLoad) return;
-            
+
             if (powerComp.PowerOn)
                 StartSustainer();
         }
@@ -61,7 +60,7 @@ namespace MOARANDROIDS
             base.CompTick();
             var GT = Find.TickManager.TicksGame;
 
-            //TOutes les 30sec incrémentation points de sécurité
+
             if (isHackingServer && GT % 1800 == 0 && !(((Building) parent).IsBrokenDown() || !((Building) parent).TryGetComp<CompPowerTrader>().PowerOn))
                 Utils.GCATPP.incHackingPoints(Utils.nbHackingPointsGeneratedBy((Building) parent));
 
@@ -74,7 +73,6 @@ namespace MOARANDROIDS
             var host = (Building) parent;
             switch (signal)
             {
-                //Arret manuel ou  composant endommagé => arret ambiance
                 case "FlickedOff":
                 case "ScheduledOff":
                 case "Breakdown":
@@ -86,11 +84,11 @@ namespace MOARANDROIDS
                         Utils.GCATPP.popSecurityServer(host);
                     if (isHackingServer)
                         Utils.GCATPP.popHackingServer(host);
-                    //if (signal != "Virused" && signal != "Hacked")
+
                     StopSustainer();
                     break;
                 }
-                //Redemarrage ambiance
+
                 case "PowerTurnedOn":
                 {
                     if (isSkillServer)
@@ -109,7 +107,7 @@ namespace MOARANDROIDS
         {
             var build = (Building) parent;
 
-            //Si brokendown ou pas alimenté on degage ou partie sécurité désactivée
+
             if (Settings.disableSkyMindSecurityStuff || build.IsBrokenDown() || !build.TryGetComp<CompPowerTrader>().PowerOn)
                 yield break;
 
@@ -122,7 +120,7 @@ namespace MOARANDROIDS
 
 
             if (!isHackingServer) yield break;
-            
+
             if (nbp - Settings.costPlayerVirus >= 0)
                 canVirus = true && powered;
 
@@ -202,7 +200,6 @@ namespace MOARANDROIDS
 
         private void showFloatMapHackMenu(int hackType)
         {
-            //Listing map de destination
             var opts = new List<FloatMenuOption>();
             foreach (var m in Find.Maps)
             {
@@ -256,7 +253,7 @@ namespace MOARANDROIDS
             }
 
             if (!isSkillServer) return ret.TrimEnd('\r', '\n') + base.CompInspectStringExtra();
-            
+
             ret += "ATPP_SkillServersSynthesis".Translate(Utils.GCATPP.getNbSkillPoints(), Utils.GCATPP.getNbSkillSlotAvailable()) + "\n";
             ret += "ATTP_SkillProducedPoints".Translate(Utils.nbSkillPointsGeneratedBy((Building) parent)) + "\n";
             ret += "ATTP_SkillSlotsAdded".Translate(Utils.nbSkillSlotsGeneratedBy((Building) parent)) + "\n";
@@ -280,22 +277,17 @@ namespace MOARANDROIDS
         private void StartSustainer()
         {
             if (sustainer != null || Props.ambiance == "None" || Settings.disableServersAmbiance) return;
-            
+
             var info = SoundInfo.InMap(parent);
             sustainer = ambiance.TrySpawnSustainer(info);
-            //this.sustainer = SoundDefOf.GeyserSpray.TrySpawnSustainer(info);
-
-            //this.sustainerHot = SoundDefOf.GeyserSpray.TrySpawnSustainer(info);
         }
 
         private void StopSustainer()
         {
             if (sustainer == null || Props.ambiance == "None") return;
-            
+
             sustainer.End();
             sustainer = null;
-            // SoundInfo info = SoundInfo.InMap(this.parent, MaintenanceType.None);
-            //this.ambiance.sustainStopSound.PlayOneShot(info);
         }
     }
 }

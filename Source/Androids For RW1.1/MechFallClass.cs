@@ -3,17 +3,15 @@ using Verse;
 
 namespace MOARANDROIDS
 {
-    // Token: 0x0200065F RID: 1631
     public class MechFall : OrbitalStrike
     {
-        // Token: 0x0600216E RID: 8558 RVA: 0x000FB115 File Offset: 0x000F9515
         public override void StartStrike()
         {
             base.StartStrike();
             MechFallMoteMaker.MakeMechFallMote(Position, Map);
         }
 
-        // Token: 0x0600216F RID: 8559 RVA: 0x000FB130 File Offset: 0x000F9530
+
         public override void Tick()
         {
             if (TicksPassed >= duration) SpawnDude();

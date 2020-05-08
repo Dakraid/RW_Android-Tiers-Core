@@ -27,7 +27,7 @@ namespace MOARANDROIDS
                         {
                             Utils.anyPlayerColonnyPaySilver(fee);
 
-                            //Check si la faction tient parole
+
                             if (Rand.Chance(1.0f - Settings.riskCryptolockerScam))
                             {
                                 var cso = victim.TryGetComp<CompSurrogateOwner>();
@@ -57,7 +57,6 @@ namespace MOARANDROIDS
                             }
                             else
                             {
-                                //ATPP_LetterFactionScamCryptolocker
                                 Find.LetterStack.ReceiveLetter("ATPP_LetterFactionScam".Translate(), "ATPP_LetterFactionScamRansomwareDesc".Translate(faction.Name),
                                     LetterDefOf.ThreatBig);
                             }

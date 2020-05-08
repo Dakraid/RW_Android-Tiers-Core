@@ -31,7 +31,7 @@ namespace MOARANDROIDS
         {
             base.DoWindowContents(inRect);
             if (Event.current.type != EventType.KeyDown) return;
-            
+
             switch (Event.current.keyCode)
             {
                 case KeyCode.Return:

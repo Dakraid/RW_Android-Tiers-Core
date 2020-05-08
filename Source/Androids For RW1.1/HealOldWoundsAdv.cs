@@ -29,7 +29,7 @@ namespace MOARANDROIDS
         {
             ticksToHeal--;
             if (ticksToHeal > 0) return;
-            
+
             TryHealRandomWound();
             ResetTicksToHeal();
         }

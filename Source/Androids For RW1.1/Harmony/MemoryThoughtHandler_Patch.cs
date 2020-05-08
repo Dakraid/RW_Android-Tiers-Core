@@ -48,9 +48,6 @@ namespace MOARANDROIDS
             {
                 try
                 {
-                    //Log.Message(newThought.def.defName);
-
-                    //Si android (en général) alors squeeze de certains moods OU alors si android surrogate suppression de TOUT les moods (si pas controllé) DE MEME si controlleur avec connection en cours désaction des MOODS
                     return !shouldSkipCurrentMemory(newThought.def, __instance);
                 }
                 catch (Exception e)

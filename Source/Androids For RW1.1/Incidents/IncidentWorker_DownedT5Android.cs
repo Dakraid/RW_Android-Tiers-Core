@@ -58,7 +58,8 @@ namespace MOARANDROIDS
         private bool AnyQuestExistsFrom(Faction faction)
         {
             var sites = Find.WorldObjects.Sites;
-            return sites.Select(site => site.GetComponent<DefeatAllEnemiesQuestComp>()).Any(component => component != null && component.Active && component.requestingFaction == faction);
+            return sites.Select(site => site.GetComponent<DefeatAllEnemiesQuestComp>())
+                .Any(component => component != null && component.Active && component.requestingFaction == faction);
         }
 
         private bool CommonHumanlikeEnemyFactionExists(Faction f1, Faction f2)

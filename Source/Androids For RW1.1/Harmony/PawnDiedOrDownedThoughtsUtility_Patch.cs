@@ -15,7 +15,6 @@ namespace MOARANDROIDS
             [HarmonyPrefix]
             public static bool Listener(ref Pawn victim)
             {
-                //Si android avec peu de logique alors tous le monde se fout de sa mort OU si Surrogate
                 return !Utils.ExceptionAndroidListBasic.Contains(victim.def.defName) && !victim.IsSurrogateAndroid() && !victim.IsBlankAndroid();
             }
         }

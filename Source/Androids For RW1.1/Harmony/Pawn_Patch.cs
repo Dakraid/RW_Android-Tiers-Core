@@ -20,23 +20,22 @@ namespace MOARANDROIDS
                     if (__instance == null)
                         return;
 
-                    //Si surrogate on le deconnecte et on clear le controlleur (SI pas faisant suite à un piratage)
+
                     var cas = __instance.TryGetComp<CompAndroidState>();
                     if (cas == null || !cas.isSurrogate || cas.externalController == null || newFaction == null || !newFaction.IsPlayer ||
                         Find.DesignatorManager.SelectedDesignator != null && Find.DesignatorManager.SelectedDesignator is Designator_SurrogateToHack) return;
 
                     if (cas.surrogateController != null)
                     {
-                        //On affiche une notif
                         Find.LetterStack.ReceiveLetter("ATPP_LetterTraitorOffline".Translate(), "ATPP_LetterTraitorOfflineDesc".Translate(__instance.LabelShortCap),
                             LetterDefOf.NegativeEvent);
 
-                        //Le cas echeant on le deconnecte
+
                         if (cas.surrogateController.TryGetComp<CompSurrogateOwner>() != null)
                             cas.surrogateController.TryGetComp<CompSurrogateOwner>().disconnectControlledSurrogate(null);
                     }
 
-                    //On vire l'external controller
+
                     cas.externalController = null;
                 }
                 catch (Exception e)
@@ -59,34 +58,32 @@ namespace MOARANDROIDS
                     {
                         Utils.insideKillFuncSurrogate = true;
 
-                        //Si c'est un surrogate controllé temporaire alors on le restitue a sa faction
+
                         var csm = __instance.TryGetComp<CompSkyMind>();
                         if (csm != null)
-                            //Log.Message("Restitution surrogate a sa faction");
+
                             csm.tempHackingEnding();
                     }
 
-                    //disconnect killed user
+
                     Utils.GCATPP.disconnectUser(__instance);
-                    //Log.Message("YOU KILLED "+__instance.LabelCap);
-                    //Is surrogate android used ?
+
+
                     if (__instance.IsSurrogateAndroid(true))
                     {
-                        //Obtention controlleur
                         var cas = __instance.TryGetComp<CompAndroidState>();
                         if (cas == null)
                             return true;
 
-                        //Arret du mode de control chez le controller
+
                         var cso = cas.surrogateController.TryGetComp<CompSurrogateOwner>();
                         cso.stopControlledSurrogate(__instance, false, false, true);
 
-                        //On reset les données pour une potentiel futur resurection
+
                         cas.resetInternalState();
                     }
 
 
-                    //Log.Message("YOU KILLED END");
                     Utils.insideKillFuncSurrogate = false;
                     return true;
                 }
@@ -110,7 +107,7 @@ namespace MOARANDROIDS
                 try
                 {
                     if (__instance.IsAndroidTier() || __instance.VXChipPresent() || __instance.IsSurrogateAndroid())
-                        //On deconnecte l'user de force le cas echeant
+
                         Utils.GCATPP.disconnectUser(__instance);
                 }
                 catch (Exception e)
@@ -140,11 +137,11 @@ namespace MOARANDROIDS
                 {
                     var csm = __instance.TryGetComp<CompSkyMind>();
 
-                    //Si prisonnier et possede une VX2 on va obtenir les GIZMOS associés OU virusé
+
                     if (__instance.IsPrisoner || csm != null && csm.Hacked == 1)
                     {
                         IEnumerable<Gizmo> tmp;
-                        //Si posseseur d'une VX2
+
 
                         if (__instance.VXChipPresent())
                         {
@@ -157,7 +154,7 @@ namespace MOARANDROIDS
                             }
                         }
 
-                        //Si android prisonier ou virusé
+
                         if (__instance.IsAndroidTier())
                         {
                             var cas = __instance.TryGetComp<CompAndroidState>();
@@ -178,7 +175,7 @@ namespace MOARANDROIDS
                         }
                     }
 
-                    //Si animal posséder par player
+
                     if (!__instance.IsPoweredAnimalAndroids()) return;
 
                     {

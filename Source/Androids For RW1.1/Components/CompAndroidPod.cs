@@ -12,7 +12,7 @@ namespace MOARANDROIDS
 
             var CGT = Find.TickManager.TicksGame;
             if (CGT % 60 == 0)
-                //Rafraichissement qt de courant consommé
+
                 refreshPowerConsumed();
         }
 

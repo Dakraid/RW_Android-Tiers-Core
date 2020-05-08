@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using RimWorld;
 using UnityEngine;
@@ -12,8 +11,8 @@ namespace MOARANDROIDS
 {
     public class Designator_SurrogateToHack : Designator
     {
-        private Map cmap;
         private readonly int hackType;
+        private Map cmap;
 
         private IntVec3 pos;
         private Pawn target;
@@ -83,7 +82,7 @@ namespace MOARANDROIDS
             var cp = (Pawn) t;
             var cas = cp.TryGetComp<CompAndroidState>();
 
-            //Si pas clone ou clone deja utilisé on degage
+
             if (cas == null || !cas.isSurrogate || cp.Faction == Faction.OfPlayer)
                 return false;
 
@@ -122,7 +121,7 @@ namespace MOARANDROIDS
             var nbp = Utils.GCATPP.getNbHackingPoints();
             var nbpToConsume = 0;
 
-            //Check points
+
             switch (hackType)
             {
                 case 1:
@@ -145,17 +144,17 @@ namespace MOARANDROIDS
                 return;
             }
 
-            //Si faction alliée ou neutre ==> pénalitée
+
             if (target.Faction.RelationKindWith(Faction.OfPlayer) != FactionRelationKind.Hostile) target.Faction.TryAffectGoodwillWith(Faction.OfPlayer, -1 * Rand.Range(5, 36));
 
-            //Application effet
+
             switch (hackType)
             {
                 case 1:
                 case 2:
 
                     csm.Hacked = hackType;
-                    //Surrogate va attaquer la colonnie
+
                     target.SetFactionDirect(Faction.OfAncients);
                     LordJob_AssistColony lordJob;
                     Lord lord = null;
@@ -180,7 +179,7 @@ namespace MOARANDROIDS
 
                     lord.AddPawn(target);
 
-                    //Si virus explosive enclenchement de la détonnation
+
                     if (hackType == 2)
                         csm.infectedExplodeGT = Find.TickManager.TicksGame + Settings.nbSecExplosiveVirusTakeToExplode * 60;
                     break;
@@ -203,7 +202,7 @@ namespace MOARANDROIDS
                     cso?.disconnectControlledSurrogate(null);
 
                     if (hackType == 4)
-                        //Contorle definitif on jerte l'externalController
+
                         cas.externalController = null;
 
                     target.Map.attackTargetsCache.UpdateTarget(target);
@@ -219,7 +218,6 @@ namespace MOARANDROIDS
                     }
                     else
                     {
-                        //Si le surrogate quon veux controlé est infecté alors on enleve l'infection et on reset ses stats
                         if (csm.Infected != -1)
                         {
                             csm.Infected = -1;
@@ -238,10 +236,10 @@ namespace MOARANDROIDS
 
             Utils.soundDefSurrogateHacked.PlayOneShot(null);
 
-            //Notif d'applciation de l'effet
+
             Messages.Message("ATPP_SurrogateHackOK".Translate(surrogateName), target, MessageTypeDefOf.PositiveEvent);
 
-            //ANimation sonore et visuelle
+
             Utils.soundDefSurrogateConnection.PlayOneShot(null);
             MoteMaker.ThrowDustPuffThick(pos.ToVector3Shifted(), cmap, 4.0f, Color.red);
 
@@ -249,7 +247,6 @@ namespace MOARANDROIDS
         }
 
 
-        [DebuggerHidden]
         private bool SXInCell(IntVec3 c)
         {
             if (c.Fogged(Map)) return false;

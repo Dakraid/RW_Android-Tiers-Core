@@ -134,15 +134,15 @@ namespace MOARANDROIDS
 
                     Utils.traitSimpleMinded = DefDatabase<TraitDef>.GetNamed("SimpleMindedAndroid", false);
 
-                    //generating list of androids without skin
+
                     foreach (var el in Utils.ExceptionAndroidList.Where(el => !Utils.ExceptionAndroidWithSkinList.Contains(el))) Utils.ExceptionAndroidWithoutSkinList.Add(el);
 
-                    //Check if TX serie loaded
+
                     if (DefDatabase<PawnKindDef>.GetNamed("ATPP_AndroidTX2CollectiveSoldier", false) != null)
                     {
                         Utils.TXSERIE_LOADED = true;
 
-                        //Add TX related corpses
+
                         foreach (var el in Utils.ExceptionTXSerie) Utils.ExceptionAndroidCorpseList.Add("Corpse_" + el);
                     }
 
@@ -175,7 +175,7 @@ namespace MOARANDROIDS
                         Log.Message("[ATPP] RepairableFrameworkHediffException " + e.Message + " " + e.StackTrace);
                     }
 
-                    //Apply SolarFlare policy
+
                     try
                     {
                         Utils.applySolarFlarePolicy();
@@ -195,7 +195,7 @@ namespace MOARANDROIDS
                     }
 
                     var r = DefDatabase<RecipeDef>.GetNamed("ATPP_DisassembleAndroid", false);
-                    //add to disallowedThings all alien race creatures except those provided by this pod ATPP_DisassembleAndroid
+
                     var tcd = DefDatabase<ThingCategoryDef>.GetNamed("alienCorpseCategory", false);
 
                     if (tcd != null && r != null)
@@ -205,7 +205,7 @@ namespace MOARANDROIDS
                             r.fixedIngredientFilter.SetAllow(el, false);
                         }
 
-                    //Dynamicaly add "Meat_Human" to recipe TX3/TX4
+
                     if (Utils.TXSERIE_LOADED)
                         try
                         {
@@ -226,24 +226,23 @@ namespace MOARANDROIDS
 
                     Utils.ExceptionAndroidCanReloadWithPowerList = Utils.ExceptionAndroidList.Concat(Utils.ExceptionAndroidAnimalPowered).ToList();
 
-                    //RunTime patching
+
                     foreach (var td in DefDatabase<ThingDef>.AllDefsListForReading)
                         try
                         {
                             if (td?.race != null)
                             {
-                                //Dynamic fix Fluffy_BirdsAndBees mod which add sex to androids
                                 if (Utils.BIRDSANDBEES_LOADED && (Utils.ExceptionAndroidList.Contains(td.defName) || Utils.ExceptionAndroidAnimals.Contains(td.defName)))
                                 {
                                     Log.Message("[ATPP] BIRDSANDBEES.fix " + td.defName);
                                     try
                                     {
-                                        //remove neutering operation
                                         if (td.recipes != null)
-                                            foreach (var cr in td.recipes.ToList().Where(cr => cr.defName == "Neuter" || cr.defName == "InstallBasicReproductiveOrgans" || cr.defName == "InstallBionicReproductiveOrgans"))
+                                            foreach (var cr in td.recipes.ToList().Where(cr =>
+                                                cr.defName == "Neuter" || cr.defName == "InstallBasicReproductiveOrgans" || cr.defName == "InstallBionicReproductiveOrgans"))
                                                 td.recipes.Remove(cr);
 
-                                        //Cut reproductive organs
+
                                         if (td.race.body != null && td.race.body.corePart != null && td.race.body.corePart.parts != null)
                                         {
                                             foreach (var cbp in td.race.body.corePart.parts.ToList().Where(cbp => cbp.def.defName == "ReproductiveOrgans"))
@@ -252,7 +251,7 @@ namespace MOARANDROIDS
                                                 td.race.body.AllParts.Remove(cbp);
                                         }
 
-                                        //Remove old-age  hediffgivers
+
                                         if (td.race.hediffGiverSets != null)
                                             foreach (var hg in td.race.hediffGiverSets.ToList().Where(hg => hg.defName == "HumanoidFertility"))
                                                 td.race.hediffGiverSets.Remove(hg);
@@ -265,11 +264,10 @@ namespace MOARANDROIDS
 
                                 if (td.race.intelligence == Intelligence.Humanlike)
                                 {
-                                    //SkyMind
                                     var cp = new CompProperties {compClass = typeof(CompSkyMind)};
                                     td.comps.Add(cp);
 
-                                    //CompSurrogate
+
                                     if (td.defName != "M7Mech")
                                     {
                                         cp = new CompProperties {compClass = typeof(CompSurrogateOwner)};
@@ -279,7 +277,7 @@ namespace MOARANDROIDS
                                     cp = new CompProperties {compClass = typeof(CompAndroidState)};
                                     td.comps.Add(cp);
 
-                                    //Si androide on va venir stocké dans la Raceprops s'il sagit d'un androide evolué ou non
+
                                     if (!Utils.ExceptionAndroidList.Contains(td.defName)) continue;
 
                                     td.race.gestationPeriodDays = Utils.ExceptionAndroidListAdvanced.Contains(td.defName) ? 2 : 1;
@@ -288,7 +286,8 @@ namespace MOARANDROIDS
                                     {
                                         if (Settings.allowHumanDrugsForAndroids) continue;
 
-                                        foreach (var el in td.AllRecipes.ToList().Where(el => Enumerable.Any(Utils.BlacklistAndroidFood, blacklistedFood => el.defName == "Administer_" + blacklistedFood)))
+                                        foreach (var el in td.AllRecipes.ToList().Where(el =>
+                                            Enumerable.Any(Utils.BlacklistAndroidFood, blacklistedFood => el.defName == "Administer_" + blacklistedFood)))
                                             td.AllRecipes.Remove(el);
                                     }
                                     catch (Exception e)
@@ -298,7 +297,6 @@ namespace MOARANDROIDS
                                 }
                                 else if (Utils.ExceptionAndroidAnimalPowered.Contains(td.defName))
                                 {
-                                    //Log.Message("=>" + td.defName);
                                     var cp = new CompProperties {compClass = typeof(CompAndroidState)};
                                     td.comps.Add(cp);
                                 }
@@ -310,7 +308,7 @@ namespace MOARANDROIDS
                                     var cp = new CompProperties {compClass = typeof(CompAutoDoor)};
                                     td.comps.Add(cp);
 
-                                    //SkyMind
+
                                     cp = new CompProperties {compClass = typeof(CompSkyMind)};
                                     td.comps.Add(cp);
                                 }
@@ -328,11 +326,10 @@ namespace MOARANDROIDS
                                 }
                                 else if (td.thingClass != null && (td.thingClass == typeof(Building_Turret) || td.thingClass.IsSubclassOf(typeof(Building_Turret))))
                                 {
-                                    //SkyMind
                                     var cp = new CompProperties {compClass = typeof(CompSkyMind)};
                                     td.comps.Add(cp);
 
-                                    //RemoteTurret
+
                                     cp = new CompProperties {compClass = typeof(CompRemotelyControlledTurret)};
                                     td.comps.Add(cp);
                                 }
@@ -345,7 +342,7 @@ namespace MOARANDROIDS
 
                                     var found = false;
                                     var flickable = false;
-                                        
+
                                     foreach (var e in td.comps.Where(e => e.compClass != null))
                                     {
                                         if (e.compClass == typeof(CompFlickable))
@@ -377,7 +374,7 @@ namespace MOARANDROIDS
                     {
                     }
 
-                    //Patching M7 ThinkNode
+
                     var ttd = DefDatabase<ThinkTreeDef>.GetNamed("MechM7Like", false);
 
                     try
@@ -393,7 +390,7 @@ namespace MOARANDROIDS
 
                             tnt.subNodes.Add(new JobGiver_GetFood());
 
-                            //Tentative de trouver emplacement ou ajouter le batterieRecharcheWork (juste aprés le ThinkNode_ConditionalColonist)
+
                             var index = 0;
                             var found = false;
                             foreach (var el in ttd.thinkRoot.subNodes)
@@ -444,11 +441,9 @@ namespace MOARANDROIDS
                     }
 
 
-                    //Dynamic SMartMedecine patching
                     if (Utils.SMARTMEDICINE_LOADED && Utils.smartMedicineAssembly != null)
                         try
                         {
-                            //Utils.harmonyInstance;
                             var original = Utils.smartMedicineAssembly.GetType("SmartMedicine.FindBestMedicine").GetMethod("Find", BindingFlags.Static | BindingFlags.Public);
                             var prefix = typeof(Utils).GetMethod("FindBestMedicinePrefix", BindingFlags.Static | BindingFlags.Public);
                             var postfix = typeof(Utils).GetMethod("FindBestMedicinePostfix", BindingFlags.Static | BindingFlags.Public);
@@ -459,11 +454,10 @@ namespace MOARANDROIDS
                             Log.Message("[ATPP] SmartMedicinePatch " + e.Message + " " + e.StackTrace);
                         }
 
-                    //Dynamic MedicinePatch patching
+
                     if (Utils.MEDICINEPATCH_LOADED && Utils.medicinePatchAssembly != null)
                         try
                         {
-                            //Utils.harmonyInstance;
                             var original = Utils.medicinePatchAssembly.GetType("ModMedicinePatch.ModMedicinePatch")
                                 .GetMethod("DynamicMedicalCareSetter", BindingFlags.Static | BindingFlags.Public);
                             var prefix = typeof(Utils).GetMethod("DynamicMedicalCareSetterPrefix", BindingFlags.Static | BindingFlags.Public);
@@ -478,7 +472,7 @@ namespace MOARANDROIDS
                             Log.Message("[ATPP] MedicinePatchPatching " + e.Message + " " + e.StackTrace);
                         }
 
-                    //PRISON LABOR Patching
+
                     if (Utils.PRISONLABOR_LOADED)
                         try
                         {
@@ -486,10 +480,10 @@ namespace MOARANDROIDS
                             MethodInfo original = null;
                             MethodInfo prefix = null;
 
-                            //Utils.harmonyInstance;
+
                             var t1 = Utils.prisonLaborAssembly.GetType("PrisonLabor.Core.PrisonLaborUtility");
 
-                            //Try for old release
+
                             if (t1 == null)
                             {
                                 Log.Message("[ATPP] PrisonLabor V1 not detected trying add compatibility with old release");
@@ -522,11 +516,10 @@ namespace MOARANDROIDS
                             Log.Message("[ATPP] PrisonLaborPatching " + e.Message + " " + e.StackTrace);
                         }
 
-                    //SoS2 patching
+
                     if (Utils.SAVEOURSHIP2_LOADED)
                         try
                         {
-                            //Utils.harmonyInstance;
                             var original = Utils.saveOurShip2Assembly.GetType("SaveOurShip2.ShipInteriorMod2").GetMethod("hasSpaceSuit", BindingFlags.Static | BindingFlags.Public);
                             var postfix = typeof(CPaths).GetMethod("SaveOurShip2_hasSpaceSuit", BindingFlags.Static | BindingFlags.Public);
                             Utils.harmonyInstance.Patch(original, null, new HarmonyMethod(postfix));
@@ -539,7 +532,6 @@ namespace MOARANDROIDS
                     if (Utils.HOSPITALITY_LOADED)
                         try
                         {
-                            //Utils.harmonyInstance;
                             var original = Utils.hospitalityAssembly.GetType("Hospitality.BedUtility").GetMethod("FindBedFor", BindingFlags.Static | BindingFlags.Public);
                             var prefix = typeof(CPaths).GetMethod("Hopistality_FindBedForPrefix", BindingFlags.Static | BindingFlags.Public);
                             var postfix = typeof(CPaths).GetMethod("Hopistality_FindBedForPostfix", BindingFlags.Static | BindingFlags.Public);
@@ -557,7 +549,6 @@ namespace MOARANDROIDS
                                 .GetMethod("CompInspectStringExtra", BindingFlags.Instance | BindingFlags.Public);
                             var postfix = typeof(CPaths).GetMethod("PowerPP_CompLocalWirelessPowerEmitter_CompInspectStringExtra", BindingFlags.Static | BindingFlags.Public);
                             Utils.harmonyInstance.Patch(original, null, new HarmonyMethod(postfix));
-                            //PowerPP_CompLocalWirelessPowerEmitter_CompInspectStringExtra
                         }
                         catch (Exception e)
                         {
@@ -575,8 +566,7 @@ namespace MOARANDROIDS
                             var prefix = typeof(CPaths).GetMethod("QEE_BuildingPawnVatGrower_TryMakeClonePrefix", BindingFlags.Static | BindingFlags.Public);
                             postfix = typeof(CPaths).GetMethod("QEE_BuildingPawnVatGrower_TryMakeClonePostfix", BindingFlags.Static | BindingFlags.Public);
                             Utils.harmonyInstance.Patch(original, new HarmonyMethod(prefix), new HarmonyMethod(postfix));
-                            //
-                            //QEE_BUildingPawnVatGrower_TryExtractProductPrefix
+
 
                             original = Utils.qeeAssembly.GetType("QEthics.Building_PawnVatGrower").GetMethod("TryExtractProduct", BindingFlags.Instance | BindingFlags.Public);
                             prefix = typeof(CPaths).GetMethod("QEE_BUildingPawnVatGrower_TryExtractProductPrefix", BindingFlags.Static | BindingFlags.Public);
@@ -608,12 +598,12 @@ namespace MOARANDROIDS
                         Log.Message("[ATPP] PawnApparelGeneratorPatching " + e.Message + " " + e.StackTrace);
                     }
 
-                    //Fluffy WorkTab patching
+
                     /*if (Utils.WORKTAB_LOADED)
                     {
                         try
                         {
-                            //Utils.harmonyInstance;
+                            
                             var original = Utils.workTabAssembly.GetType("WorkTab.Pawn_WorkSettings_CacheWorkGiversInOrder").GetMethod("Prefix", BindingFlags.Static | BindingFlags.Public);
                             var postfix = typeof(CPaths).GetMethod("WorkTab_PrefixPostFix", BindingFlags.Static | BindingFlags.Public);
                             Utils.harmonyInstance.Patch(original, null, new HarmonyMethod(postfix));
@@ -625,14 +615,12 @@ namespace MOARANDROIDS
                     }*/
 
 
-                    //Application parametre d'alimentation des plantes vivantes des androides
                     Utils.applyLivingPlantPolicy();
 
-                    //Genration WorkType custom de crafter soigner d'androides
+
                     var doctor = DefDatabase<WorkTypeDef>.GetNamed("Doctor", false);
                     Utils.WorkTypeDefSmithing = DefDatabase<WorkTypeDef>.GetNamed("Smithing", false);
 
-                    //Duplication doctor WorkGiverDef
 
                     var nbJobDrC = 0;
                     foreach (var e in doctor.workGiversByPriority)
@@ -681,7 +669,6 @@ namespace MOARANDROIDS
 
                     try
                     {
-                        //Ajout a la liste des def des defs synthetiques pour que si d'autre mods mess avec les workGiversByPriority il n'y est pas de pb
                         foreach (var el in Utils.CrafterDoctorJob) DefDatabase<WorkGiverDef>.Add(el);
                     }
                     catch (Exception ex)
@@ -689,12 +676,11 @@ namespace MOARANDROIDS
                         Log.Message("[ATPP] Duplication.DoctorWorkGiverDefs.AddWGD " + ex.Message + " " + ex.StackTrace);
                     }
 
-                    //Ajout des jobs de soins au jobs de crafting ==> ne seront realisable que grace aux patch checkant que le patient est un android et le docteur a l'option doc activée !!!
+
                     Utils.WorkTypeDefSmithing.workGiversByPriority = Utils.CrafterDoctorJob.Concat(Utils.WorkTypeDefSmithing.workGiversByPriority).ToList();
 
                     try
                     {
-                        //Ajout PawnkindDefs des androids
                         var pkd = new List<string>
                             {"AndroidT1RaiderFactionSpecific", "AndroidT2RaiderFactionSpecific", "AndroidT3RaiderFactionSpecific", "AndroidT4RaiderFactionSpecific"};
                         foreach (var p in pkd.Select(x => DefDatabase<PawnKindDef>.GetNamed(x, false))) Utils.AndroidsPKDHostile.Add(p);
@@ -731,14 +717,14 @@ namespace MOARANDROIDS
                     }
 
 
-                    //Remplissage des mentalBreakDef des virused lite
                     var selMentalBreaks = new List<string> {"Wander_Sad", "InsultingSpree", "TargetedInsultingSpree", "MurderousRage"};
 
-                    foreach (var mb in selMentalBreaks.Select(ct => DefDatabase<MentalBreakDef>.GetNamed(ct, false)).Where(mb => mb != null)) Utils.VirusedRandomMentalBreak.Add(mb);
+                    foreach (var mb in selMentalBreaks.Select(ct => DefDatabase<MentalBreakDef>.GetNamed(ct, false)).Where(mb => mb != null))
+                        Utils.VirusedRandomMentalBreak.Add(mb);
 
                     Log.Message("[ATPP] " + selMentalBreaks.Count + " MentalBreaks collected");
 
-                    //Adding bad traits
+
                     TraitDef t;
                     var selTraits = new List<string> {"Pyromaniac", "Wimp", "CreepyBreathing", "AnnoyingVoice", "Jealous", "NightOwl", "Brawler", "Nudist", "Gourmand"};
 
@@ -749,7 +735,7 @@ namespace MOARANDROIDS
                             Utils.RansomAddedBadTraits.Add(t);
                     }
 
-                    //Si presence HellUnit ajout schema creation surrogate, sinon suppression recipedefs
+
                     var recipHU = DefDatabase<RecipeDef>.GetNamed("ATPP_CreateHellDrone");
                     var tdHU = DefDatabase<ThingDef>.GetNamed("ATPP_SHUSurrogateGeneratorAI");
 
@@ -782,7 +768,7 @@ namespace MOARANDROIDS
         {
             base.LoadedGame();
 
-            //Reconnection des surrogates en caravane
+
             reconnectSurrogatesInCaravans();
             removeBlacklistedAndroidsHediffs();
             checkRemoveAndroidFactions();
@@ -829,7 +815,7 @@ namespace MOARANDROIDS
         {
             base.ExposeData();
 
-            //Initialisation des champs null le cas echeant Et si param ok suppresion des relations de bonding existantes
+
             if (Scribe.mode == LoadSaveMode.LoadingVars) reset();
 
             Scribe_Values.Look(ref SkyCloureCoreID, "ATPP_SkyCloureCoreID", 1);
@@ -863,7 +849,7 @@ namespace MOARANDROIDS
 
             var CGT = Find.TickManager.TicksGame;
 
-            //TOutes les 1 sec
+
             if (CGT % 60 == 0)
             {
                 if (!appliedSettingsOnReload)
@@ -875,7 +861,7 @@ namespace MOARANDROIDS
                 checkVirusedThings();
             }
 
-            //Toutes les 6 sec check etat réseau
+
             if (CGT % 360 != 0) return;
 
             if (!Settings.disableLowNetworkMalus)
@@ -883,7 +869,7 @@ namespace MOARANDROIDS
 
             checkSkyMindAutoReconnect();
 
-            //Check solarFlare dans les caravans
+
             checkSolarFlarStuffInCaravans();
 
             if (Utils.POWERPP_LOADED)
@@ -913,7 +899,7 @@ namespace MOARANDROIDS
 
                     var nonFunctionalLWPN = el.Key.Destroyed || el.Key.IsBrokenDown() || !el.Key.TryGetComp<CompPowerTrader>().PowerOn;
 
-                    //Déduction qt consommé par android
+
                     var qtConsummed = Utils.getConsumedPowerByAndroid(android.def.defName);
                     if (nonFunctionalLWPN || availablePower - qtConsummed < 0 ||
                         el.Key.def.defName != "ARKPPP_LocalWirelessPowerEmitter" && nbConn >= Settings.maxAndroidByPortableLWPN)
@@ -926,7 +912,7 @@ namespace MOARANDROIDS
                     else
                     {
                         availablePower -= qtConsummed;
-                        //Incrémentation de la batterie le cas echeant (et animation de chargement de batterie)
+
                         android.needs.food.CurLevelPercentage += Settings.percentageOfBatteryChargedEach6Sec;
                         if (android.needs.food.CurLevelPercentage <= 0.95f)
                             Utils.throwChargingMote(android);
@@ -964,7 +950,7 @@ namespace MOARANDROIDS
             }
         }
 
-        //Check relatifs aux things virusés
+
         public void checkVirusedThings()
         {
             var GT = Find.TickManager.TicksGame;
@@ -979,9 +965,7 @@ namespace MOARANDROIDS
                 if (csm.hacked == 3 && GT >= csm.hackEndGT)
                     csm.tempHackingEnding();
 
-                //reconnectDirectExternalController = true;
 
-                //Explosion androide infecté par un virus explosif
                 if (csm.infectedExplodeGT != -1 && GT >= csm.infectedExplodeGT)
                 {
                     csm.infectedExplodeGT = -1;
@@ -1001,7 +985,7 @@ namespace MOARANDROIDS
                     }
                 }
 
-                //Fin de la contamination vitale du dispositif
+
                 if (csm.infectedEndGT == -1 || csm.infectedEndGT > GT) continue;
 
                 csm.infectedEndGT = -1;
@@ -1015,7 +999,7 @@ namespace MOARANDROIDS
             if (map == null)
                 return false;
 
-            //Si ni relay no antennes sur la map alors androids sur cette derniere sont impactés
+
             if (listerSkyMindServers.ContainsKey(map) && listerSkyMindServers[map].Count > 0)
                 ok = true;
             else if (listerSkyMindWANServers.ContainsKey(map) && listerSkyMindWANServers[map].Count > 0)
@@ -1029,7 +1013,6 @@ namespace MOARANDROIDS
 
         public void checkSkyMindSignalPerformance()
         {
-            //Maps
             foreach (var entry in listerSurrogateAndroids) checkSkyMindSignalPerformanceEntry(entry);
         }
 
@@ -1045,7 +1028,7 @@ namespace MOARANDROIDS
 
             var ok = isThereSkyMindAntennaOrRelayInMap(map);
 
-            //Il y a une antenne permettant de relayer le skinMind sur la map en cours
+
             if (forceRemoveHediff || ok && listerSurrogateAndroids.ContainsKey(MUID) && listerSurrogateAndroids[MUID].Count > 0)
                 foreach (var s in listerSurrogateAndroids[MUID])
                 {
@@ -1057,16 +1040,23 @@ namespace MOARANDROIDS
                         s.health.RemoveHediff(he);
                 }
             else
-                //Pas d'antenne permetant de relayer le signal on va impacter els surrogates
-                foreach (var s in from s in listerSurrogateAndroids[MUID] where !s.Dead && s.health.hediffSet.GetFirstHediffOfDef(Utils.hediffHaveRXChip) == null let he = s.health.hediffSet.GetFirstHediffOfDef(Utils.hediffLowNetworkSignal) where he == null select s)
-                {
+
+                foreach (var s in from s in listerSurrogateAndroids[MUID]
+                    where !s.Dead && s.health.hediffSet.GetFirstHediffOfDef(Utils.hediffHaveRXChip) == null
+                    let he = s.health.hediffSet.GetFirstHediffOfDef(Utils.hediffLowNetworkSignal)
+                    where he == null
+                    select s)
                     s.health.AddHediff(Utils.hediffLowNetworkSignal);
-                }
         }
 
         public void checkSkyMindAutoReconnect()
         {
-            foreach (var el in from el in listerSkyMindable let csm = el.TryGetComp<CompSkyMind>() where csm != null where csm.autoconn && !csm.connected where csm.canBeConnectedToSkyMind() select el) Utils.GCATPP.connectUser(el);
+            foreach (var el in from el in listerSkyMindable
+                let csm = el.TryGetComp<CompSkyMind>()
+                where csm != null
+                where csm.autoconn && !csm.connected
+                where csm.canBeConnectedToSkyMind()
+                select el) Utils.GCATPP.connectUser(el);
         }
 
 
@@ -1132,7 +1122,7 @@ namespace MOARANDROIDS
                 toDel.Clear();
             }
 
-            //Si plus de support reseau skymind et core alors play alerte vocale
+
             if (prevNbSlot != 0 && nbSlot == 0)
                 Utils.playVocal("soundDefSkyCloudSkyMindNetworkOffline");
         }
@@ -1269,7 +1259,6 @@ namespace MOARANDROIDS
 
             foreach (var t in th)
             {
-                //Log.Message("2) " + t.LabelShortCap);
                 Pawn cp = null;
                 if (t is Pawn pawn)
                     cp = pawn;
@@ -1283,7 +1272,7 @@ namespace MOARANDROIDS
             {
                 if (connectedThing.Contains(colonist)) return true;
 
-                //Si un mind EST le skyCLoud hote est allumé ET booté alors oui considéré comme connected
+
                 if (colonist is Pawn)
                 {
                     var cso = colonist.TryGetComp<CompSurrogateOwner>();
@@ -1300,14 +1289,13 @@ namespace MOARANDROIDS
 
         public bool connectUser(Thing thing)
         {
-            //Si déjà connecté return TRUE
             if (connectedThing.Contains(thing))
             {
-                //Si surrogate on va en plus declencher un changement de Map
                 if (!(thing is Pawn pawn)) return true;
                 if (!pawn.IsSurrogateAndroid()) return true;
 
-                foreach (var MUID in from entry in listerSurrogateAndroids.ToList() let MUID = entry.Key where entry.Value.Contains(pawn) select MUID) pushSurrogateAndroidNotifyMapChanged(pawn, MUID);
+                foreach (var MUID in from entry in listerSurrogateAndroids.ToList() let MUID = entry.Key where entry.Value.Contains(pawn) select MUID)
+                    pushSurrogateAndroidNotifyMapChanged(pawn, MUID);
 
                 return true;
             }
@@ -1323,7 +1311,7 @@ namespace MOARANDROIDS
                     case Pawn pawn:
                     {
                         var cas = pawn.TryGetComp<CompAndroidState>();
-                        //Si surrogate ajout a la liste des surrogates (ET connecté au skyMind)
+
                         if (cas != null && cas.isSurrogate)
                             pushSurrogateAndroid(pawn);
                         else
@@ -1343,7 +1331,6 @@ namespace MOARANDROIDS
                 }
             }
 
-            //Log.Message("ICI BROADCAST => "+pawn.def.defName);
 
             return true;
         }
@@ -1359,7 +1346,7 @@ namespace MOARANDROIDS
                 case Pawn pawn:
                 {
                     var cas = pawn.TryGetComp<CompAndroidState>();
-                    //Si surrogate retrait de la liste des surrogates (ET connecté au skyMind)
+
                     if (cas != null && cas.isSurrogate)
                     {
                         var MUID = "caravan";
@@ -1399,10 +1386,10 @@ namespace MOARANDROIDS
             if (!listerSurrogateAndroids[MUID].Contains(sx))
                 listerSurrogateAndroids[MUID].Add(sx);
 
-            //Check rapide si hediff LowSignalSkyMin dpresent et doit etre enlevé pour eviter d'attendre la mise a jour prochaine toutes les X secs
+
             /*if (!isThereSkyMindAntennaOrRelayInMap(sx.Map))
             {
-                //Pas de Connection ajout hediff lowSignalSkyMind
+                
                 Hediff he = sx.health.hediffSet.GetFirstHediffOfDef(Utils.hediffLowNetworkSignal);
                 if (he == null)
                     sx.health.AddHediff(Utils.hediffLowNetworkSignal);
@@ -1451,7 +1438,7 @@ namespace MOARANDROIDS
             var ret = new List<Pawn>();
             var tmp = ret.ToList();
 
-            //Linearisation des surrogates a travers les maps
+
             ret = listerSurrogateAndroids.Aggregate(ret, (current, e) => current.Concat(e.Value).ToList());
 
             if (withoutVirus)
@@ -1577,8 +1564,16 @@ namespace MOARANDROIDS
          */
         public Building getFreeReloadStation(Map map, Pawn android)
         {
-            //Log.Message("Nb RS en stock " + listerReloadStation.Count);
-            return listerReloadStation.ContainsKey(map) ? (from el in listerReloadStation[map].OrderBy(b => b.Position.DistanceTo(android.Position)) where !el.Destroyed && !el.IsBrokenDown() && el.TryGetComp<CompPowerTrader>().PowerOn && el.Position.InAllowedArea(android) let rs = el.TryGetComp<CompReloadStation>() where rs != null where rs.getNbAndroidReloading(true) < 8 let freePlace = rs.getFreeReloadPlacePos(android) where freePlace != IntVec3.Invalid && android.CanReach(freePlace, PathEndMode.OnCell, Danger.Deadly) select el).FirstOrDefault() : null;
+            return listerReloadStation.ContainsKey(map)
+                ? (from el in listerReloadStation[map].OrderBy(b => b.Position.DistanceTo(android.Position))
+                    where !el.Destroyed && !el.IsBrokenDown() && el.TryGetComp<CompPowerTrader>().PowerOn && el.Position.InAllowedArea(android)
+                    let rs = el.TryGetComp<CompReloadStation>()
+                    where rs != null
+                    where rs.getNbAndroidReloading(true) < 8
+                    let freePlace = rs.getFreeReloadPlacePos(android)
+                    where freePlace != IntVec3.Invalid && android.CanReach(freePlace, PathEndMode.OnCell, Danger.Deadly)
+                    select el).FirstOrDefault()
+                : null;
         }
 
         public int getNextSkyCloudID()
@@ -1660,7 +1655,9 @@ namespace MOARANDROIDS
          */
         public List<Thing> getHeatSensitiveDevicesByHotLevel(Map map, int hotLevel)
         {
-            return !listerHeatSensitiveDevices.ContainsKey(map) ? null : listerHeatSensitiveDevices[map].Where(device => device.TryGetComp<CompHeatSensitive>().hotLevel == hotLevel).Cast<Thing>().ToList();
+            return !listerHeatSensitiveDevices.ContainsKey(map)
+                ? null
+                : listerHeatSensitiveDevices[map].Where(device => device.TryGetComp<CompHeatSensitive>().hotLevel == hotLevel).Cast<Thing>().ToList();
         }
 
         private void checkRemoveAndroidFactions()
@@ -1713,12 +1710,12 @@ namespace MOARANDROIDS
                             if (method != null)
                             {
                                 androidFactionCoalition.def.hidden = false;
-                                //Force faction discovery a recreer faction le cas echeant (faction detruite)
+
                                 if (androidFactionCoalition.defeated)
                                 {
                                     androidFactionCoalition.defeated = false;
 
-                                    //Creation des bases par faction discovery
+
                                     method.Invoke(null, new object[] {androidFactionCoalition});
                                 }
                             }
@@ -1781,12 +1778,12 @@ namespace MOARANDROIDS
                             if (method != null)
                             {
                                 androidFactionInsurrection.def.hidden = false;
-                                //Force faction discovery a recreer faction le cas echeant (faction detruite)
+
                                 if (androidFactionInsurrection.defeated)
                                 {
                                     androidFactionInsurrection.defeated = false;
 
-                                    //Creation des bases par faction discovery
+
                                     method.Invoke(null, new object[] {androidFactionInsurrection});
                                 }
                             }
@@ -2055,15 +2052,15 @@ namespace MOARANDROIDS
             if (!listerLWPNAndroid.ContainsKey(LWPN))
                 listerLWPNAndroid[LWPN] = new List<Pawn>();
 
-            //Check si suffisament d'energie pour accueillir l'android
+
             var qtConsumed = Utils.getConsumedPowerByAndroid(android.def.defName);
             if (LWPN.Destroyed ||
-                (LWPN.def.defName != "ARKPPP_LocalWirelessPowerEmitter" &&
-                 (LWPN.def.defName != "ARKPPP_LocalWirelessPortablePowerEmitter" || listerLWPNAndroid[LWPN].Count() >= Settings.maxAndroidByPortableLWPN)) ||
+                LWPN.def.defName != "ARKPPP_LocalWirelessPowerEmitter" &&
+                (LWPN.def.defName != "ARKPPP_LocalWirelessPortablePowerEmitter" || listerLWPNAndroid[LWPN].Count() >= Settings.maxAndroidByPortableLWPN) ||
                 !LWPN.TryGetComp<CompPowerTrader>().PowerOn || !(Utils.getCurrentAvailableEnergy(LWPN.PowerComp.PowerNet) - qtConsumed > 0)) return false;
 
             listerLWPNAndroid[LWPN].Add(android);
-            //incrémentation qt de courant consommé pat LWPN
+
             LWPN.TryGetComp<CompPowerTrader>().PowerOutput -= qtConsumed;
             return true;
         }
@@ -2074,7 +2071,7 @@ namespace MOARANDROIDS
             if (!listerLWPNAndroid.ContainsKey(LWPN))
                 return;
 
-            //incrémentation qt de courant consommé pat LWPN
+
             var qtConsumed = Utils.getConsumedPowerByAndroid(android.def.defName);
             LWPN.TryGetComp<CompPowerTrader>().PowerOutput += qtConsumed;
 

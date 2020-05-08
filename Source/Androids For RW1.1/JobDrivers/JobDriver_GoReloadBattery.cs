@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using RimWorld;
 using Verse;
 using Verse.AI;
 
-// TODO: Look into performance issues
 namespace MOARANDROIDS
 {
     public class JobDriver_GoReloadBattery : JobDriver
@@ -13,19 +11,17 @@ namespace MOARANDROIDS
         {
             if (pawn.Downed)
                 return false;
-            
+
             pawn.Map.pawnDestinationReservationManager.Reserve(pawn, job, job.targetA.Cell);
             return true;
         }
 
-        [DebuggerHidden]
         protected override IEnumerable<Toil> MakeNewToils()
         {
-            //Check si TargetIndex.A est un Bed si oui alors juste un Toil_Bed.GotoBed suivant d'un LayDownCustomFood
             if (TargetThingA is Building_Bed)
             {
                 yield return Toils_Bed.GotoBed(TargetIndex.A);
-                //yield return Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.OnCell);
+
                 yield return Toils_LayDownPower.LayDown(TargetIndex.A, true, false, false);
             }
             else

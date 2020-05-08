@@ -28,7 +28,7 @@ namespace MOARANDROIDS
                 else
                 {
                     var flag3 = other.IsAndroid();
-                    //SI androide OU un cyborg
+
                     if (flag3 || other.health.hediffSet.CountAddedAndImplantedParts() >= 5)
                     {
                         result = false;

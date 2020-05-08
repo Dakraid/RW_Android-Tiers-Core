@@ -20,7 +20,7 @@ namespace MOARANDROIDS
             }
         }
 
-        //Eviter que l'android se décharge pendant qu'il se recharge
+
         [HarmonyPatch(typeof(Need_Food), "get_FoodFallPerTick")]
         public class FoodFallPerTick_Patch
         {

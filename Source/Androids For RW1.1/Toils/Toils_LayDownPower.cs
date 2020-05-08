@@ -76,7 +76,7 @@ namespace MOARANDROIDS
                     return;
                 }
 
-                //Fin recharche ou pod non alimenté ou non operationel
+
                 if (building_Bed != null && (actor.needs.food.CurLevelPercentage >= 1.0f
                                              || building_Bed.Destroyed || building_Bed.IsBrokenDown()
                                              || !building_Bed.TryGetComp<CompPowerTrader>().PowerOn))

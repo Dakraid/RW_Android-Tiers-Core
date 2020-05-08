@@ -16,7 +16,11 @@ namespace MOARANDROIDS
         {
             private static void addInactiveSurrogates(ref List<Pawn> lst, Map map, bool M7)
             {
-                lst.AddRange(from p in map.mapPawns.AllPawns where p.Faction == Faction.OfPlayer let cas = p.TryGetComp<CompAndroidState>() where cas != null && cas.isSurrogate && cas.surrogateController == null && !cas.isOrganic && (!M7 || p.def.defName == Utils.M7) select p);
+                lst.AddRange(from p in map.mapPawns.AllPawns
+                    where p.Faction == Faction.OfPlayer
+                    let cas = p.TryGetComp<CompAndroidState>()
+                    where cas != null && cas.isSurrogate && cas.surrogateController == null && !cas.isOrganic && (!M7 || p.def.defName == Utils.M7)
+                    select p);
             }
 
             [HarmonyPostfix]
@@ -34,7 +38,7 @@ namespace MOARANDROIDS
                         {
                             var lst = pawns.Where(el => el.def.defName != Utils.M7 && el.IsAndroidTier()).ToList();
 
-                            //Si option masquant les surrogates activé alors ajout de ces derniers à la fin
+
                             if (Settings.hideInactiveSurrogates)
                                 addInactiveSurrogates(ref lst, bed.Map, false);
 
@@ -44,7 +48,7 @@ namespace MOARANDROIDS
                         case "ATPP_AndroidPodMech":
                         {
                             var lst = pawns.Where(el => el.def.defName == Utils.M7).ToList();
-                            //Si option masquant les surrogates activé alors ajout de ces derniers à la fin
+
                             if (Settings.hideInactiveSurrogates)
                                 addInactiveSurrogates(ref lst, bed.Map, false);
 
@@ -91,7 +95,6 @@ namespace MOARANDROIDS
                 else
                     __result = __result.AddItem(new FloatMenuOption("ATPP_ForceReload".Translate(), delegate
                     {
-                        //Affectation du pod a myPawn pour eviter le rehet du job
                         myPawn.ownership.ClaimBedIfNonMedical(__instance);
 
                         var job = new Job(DefDatabase<JobDef>.GetNamed("ATPP_GoReloadBattery"), new LocalTargetInfo(__instance));

@@ -4,7 +4,6 @@ using Verse.AI;
 
 namespace MOARANDROIDS
 {
-    // Token: 0x0200002A RID: 42
     public class JobGiver_TargetEnemiesSwarm : ThinkNode_JobGiver
     {
         private const float WaitChance = 0f;
@@ -17,7 +16,7 @@ namespace MOARANDROIDS
 
         private const int WanderOutsideDoorRegions = 9;
 
-        // Token: 0x06000082 RID: 130 RVA: 0x00004484 File Offset: 0x00002684
+
         protected override Job TryGiveJob(Pawn pawn)
         {
             var flag = pawn.TryGetAttackVerb(null) == null;

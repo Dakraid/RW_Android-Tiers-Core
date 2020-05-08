@@ -44,7 +44,6 @@ namespace MOARANDROIDS
 
             failReason = "ATPP_CannotBeUsedBecauseNoOldAgeIssues".Translate();
             return false;
-
         }
     }
 }

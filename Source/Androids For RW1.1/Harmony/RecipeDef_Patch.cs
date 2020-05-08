@@ -24,7 +24,7 @@ namespace MOARANDROIDS
                         var cas = Utils.curSelPatientDrawMedOperationsTab.TryGetComp<CompAndroidState>();
 
                         if (cas == null) return;
-                        //Si androide surrogate on va virer la possibilité d'ajouter des VX chips
+
                         if (cas.isSurrogate)
                         {
                             if (Utils.ExceptionVXNeuralChipSurgery.Contains(__instance.defName))
@@ -32,7 +32,6 @@ namespace MOARANDROIDS
                         }
                         else
                         {
-                            //Sinon si pas surrogate et que le recipe en question est à destination des surrogates on le squeeze
                             if (Utils.ExceptionArtificialBrainsSurgery.Contains(__instance.defName))
                                 __result = false;
                         }

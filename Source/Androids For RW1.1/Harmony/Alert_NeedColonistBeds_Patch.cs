@@ -21,19 +21,17 @@ namespace MOARANDROIDS
                     var num = 0;
                     var num2 = 0;
                     var allBuildingsColonist = map.listerBuildings.allBuildingsColonist;
-                    foreach (var building_Bed in allBuildingsColonist.Select(building => building as Building_Bed).Where(building_Bed => building_Bed != null && !building_Bed.ForPrisoners && !building_Bed.Medical && building_Bed.def.building.bed_humanlike))
-                    {
+                    foreach (var building_Bed in allBuildingsColonist.Select(building => building as Building_Bed).Where(building_Bed =>
+                        building_Bed != null && !building_Bed.ForPrisoners && !building_Bed.Medical && building_Bed.def.building.bed_humanlike))
                         if (building_Bed.SleepingSlotsCount == 1)
                             num++;
                         else
                             num2++;
-                    }
 
                     var num3 = 0;
                     var num4 = 0;
                     foreach (var current in map.mapPawns.FreeColonistsSpawned)
                     {
-                        //On ignore les androis dans la comptabilisation
                         if (Utils.ExceptionAndroidList.Contains(current.def.defName))
                             continue;
 
@@ -46,7 +44,6 @@ namespace MOARANDROIDS
 
                     if (num4 % 2 != 0)
                     {
-                        //Log.ErrorOnce("partneredCols % 2 != 0", 743211, false);
                     }
 
                     for (var j = 0; j < num4 / 2; j++)

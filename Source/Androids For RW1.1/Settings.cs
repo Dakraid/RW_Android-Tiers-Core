@@ -387,7 +387,6 @@ namespace MOARANDROIDS
             skillNbpGeneratedAdvanced = (int) list.Slider(skillNbpGeneratedAdvanced, 1, 100);
 
 
-            //ATPP_SettingsRiskGetLittleVirusEvenWithSecurityServers*
             list.CheckboxLabeled("ATPP_SettingsDisableSolarFlareImpactOnAndroids".Translate(), ref disableSolarFlareEffect);
             list.CheckboxLabeled("ATPP_SettingsFoodGenerateLessEnergy".Translate(), ref androidNeedToEatMore);
             GUI.color = Color.yellow;
@@ -495,7 +494,7 @@ namespace MOARANDROIDS
                 list.Label("T1 :");
                 GUI.color = Color.white;
 
-                //T1 default skills 
+
                 list.Label("Shooting".Translate() + " " + defaultSkillT1Shoot + "/20");
                 defaultSkillT1Shoot = (int) list.Slider(defaultSkillT1Shoot, 0, 20);
 
@@ -614,7 +613,7 @@ namespace MOARANDROIDS
             list.Label("ATPP_SettingsMindReplicationDuration".Translate(mindReplicationHours));
             mindReplicationHours = (int) list.Slider(mindReplicationHours, 1, 72);
 
-            //ATPP_SettingsSkyCloudBuffPerAssistingMind
+
             list.Label("ATPP_SettingsSkyCloudBuffPerAssistingMind".Translate(nbMoodPerAssistingMinds));
             nbMoodPerAssistingMinds = (int) list.Slider(nbMoodPerAssistingMinds, 1, 20);
 
@@ -667,7 +666,6 @@ namespace MOARANDROIDS
                 list.Label("ATPP_SettingsCostHackingPoints".Translate("ATPP_SettingsCostHack".Translate()));
                 list.TextFieldNumeric(ref costPlayerHack, ref buffCostPlayerHack, 1, 999999);
 
-                //costPlayerVirus
 
                 list.Label("ATPP_SettingsTempHackDuration".Translate(nbSecDurationTempHack * 100));
                 nbSecDurationTempHack = (int) list.Slider(nbSecDurationTempHack, 1, 600);
@@ -720,7 +718,7 @@ namespace MOARANDROIDS
 
                 list.CheckboxLabeled("ATPP_SettingsAndroidCanUseOrganicMedicine".Translate(), ref androidsCanUseOrganicMedicine);
 
-                //ATPP_SettingsDelayExplosiveVirus
+
                 list.Label("ATPP_SettingsDelayExplosiveVirus".Translate(nbSecExplosiveVirusTakeToExplode));
                 nbSecExplosiveVirusTakeToExplode = (int) list.Slider(nbSecExplosiveVirusTakeToExplode, 1, 240);
 
@@ -785,7 +783,6 @@ namespace MOARANDROIDS
 
             list.End();
             Widgets.EndScrollView();
-            //settings.Write();
         }
 
         public override void ExposeData()

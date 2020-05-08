@@ -19,7 +19,7 @@ namespace MOARANDROIDS
             {
                 Utils.lastButcheredPawnIsAndroid = false;
 
-                //Si Surrogate T4 butcherisé alors on supprime le IA-Core des produits 
+
                 if (__instance.InnerPawn == null || __instance.InnerPawn.def.defName != Utils.T4 || __instance.InnerPawn.TryGetComp<CompAndroidState>() == null ||
                     __result == null) return;
 

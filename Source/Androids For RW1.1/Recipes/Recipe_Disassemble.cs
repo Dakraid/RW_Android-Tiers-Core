@@ -5,10 +5,10 @@ using Verse;
 
 namespace Androids
 {
-	// Token: 0x02000039 RID: 57
+	
 	public class Recipe_Disassemble : RecipeWorker
 	{
-		// Token: 0x060000EF RID: 239 RVA: 0x00009868 File Offset: 0x00007A68
+		
 		public override IEnumerable<BodyPartRecord> GetPartsToApplyOn(Pawn pawn, RecipeDef recipe)
 		{
 			bool flag = pawn.def.HasModExtension<MechanicalPawnProperties>();
@@ -19,7 +19,7 @@ namespace Androids
 			yield break;
 		}
 
-		// Token: 0x060000F0 RID: 240 RVA: 0x00009888 File Offset: 0x00007A88
+		
 		public override void ApplyOnPawn(Pawn pawn, BodyPartRecord part, Pawn billDoer, List<Thing> ingredients, Bill bill)
 		{
 			Need_Energy need_Energy = pawn.needs.TryGetNeed<Need_Energy>();

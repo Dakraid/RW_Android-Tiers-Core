@@ -26,9 +26,6 @@ namespace MOARANDROIDS
             var request = new PawnGenerationRequest(pawnKindDef, Faction.OfPlayer);
             var pawn = PawnGenerator.GeneratePawn(request);
 
-            //TODO: Implement, make wor k, test.
-            //Pawn originalCloned = parent.TryGetComp<ThingyHolderThatsHoldingAClonedPawn>();
-            //pawn.story = originalCloned.story;
 
             GenSpawn.Spawn(pawn, parent.Position, parent.Map);
         }

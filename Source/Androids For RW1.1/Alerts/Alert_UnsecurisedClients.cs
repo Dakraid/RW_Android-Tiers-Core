@@ -21,7 +21,7 @@ namespace MOARANDROIDS
             var nbUnsecurised = nbClient - nbSecurisedSlot;
 
             if (nbUnsecurised <= 0) return false;
-            
+
             defaultLabel = "ATPP_AlertUnsecurisedClients".Translate(nbUnsecurised);
             defaultExplanation = "ATPP_AlertUnsecurisedClientsDesc".Translate(nbUnsecurised);
             return true;

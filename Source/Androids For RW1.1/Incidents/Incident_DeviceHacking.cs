@@ -27,15 +27,15 @@ namespace MOARANDROIDS
             var nbUnsecurisedClients = nbConnectedClients - Utils.GCATPP.getNbSlotSecurisedAvailable();
 
             LetterDef letter;
-            //Selection type virus 
+
             var attackType = 1;
             var fee = 0;
 
-            //Check si sur lensemble des clients connecté il y a quand meme des devices
+
             if (nbDevices <= 0)
                 return false;
 
-            //Attaque virale faible
+
             if (nbUnsecurisedClients <= 0)
             {
                 if (!Rand.Chance(Settings.riskSecurisedSecuritySystemGetVirus))
@@ -48,11 +48,12 @@ namespace MOARANDROIDS
                 nb = nb != 0 ? Rand.Range(1, nb + 1) : 1;
 
                 letter = LetterDefOf.ThreatSmall;
-                //Obtention des victimes
+
                 victims = Utils.GCATPP.getRandomDevices(nb);
                 if (victims.Count == 0) return false;
 
-                foreach (CompSkyMind csm in from v in victims let csm = v.TryGetComp<CompSkyMind>() let cas = v.TryGetComp<CompAndroidState>() where cas != null select csm) csm.Infected = 4;
+                foreach (var csm in from v in victims let csm = v.TryGetComp<CompSkyMind>() let cas = v.TryGetComp<CompAndroidState>() where cas != null select csm)
+                    csm.Infected = 4;
 
 
                 title = "ATPP_IncidentDeviceHackingVirus".Translate();
@@ -82,8 +83,7 @@ namespace MOARANDROIDS
 
                 var nb = 0;
 
-                //Attaque virale douce
-                //Obtention des victimes (qui peut allez de 1 victime a N/2 victimes
+
                 nb = nbDevices / 2;
                 nb = nb != 0 ? Rand.Range(1, nb + 1) : 1;
 
@@ -118,7 +118,7 @@ namespace MOARANDROIDS
                     Utils.GCATPP.disconnectUser(v);
                     csm.Infected = attackType;
 
-                    //Virus cryptolocker
+
                     if (attackType != 3) continue;
 
                     cryptolockedThings.Add(v.GetUniqueLoadID());
@@ -130,7 +130,7 @@ namespace MOARANDROIDS
 
 
             if (attackType != 3) return true;
-            //Déduction faction ennemis au hasard
+
             var faction = Find.FactionManager.RandomEnemyFaction();
 
             var ransom = (ChoiceLetter_RansomDemand) LetterMaker.MakeLetter(DefDatabase<LetterDef>.GetNamed("ATPP_CLPayCryptoRansom"));

@@ -37,12 +37,10 @@ namespace MOARANDROIDS
             [HarmonyPostfix]
             public static void Postfix(MedicalCareCategory cat, ThingDef meds, ref bool __result)
             {
-                //Log.Message("HERE1");
                 if (Utils.FindBestMedicinePatient == null || !Utils.SMARTMEDICINE_LOADED)
                     return;
 
-                //Log.Message("HERE2 "+ Utils.FindBestMedicinePatient.LabelShortCap);
-                //Si androide slection que des nanokits
+
                 if (Utils.FindBestMedicinePatient.IsAndroidTier() || Utils.FindBestMedicinePatient.IsCyberAnimal())
                 {
                     if (!Utils.ExceptionNanoKits.Contains(meds.defName))
@@ -50,13 +48,9 @@ namespace MOARANDROIDS
                 }
                 else
                 {
-                    //Log.Message("BLOP");
-                    //Humain pas de nanokits
                     if (Utils.ExceptionNanoKits.Contains(meds.defName))
                         __result = false;
                 }
-
-                //Utils.FindBestMedicinePatient = null;
             }
         }
 

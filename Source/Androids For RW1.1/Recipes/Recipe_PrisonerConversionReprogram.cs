@@ -5,12 +5,11 @@ using Verse;
 
 namespace MOARANDROIDS
 {
-    // Token: 0x02000009 RID: 9
     public class Recipe_AndroidRewireSurgery : Recipe_SurgeryAndroids
     {
         private int upper;
 
-        // Token: 0x0600000C RID: 12 RVA: 0x000021D8 File Offset: 0x000003D8
+
         public override void ApplyOnPawn(Pawn pawn, BodyPartRecord part, Pawn billDoer, List<Thing> ingredients, Bill bill)
         {
             var flag = billDoer != null;
@@ -34,7 +33,7 @@ namespace MOARANDROIDS
             RandomCorruption(pawn);
         }
 
-        // Token: 0x0600000E RID: 14 RVA: 0x0000229C File Offset: 0x0000049C
+
         private void FactionChange(Pawn pawn)
         {
             var flag = pawn.Faction != Faction.OfPlayer;

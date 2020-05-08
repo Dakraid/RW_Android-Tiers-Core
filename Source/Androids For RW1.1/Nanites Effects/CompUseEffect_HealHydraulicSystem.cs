@@ -18,14 +18,10 @@ namespace MOARANDROIDS
             }
 
             if (nb == 0)
-            {
                 Messages.Message(chance ? "ATPP_NoBrokenStuffFound".Translate(user.LabelShort) : "ATPP_BrokenStuffRepairFailed".Translate(user.LabelShort), user,
                     MessageTypeDefOf.NegativeEvent);
-            }
             else
-            {
                 Messages.Message("ATPP_BrokenHydraulicSystemRepaired".Translate(user.LabelShort), user, MessageTypeDefOf.PositiveEvent);
-            }
         }
 
         public override void DoEffect(Pawn user)

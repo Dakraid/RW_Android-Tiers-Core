@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using RimWorld;
 using Verse;
@@ -9,8 +8,8 @@ namespace MOARANDROIDS
 {
     public class Designator_AndroidToControl : Designator
     {
-        private Map cmap;
         private readonly Pawn controller;
+        private Map cmap;
         public bool fromSkyCloud;
 
         private int kindOfTarget;
@@ -72,12 +71,12 @@ namespace MOARANDROIDS
                 var csm = cp.TryGetComp<CompSkyMind>();
                 var cas = cp.TryGetComp<CompAndroidState>();
 
-                //Si pas clone ou clone deja utilisé on degage
+
                 if (cas == null || !cas.isSurrogate || cas.surrogateController != null || csm.Infected != -1)
                     return false;
 
                 if (!Utils.GCATPP.isConnectedToSkyMind(cp))
-                    //Tentative connection au skymind 
+
                     if (!Utils.GCATPP.connectUser(cp))
                         return false;
 
@@ -86,21 +85,20 @@ namespace MOARANDROIDS
                 return true;
             }
 
-            if (!fromSkyCloud || (t.def.thingClass != typeof(Building_Turret) && !t.def.thingClass.IsSubclassOf(typeof(Building_Turret)))) return false;
+            if (!fromSkyCloud || t.def.thingClass != typeof(Building_Turret) && !t.def.thingClass.IsSubclassOf(typeof(Building_Turret))) return false;
 
             var crt = t.TryGetComp<CompRemotelyControlledTurret>();
 
             if (crt == null || crt.controller != null || t.IsBrokenDown() || !t.TryGetComp<CompPowerTrader>().PowerOn) return false;
 
             if (!Utils.GCATPP.isConnectedToSkyMind(t))
-                //Tentative connection au skymind 
+
                 if (!Utils.GCATPP.connectUser(t))
                     return false;
 
             target = t;
             kindOfTarget = 2;
             return true;
-
         }
 
         public override void DesignateMultiCell(IEnumerable<IntVec3> cells)
@@ -121,7 +119,6 @@ namespace MOARANDROIDS
 
             var cso = controller.TryGetComp<CompSurrogateOwner>();
             if (cso != null)
-            {
                 switch (kindOfTarget)
                 {
                     case 1:
@@ -135,14 +132,12 @@ namespace MOARANDROIDS
                         break;
                     }
                 }
-            }
 
             if (!controller.VX3ChipPresent())
                 Find.DesignatorManager.Deselect();
         }
 
 
-        [DebuggerHidden]
         private bool SXInCell(IntVec3 c)
         {
             if (c.Fogged(Map)) return false;
@@ -156,7 +151,8 @@ namespace MOARANDROIDS
             if (c.Fogged(Map)) return false;
 
             var thingList = c.GetThingList(Map);
-            return Enumerable.Any(thingList, t => t != null && (t.def.thingClass == typeof(Building_Turret) || t.def.thingClass.IsSubclassOf(typeof(Building_Turret))) && CanDesignateThing(t).Accepted);
+            return Enumerable.Any(thingList,
+                t => t != null && (t.def.thingClass == typeof(Building_Turret) || t.def.thingClass.IsSubclassOf(typeof(Building_Turret))) && CanDesignateThing(t).Accepted);
         }
     }
 }

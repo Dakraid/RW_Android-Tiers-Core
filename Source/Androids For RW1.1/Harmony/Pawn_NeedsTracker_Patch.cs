@@ -20,7 +20,7 @@ namespace MOARANDROIDS
                 {
                     var isAndroid = Utils.ExceptionAndroidList.Contains(___pawn.def.defName);
 
-                    //SI pas un androide on jerte
+
                     if (!isAndroid)
                         return;
 
@@ -33,7 +33,7 @@ namespace MOARANDROIDS
                         || nd.defName == "Comfort" && (!advancedAndroids || advancedAndroids && Settings.removeComfortNeedForT3T4))
                         __result = false;
 
-                    //Activation besoin de bouffe pour les M7 surrogates (SM7)
+
                     if (___pawn.def.defName == "M7Mech" && ___pawn.IsSurrogateAndroid() && nd.defName == "Food")
                         __result = true;
                 }

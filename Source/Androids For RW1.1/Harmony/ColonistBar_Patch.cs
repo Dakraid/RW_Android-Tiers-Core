@@ -24,7 +24,7 @@ namespace MOARANDROIDS
                         return;
 
                     List<ColonistBar.Entry> toDel = null;
-                    //Suppresssion de la barre du haut des surrogates non actifs
+
                     foreach (var e in ___cachedEntries.Where(e => e.pawn.IsSurrogateAndroid(false, true)))
                     {
                         if (toDel == null)

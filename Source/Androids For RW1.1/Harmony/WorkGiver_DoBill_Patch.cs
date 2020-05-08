@@ -6,7 +6,6 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 
-// TODO: Look into performance issues
 namespace MOARANDROIDS
 {
     internal class WorkGiver_DoBill_Patch
@@ -21,11 +20,11 @@ namespace MOARANDROIDS
                 try
                 {
                     if (!(billGiver is Pawn patient)) return;
-                    //On retire les medecine autre que nanokits
+
                     if (patient.IsAndroidTier() || patient.IsCyberAnimal())
                         foreach (var el in relevantThings.ToList().Where(el => !Utils.ExceptionNanoKits.Contains(el.def.defName)))
                             relevantThings.Remove(el);
-                    //On retire les nanokits
+
                     else
                         foreach (var el in relevantThings.ToList().Where(el => Utils.ExceptionNanoKits.Contains(el.def.defName)))
                             relevantThings.Remove(el);
@@ -57,7 +56,7 @@ namespace MOARANDROIDS
                         return;
                     }
 
-                    //Medecin normal on jerte si t est un android
+
                     if (__instance.def.workType == WorkTypeDefOf.Doctor)
                     {
                         if (thing is Pawn && ((Pawn) thing).IsAndroidTier())
@@ -66,7 +65,7 @@ namespace MOARANDROIDS
                     else
                     {
                         if (!Utils.CrafterDoctorJob.Contains(__instance.def)) return;
-                        //Crafteur on jerte si patient pas un android
+
                         if (thing is Pawn && ((Pawn) thing).IsAndroidTier())
                         {
                             var cso = pawn.TryGetComp<CompSurrogateOwner>();

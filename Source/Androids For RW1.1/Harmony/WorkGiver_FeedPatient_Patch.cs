@@ -2,7 +2,6 @@
 using RimWorld;
 using Verse;
 
-// TODO: Look into performance issues
 namespace MOARANDROIDS
 {
     internal class WorkGiver_FeedPatient_Patch
@@ -23,7 +22,6 @@ namespace MOARANDROIDS
             [HarmonyPrefix]
             public static bool ListenerPrefix(Pawn pawn, Thing t, bool forced, ref bool __result, WorkGiver_FeedPatient __instance)
             {
-                //On va en plus checker si le eater est pas un android chargé sur un wireless powergrid pas de feed patients co 
                 if (!(t is Pawn pawn2) || !pawn2.IsAndroidTier()) return true;
 
                 var cas = pawn2.TryGetComp<CompAndroidState>();
