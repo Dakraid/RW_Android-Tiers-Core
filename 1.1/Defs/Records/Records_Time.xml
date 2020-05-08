@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-  <RecordDef>
-    <defName>TimeInBedForMedicalReasons</defName>
-    <label>time in a bed for medical reasons</label>
-    <description>Total time spent in a bed for medical reasons: awaiting treatment, recovering from injuries or being operated on.</description>
-    <type>Time</type>
-    <workerClass>MOARANDROIDS.TimeinbedformedicalreasonsAndroid</workerClass>
-  </RecordDef>
+    <RecordDef>
+        <defName>TimeInBedForMedicalReasons</defName>
+        <label>time in a bed for medical reasons</label>
+        <description>Total time spent in a bed for medical reasons: awaiting treatment, recovering from injuries or being operated on.</description>
+        <type>Time</type>
+        <workerClass>MOARANDROIDS.TimeinbedformedicalreasonsAndroid</workerClass>
+    </RecordDef>
 </Defs>

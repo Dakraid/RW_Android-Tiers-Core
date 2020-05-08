@@ -27,8 +27,9 @@
         <pathCost>200</pathCost>
         <hasInteractionCell>false</hasInteractionCell>
         <surfaceType>Item</surfaceType>
-        <tickerType>Normal</tickerType>        <!-- TESTING  
-        <DesignationCategory>Production</DesignationCategory> --></ThingDef>
+        <tickerType>Normal</tickerType>
+        <!-- TESTING  <DesignationCategory>Production</DesignationCategory> -->
+    </ThingDef>
     <ThingDef ParentName="BuildingCreatorBase">
         <defName>T1AndroidGeneratorAI</defName>
         <label>T1 Android</label>
