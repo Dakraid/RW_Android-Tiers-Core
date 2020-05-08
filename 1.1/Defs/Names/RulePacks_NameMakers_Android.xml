@@ -1,12 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-
   <RulePackDef>
     <defName>AndroidAtlasStandard</defName>
     <rulePack>
       <rulesStrings>
         <li>name->[AndroidAtlasStandardNames] [NumberAtlasAndroid]</li>
-
       </rulesStrings>
       <rulesRaw>
         <li Class="Rule_File">
@@ -20,13 +18,11 @@
       </rulesRaw>
     </rulePack>
   </RulePackDef>
-  
   <RulePackDef>
     <defName>AndroidAtlasArchotech</defName>
     <rulePack>
       <rulesStrings>
         <li>name->[AndroidAtlasArchotechNames] Lo' [AndroidAtlasArchotechEnding]</li>
-
       </rulesStrings>
       <rulesRaw>
         <li Class="Rule_File">
@@ -40,5 +36,4 @@
       </rulesRaw>
     </rulePack>
   </RulePackDef>
-
 </Defs>

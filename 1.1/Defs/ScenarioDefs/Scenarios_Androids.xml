@@ -10,13 +10,11 @@
 				<def>PlayerFaction</def>
 				<factionDef>PlayerColonyAndroid</factionDef>
 			</playerFaction>
-			<parts>
-				<!-- Config pages -->
+			<parts>				<!-- Config pages -->
 				<li Class="ScenPart_ConfigPage_ConfigureStartingPawns">
 					<def>ConfigPage_ConfigureStartingPawns</def>
 					<pawnCount>3</pawnCount>
-				</li>
-				<!-- Player starting stuff spawn method-->
+				</li>				<!-- Player starting stuff spawn method-->
 				<li Class="ScenPart_PlayerPawnsArriveMethod">
 					<def>PlayerPawnsArriveMethod</def>
 					<method>DropPods</method>
@@ -33,8 +31,7 @@
 				<li Class="ScenPart_StartingResearch">
 					<def>StartingResearch</def>
 					<project>T1Replacements</project>
-				</li>
-				<!-- Player starting things -->
+				</li>				<!-- Player starting things -->
 				<li Class="ScenPart_StartingThing_Defined">
 					<def>StartingThing_Defined</def>
 					<thingDef>Steel</thingDef>
@@ -54,8 +51,7 @@
 					<def>StartingThing_Defined</def>
 					<thingDef>RepairKitAT</thingDef>
 					<count>9</count>
-				</li>
-				<!-- Scatter some things near player start -->
+				</li>				<!-- Scatter some things near player start -->
 				<li Class="ScenPart_ScatterThingsNearPlayerStart">
 					<def>ScatterThingsNearPlayerStart</def>
 					<thingDef>Steel</thingDef>
@@ -75,8 +71,7 @@
 					<def>ScatterThingsNearPlayerStart</def>
 					<thingDef>Pemmican</thingDef>
 					<count>120</count>
-				</li>
-				<!-- Scatter some things anywhere -->
+				</li>				<!-- Scatter some things anywhere -->
 				<li Class="ScenPart_ScatterThingsAnywhere">
 					<def>ScatterThingsAnywhere</def>
 					<thingDef>ShipChunk</thingDef>
@@ -86,8 +81,7 @@
 					<def>ScatterThingsAnywhere</def>
 					<thingDef>Steel</thingDef>
 					<count>720</count>
-				</li>
-				<!-- Game start dialog -->
+				</li>				<!-- Game start dialog -->
 				<li Class="ScenPart_GameStartDialog">
 					<def>GameStartDialog</def>
 					<text>Lined up amongst a series of hundreds of other androids, you all wonder what will happen when you arrive at your destination. This thought is interrupted however by the bay doors below you opening, releasing all androids onto the planet below in cramped ejection pods. You can hear the sound of the pod breaking through the atmosphere at breakneck speeds, unable to slow down in anyway possible until you slam down onto the surface. You find that only 3 androids made it out unharmed around you, the others reduced to scrap upon impact.</text>
@@ -96,5 +90,4 @@
 			</parts>
 		</scenario>
 	</ScenarioDef>
-
 </Defs>

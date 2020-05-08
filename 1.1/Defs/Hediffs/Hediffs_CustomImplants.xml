@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
- 
   <HediffDef>
     <hediffClass>Hediff_AddedPart</hediffClass>
     <defaultLabelColor>(1,0.85,0)</defaultLabelColor>
     <isBad>false</isBad>
-	
     <defName>Backstory_PitFighterUpgrade</defName>
     <label>pit gauntlets</label>
     <labelNoun>a pit gauntlet</labelNoun>
-	<description>An installed gauntlet.</description>
-	<descriptionHyperlinks><ThingDef>Backstory_PitFighterUpgradeItem</ThingDef></descriptionHyperlinks>
-	 <comps>
+    <description>An installed gauntlet.</description>
+    <descriptionHyperlinks>
+      <ThingDef>Backstory_PitFighterUpgradeItem</ThingDef>
+    </descriptionHyperlinks>
+    <comps>
       <li Class="HediffCompProperties_VerbGiver">
         <tools>
           <li>
@@ -30,7 +30,6 @@
       <partEfficiency>0.85</partEfficiency>
     </addedPartProps>
   </HediffDef>
-  
   <HediffDef>
     <hediffClass>Hediff_AddedPart</hediffClass>
     <defaultLabelColor>(1,0.85,0)</defaultLabelColor>
@@ -38,9 +37,11 @@
     <defName>Backstory_TranscendantAssimilatorUpgrade</defName>
     <label>Plasma gauntlet</label>
     <labelNoun>a plasma gauntlet</labelNoun>
-	<description>An installed gauntlet.</description>
-	<descriptionHyperlinks><ThingDef>Backstory_TranscendantAssimilatorUpgradeItem</ThingDef></descriptionHyperlinks>
-	 <comps>
+    <description>An installed gauntlet.</description>
+    <descriptionHyperlinks>
+      <ThingDef>Backstory_TranscendantAssimilatorUpgradeItem</ThingDef>
+    </descriptionHyperlinks>
+    <comps>
       <li Class="HediffCompProperties_VerbGiver">
         <tools>
           <li>
@@ -59,7 +60,6 @@
       <partEfficiency>0.85</partEfficiency>
     </addedPartProps>
   </HediffDef>
-  
   <HediffDef>
     <hediffClass>Hediff_AddedPart</hediffClass>
     <defaultLabelColor>(1,0.85,0)</defaultLabelColor>
@@ -67,20 +67,21 @@
     <defName>Backstory_HighCouncilUpgrade</defName>
     <label>Quantum processing</label>
     <labelNoun>a quantum mind</labelNoun>
-	<description>An installed quantum mind.</description>
-	<descriptionHyperlinks><ThingDef>Backstory_HighCouncilUpgradeItem</ThingDef></descriptionHyperlinks>
-		<stages>
-			<li>
-				<statOffsets>
-				<TradePriceImprovement>0.2</TradePriceImprovement>
-				<NegotiationAbility>0.4</NegotiationAbility>
-				</statOffsets>
-			</li>
-		</stages>
+    <description>An installed quantum mind.</description>
+    <descriptionHyperlinks>
+      <ThingDef>Backstory_HighCouncilUpgradeItem</ThingDef>
+    </descriptionHyperlinks>
+    <stages>
+      <li>
+        <statOffsets>
+          <TradePriceImprovement>0.2</TradePriceImprovement>
+          <NegotiationAbility>0.4</NegotiationAbility>
+        </statOffsets>
+      </li>
+    </stages>
     <addedPartProps>
       <solid>true</solid>
       <partEfficiency>1.1</partEfficiency>
     </addedPartProps>
   </HediffDef>
-
 </Defs>

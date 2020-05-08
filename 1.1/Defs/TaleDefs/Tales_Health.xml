@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-
   <TaleDef>
     <defName>AndroidOverheating</defName>
     <label>overheating android</label>
@@ -30,7 +29,6 @@
       </rulesStrings>
     </rulePack>
   </TaleDef>
-
   <TaleDef>
     <defName>AndroidFreezing</defName>
     <label>freezing android</label>
@@ -60,6 +58,4 @@
       </rulesStrings>
     </rulePack>
   </TaleDef>
-
-
 </Defs>

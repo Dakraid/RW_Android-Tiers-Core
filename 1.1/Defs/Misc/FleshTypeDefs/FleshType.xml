@@ -1,5 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-
 <Defs>
   <FleshTypeDef>
     <defName>Android</defName>
@@ -25,8 +24,6 @@
       </li>
     </wounds>
   </FleshTypeDef>
-
- 
   <FleshTypeDef>
     <defName>MechanisedInfantry</defName>
     <corpseCategory>CorpsesMechanoid</corpseCategory>
@@ -51,5 +48,4 @@
       </li>
     </wounds>
   </FleshTypeDef>
-
 </Defs>

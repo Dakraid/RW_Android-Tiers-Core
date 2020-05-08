@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
-
   <TraderKindDef>
     <defName>Base_AndroidCollective_Standard</defName>
     <stockGenerators>
@@ -67,53 +66,53 @@
           <max>200</max>
         </countRange>
       </li>
-			<li Class="StockGenerator_SingleDef">
-				<thingDef>Neutroamine</thingDef>
-				<countRange>
-					<min>50</min>
-					<max>200</max>
-				</countRange>
-			</li>
-			<li Class="StockGenerator_SingleDef">
-				<thingDef>Chemfuel</thingDef>
-				<countRange>
-					<min>300</min>
-					<max>500</max>
-				</countRange>
-			</li>
-			<li Class="StockGenerator_SingleDef">
-				<thingDef>RepairKitAT</thingDef>
-				<countRange>
-					<min>-30</min>
-					<max>20</max>
-				</countRange>
-			</li>
-			<li Class="StockGenerator_SingleDef">
-				<thingDef>Beer</thingDef>
-				<countRange>
-					<min>-40</min>
-					<max>100</max>
-				</countRange>
-			</li>
-			<li Class="StockGenerator_SingleDef">
-				<thingDef>MedicineIndustrial</thingDef>
-				<countRange>
-					<min>25</min>
-					<max>50</max>
-				</countRange>
-			</li>
+      <li Class="StockGenerator_SingleDef">
+        <thingDef>Neutroamine</thingDef>
+        <countRange>
+          <min>50</min>
+          <max>200</max>
+        </countRange>
+      </li>
+      <li Class="StockGenerator_SingleDef">
+        <thingDef>Chemfuel</thingDef>
+        <countRange>
+          <min>300</min>
+          <max>500</max>
+        </countRange>
+      </li>
+      <li Class="StockGenerator_SingleDef">
+        <thingDef>RepairKitAT</thingDef>
+        <countRange>
+          <min>-30</min>
+          <max>20</max>
+        </countRange>
+      </li>
+      <li Class="StockGenerator_SingleDef">
+        <thingDef>Beer</thingDef>
+        <countRange>
+          <min>-40</min>
+          <max>100</max>
+        </countRange>
+      </li>
+      <li Class="StockGenerator_SingleDef">
+        <thingDef>MedicineIndustrial</thingDef>
+        <countRange>
+          <min>25</min>
+          <max>50</max>
+        </countRange>
+      </li>
       <li Class="StockGenerator_Tag">
         <tradeTag>MortarShell</tradeTag>
         <thingDefCountRange>
           <min>1</min>
           <max>2</max>
         </thingDefCountRange>
-				<countRange>
-					<min>20</min>
-					<max>40</max>
-				</countRange>
-			</li>
-			<li Class="StockGenerator_Category">
+        <countRange>
+          <min>20</min>
+          <max>40</max>
+        </countRange>
+      </li>
+      <li Class="StockGenerator_Category">
         <categoryDef>Textiles</categoryDef>
         <thingDefCountRange>
           <min>1</min>
@@ -137,8 +136,10 @@
       </li>
       <li Class="StockGenerator_Category">
         <categoryDef>FoodRaw</categoryDef>
-				<excludedCategories><li>EggsFertilized</li></excludedCategories>
-				<thingDefCountRange>
+        <excludedCategories>
+          <li>EggsFertilized</li>
+        </excludedCategories>
+        <thingDefCountRange>
           <min>2</min>
           <max>4</max>
         </thingDefCountRange>
@@ -238,20 +239,20 @@
           <max>1</max>
         </countRange>
       </li>
-	  <li Class="StockGenerator_Category">
-				<categoryDef>BodyPartsAndroid</categoryDef>
-				<thingDefCountRange>
-					<min>4</min>
-					<max>8</max>
-				</thingDefCountRange>
-				<totalPriceRange>
-					<min>200</min>
-					<max>4000</max>
-				</totalPriceRange>
-			</li>
+      <li Class="StockGenerator_Category">
+        <categoryDef>BodyPartsAndroid</categoryDef>
+        <thingDefCountRange>
+          <min>4</min>
+          <max>8</max>
+        </thingDefCountRange>
+        <totalPriceRange>
+          <min>200</min>
+          <max>4000</max>
+        </totalPriceRange>
+      </li>
       <li Class="MOARANDROIDs.StockGenerator_SlaveAndroids">
         <respectPopulationIntent>false</respectPopulationIntent>
-		<randomisePawnKind>true</randomisePawnKind>
+        <randomisePawnKind>true</randomisePawnKind>
         <countRange>
           <min>1</min>
           <max>2</max>
@@ -259,7 +260,7 @@
       </li>
       <li Class="MOARANDROIDs.StockGenerator_SlaveAndroids">
         <respectPopulationIntent>false</respectPopulationIntent>
-		<randomisePawnKind>true</randomisePawnKind>
+        <randomisePawnKind>true</randomisePawnKind>
         <countRange>
           <min>0</min>
           <max>1</max>
@@ -276,9 +277,8 @@
           <max>2</max>
         </countRange>
         <excludedThingDefs>
-          <li>Luciferium</li> <!-- already handled by drugs -->
-          <li>ComponentSpacer</li> <!-- already handled by single def -->
-        </excludedThingDefs>
+          <li>Luciferium</li>          <!-- already handled by drugs -->
+          <li>ComponentSpacer</li>          <!-- already handled by single def --></excludedThingDefs>
         <customCountRanges>
           <MedicineUltratech>2~15</MedicineUltratech>
           <Hyperweave>50~200</Hyperweave>
@@ -330,18 +330,25 @@
           <max>1</max>
         </countRange>
       </li>
-			<li Class="StockGenerator_MultiDef">
-				<thingDefs>
-					<li>Kibble</li>
-					<li>Pemmican</li>
-				</thingDefs>
-			</li>
+      <li Class="StockGenerator_MultiDef">
+        <thingDefs>
+          <li>Kibble</li>
+          <li>Pemmican</li>
+        </thingDefs>
+      </li>
       <li Class="StockGenerator_BuyExpensiveSimple" />
-      <li Class="StockGenerator_BuyTradeTag"><tag>Art</tag></li>
-      <li Class="StockGenerator_BuyTradeTag"><tag>ImplantEmpireCommon</tag></li>
-      <li Class="StockGenerator_BuyTradeTag"><tag>ImplantEmpireRoyal</tag></li>
-      <li Class="StockGenerator_BuyTradeTag"><tag>ExoticBuilding</tag></li>
+      <li Class="StockGenerator_BuyTradeTag">
+        <tag>Art</tag>
+      </li>
+      <li Class="StockGenerator_BuyTradeTag">
+        <tag>ImplantEmpireCommon</tag>
+      </li>
+      <li Class="StockGenerator_BuyTradeTag">
+        <tag>ImplantEmpireRoyal</tag>
+      </li>
+      <li Class="StockGenerator_BuyTradeTag">
+        <tag>ExoticBuilding</tag>
+      </li>
     </stockGenerators>
   </TraderKindDef>
-
 </Defs>

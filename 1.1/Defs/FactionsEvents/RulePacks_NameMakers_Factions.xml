@@ -1,7 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-
-
   <RulePackDef>
     <defName>NamerFactionAndroid</defName>
     <rulePack>
@@ -10,17 +8,15 @@
       </rulesStrings>
     </rulePack>
   </RulePackDef>
-
   <RulePackDef>
     <defName>NamerFactionBaseAndroid</defName>
     <rulePack>
       <rulesStrings>
         <li>name->Land of the Enlightened </li>
-	<li>name->The golden land </li>
-	<li>name->Hills to the uprising </li>
-	<li>name->Center of Enlightenment </li>
+        <li>name->The golden land </li>
+        <li>name->Hills to the uprising </li>
+        <li>name->Center of Enlightenment </li>
       </rulesStrings>
     </rulePack>
   </RulePackDef>
-
 </Defs>

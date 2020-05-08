@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-  
   <ThoughtDef>
     <defName>ATPP_AssistingMindBoost</defName>
-	<thoughtClass>MOARANDROIDS.Thought_AssistedByMinds</thoughtClass>
+    <thoughtClass>MOARANDROIDS.Thought_AssistedByMinds</thoughtClass>
     <workerClass>MOARANDROIDS.ThoughtWorker_AssistedByMinds</workerClass>
     <stages>
       <li>
@@ -12,7 +11,6 @@
         <baseMoodEffect>1</baseMoodEffect>
       </li>
     </stages>
-	<validWhileDespawned>true</validWhileDespawned>
+    <validWhileDespawned>true</validWhileDespawned>
   </ThoughtDef>
-  
- </Defs>
+</Defs>

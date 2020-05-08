@@ -32,7 +32,6 @@
 			</li>
 		</forcedTraits>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>AndroidPirate</defName>
 		<title>Android pirate</title>
@@ -58,7 +57,6 @@
 			<li>Animals</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>AndroidHacker</defName>
 		<title>AI hacker</title>
@@ -80,7 +78,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>AndroidJunker</defName>
 		<title>Illegal junker</title>
@@ -102,7 +99,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>AndroidButcher</defName>
 		<title>Butcher</title>
@@ -124,7 +120,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>AndroidBadCop</defName>
 		<title>Corrupt cop</title>
@@ -146,7 +141,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>AndroidMurderer</defName>
 		<title>Murderer</title>
@@ -174,7 +168,6 @@
 			</li>
 		</forcedTraits>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>AndroidRobber</defName>
 		<title>Bank robber</title>
@@ -196,7 +189,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>AndroidJoywireCon</defName>
 		<title>Joywire con</title>
@@ -233,7 +225,6 @@
 			</li>
 		</forcedTraits>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidBotanist</defName>
 		<title>Botanist</title>
@@ -255,7 +246,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>AndroidEnslaved</defName>
 		<title>Enslaved</title>
@@ -284,7 +274,6 @@
 			<li>Intellectual</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>AndroidCoghead</defName>
 		<title>Medieval coghead</title>
@@ -311,7 +300,6 @@
 			<li>Intellectual</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>AndroidSlaver</defName>
 		<title>Slave trafficker</title>
@@ -348,7 +336,6 @@
 			</li>
 		</forcedTraits>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidMilitia</defName>
 		<title>Militia officer</title>
@@ -382,7 +369,6 @@
 			</li>
 		</forcedTraits>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidEscapee</defName>
 		<title>Escaped convict</title>
@@ -415,7 +401,6 @@
 			</li>
 		</forcedTraits>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidBounty</defName>
 		<title>Bounty hunter</title>
@@ -455,7 +440,6 @@
 			</li>
 		</forcedTraits>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidInsurrectionLower</defName>
 		<title>Insurrection soldier</title>
@@ -493,7 +477,6 @@
 			</li>
 		</forcedTraits>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidInsurrectionHigher</defName>
 		<title>Insurrection captain</title>
@@ -526,7 +509,6 @@
 			</li>
 		</forcedTraits>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidConArtist</defName>
 		<title>Con artist</title>
@@ -556,7 +538,6 @@
 			<li>CharismaMind</li>
 		</forcedHediffs>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidUnethicalResearcher</defName>
 		<title>Unethical researcher</title>
@@ -600,7 +581,6 @@
 			<li>Social</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidVengeful</defName>
 		<title>Vengeful android</title>
@@ -633,7 +613,6 @@
 			</li>
 		</forcedTraits>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidAssimilator</defName>
 		<title>Assimilator</title>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-
 	<ThingDef ParentName="MakeableDrugBase">
 		<defName>StructureGel</defName>
 		<label>structure gel</label>
@@ -50,8 +49,6 @@
 			</li>
 		</comps>
 	</ThingDef>
-
-
 	<HediffDef>
 		<defName>SGelhuman</defName>
 		<hediffClass>HediffWithComps</hediffClass>
@@ -72,8 +69,6 @@
 				<label>Difficulty Breathing</label>
 				<becomeVisible>false</becomeVisible>
 			</li>
-
-
 			<li>
 				<minSeverity>0.1</minSeverity>
 				<label>Trembling</label>
@@ -89,8 +84,6 @@
 					</li>
 				</capMods>
 			</li>
-
-
 			<li>
 				<minSeverity>0.25</minSeverity>
 				<label>Shaking</label>
@@ -110,8 +103,6 @@
 					</li>
 				</capMods>
 			</li>
-
-
 			<li>
 				<minSeverity>0.6</minSeverity>
 				<label>Convulsing</label>
@@ -132,8 +123,6 @@
 					</li>
 				</capMods>
 			</li>
-
-
 			<li>
 				<minSeverity>0.7</minSeverity>
 				<label>Seizing</label>
@@ -155,10 +144,7 @@
 				</capMods>
 			</li>
 		</stages>
-	</HediffDef>
-
-	<!--HediffAndroid-->
-
+	</HediffDef>	<!--HediffAndroid-->
 	<HediffDef>
 		<defName>SGelandroid</defName>
 		<hediffClass>HediffWithComps</hediffClass>
@@ -178,8 +164,6 @@
 				<label>Little effect</label>
 				<becomeVisible>false</becomeVisible>
 			</li>
-
-
 			<li>
 				<minSeverity>0.1</minSeverity>
 				<label>Losing effect</label>
@@ -194,8 +178,6 @@
 					</li>
 				</capMods>
 			</li>
-
-
 			<li>
 				<minSeverity>0.25</minSeverity>
 				<label>Mild effect</label>
@@ -214,8 +196,6 @@
 					</li>
 				</capMods>
 			</li>
-
-
 			<li>
 				<minSeverity>0.6</minSeverity>
 				<label>Effective</label>
@@ -234,8 +214,6 @@
 					</li>
 				</capMods>
 			</li>
-
-
 			<li>
 				<minSeverity>0.9</minSeverity>
 				<label>Peak</label>
@@ -256,8 +234,6 @@
 			</li>
 		</stages>
 	</HediffDef>
-
-
 	<ThingDef ParentName="MakeableDrugBase">
 		<defName>Antifreeze</defName>
 		<label>polymer antifreeze</label>
@@ -287,7 +263,7 @@
 					<hediffDef_Human>Toxicated</hediffDef_Human>
 					<hediffDef_Android>AFreezeandroid</hediffDef_Android>
 					<severity>1</severity>
-				</li>   
+				</li>
 			</outcomeDoers>
 		</ingestible>
 		<recipeMaker>
@@ -305,7 +281,6 @@
 			</li>
 		</comps>
 	</ThingDef>
-
 	<HediffDef>
 		<defName>Toxicated</defName>
 		<hediffClass>HediffWithComps</hediffClass>
@@ -326,8 +301,6 @@
 				<label>Difficulty Breathing</label>
 				<becomeVisible>false</becomeVisible>
 			</li>
-
-
 			<li>
 				<minSeverity>0.1</minSeverity>
 				<label>Nausea</label>
@@ -343,8 +316,6 @@
 					</li>
 				</capMods>
 			</li>
-
-
 			<li>
 				<minSeverity>0.25</minSeverity>
 				<label>Sickness</label>
@@ -364,8 +335,6 @@
 					</li>
 				</capMods>
 			</li>
-
-
 			<li>
 				<minSeverity>0.6</minSeverity>
 				<label>Vomitting</label>
@@ -386,8 +355,6 @@
 					</li>
 				</capMods>
 			</li>
-
-
 			<li>
 				<minSeverity>0.7</minSeverity>
 				<label>Chronic</label>
@@ -409,10 +376,7 @@
 				</capMods>
 			</li>
 		</stages>
-	</HediffDef>
-
-	<!--HediffAndroid-->
-
+	</HediffDef>	<!--HediffAndroid-->
 	<HediffDef>
 		<defName>AFreezeandroid</defName>
 		<hediffClass>HediffWithComps</hediffClass>
@@ -432,8 +396,6 @@
 				<label>Little effect</label>
 				<becomeVisible>false</becomeVisible>
 			</li>
-
-
 			<li>
 				<minSeverity>0.1</minSeverity>
 				<label>Losing effect</label>
@@ -442,8 +404,6 @@
 					<ComfyTemperatureMax>4</ComfyTemperatureMax>
 				</statOffsets>
 			</li>
-
-
 			<li>
 				<minSeverity>0.25</minSeverity>
 				<label>Mild effect</label>
@@ -452,8 +412,6 @@
 					<ComfyTemperatureMax>16</ComfyTemperatureMax>
 				</statOffsets>
 			</li>
-
-
 			<li>
 				<minSeverity>0.6</minSeverity>
 				<label>Effective</label>
@@ -462,8 +420,6 @@
 					<ComfyTemperatureMax>22</ComfyTemperatureMax>
 				</statOffsets>
 			</li>
-
-
 			<li>
 				<minSeverity>0.9</minSeverity>
 				<label>Peak</label>
@@ -474,8 +430,6 @@
 			</li>
 		</stages>
 	</HediffDef>
-
-
 	<ThingDef ParentName="MakeableDrugBase">
 		<defName>MechSwarm</defName>
 		<label>Mechanite swarm</label>
@@ -505,7 +459,7 @@
 					<hediffDef_Human>Toxicated</hediffDef_Human>
 					<hediffDef_Android>MechSwarmandroid</hediffDef_Android>
 					<severity>1</severity>
-				</li>  
+				</li>
 			</outcomeDoers>
 		</ingestible>
 		<recipeMaker>
@@ -524,7 +478,6 @@
 			</li>
 		</comps>
 	</ThingDef>
-
 	<HediffDef>
 		<defName>MechSwarmandroid</defName>
 		<hediffClass>HediffWithComps</hediffClass>
@@ -544,8 +497,6 @@
 				<label>Little effect</label>
 				<becomeVisible>false</becomeVisible>
 			</li>
-
-
 			<li>
 				<minSeverity>0.1</minSeverity>
 				<label>Losing effect</label>
@@ -563,8 +514,6 @@
 					</li>
 				</capMods>
 			</li>
-
-
 			<li>
 				<minSeverity>0.25</minSeverity>
 				<label>Mild effect</label>
@@ -582,8 +531,6 @@
 					</li>
 				</capMods>
 			</li>
-
-
 			<li>
 				<minSeverity>0.6</minSeverity>
 				<label>Effective</label>
@@ -601,8 +548,6 @@
 					</li>
 				</capMods>
 			</li>
-
-
 			<li>
 				<minSeverity>0.8</minSeverity>
 				<label>Peak</label>
@@ -621,12 +566,7 @@
 				</capMods>
 			</li>
 		</stages>
-	</HediffDef>
-
-
-
-	<!--======-->
-
+	</HediffDef>	<!--======-->
 	<ThingDef ParentName="DrugBase">
 		<defName>FractalPill</defName>
 		<label>fractal enhancement</label>
@@ -655,7 +595,7 @@
 					<hediffDef_Human>Conversion</hediffDef_Human>
 					<hediffDef_Android>FractalPillAndroid</hediffDef_Android>
 					<severity>0.05</severity>
-				</li> 	
+				</li>
 			</outcomeDoers>
 		</ingestible>
 		<comps>
@@ -664,8 +604,6 @@
 			</li>
 		</comps>
 	</ThingDef>
-
-
 	<HediffDef>
 		<defName>Conversion</defName>
 		<hediffClass>MOARANDROIDS.Hediff_Fractal</hediffClass>
@@ -681,7 +619,7 @@
 		<scenarioCanAdd>true</scenarioCanAdd>
 		<maxSeverity>1.0</maxSeverity>
 		<isBad>true</isBad>
-		<stages>	
+		<stages>
 			<li>
 				<minSeverity>0.05</minSeverity>
 				<label>Spasms</label>
@@ -697,8 +635,6 @@
 					</li>
 				</capMods>
 			</li>
-
-
 			<li>
 				<minSeverity>0.25</minSeverity>
 				<label>Seizures</label>
@@ -718,8 +654,6 @@
 					</li>
 				</capMods>
 			</li>
-
-
 			<li>
 				<minSeverity>0.6</minSeverity>
 				<label>Collapse</label>
@@ -740,8 +674,6 @@
 					</li>
 				</capMods>
 			</li>
-
-
 			<li>
 				<minSeverity>0.9</minSeverity>
 				<label>Conversion</label>
@@ -763,10 +695,7 @@
 				</capMods>
 			</li>
 		</stages>
-	</HediffDef>
-
-	<!--HediffAndroid-->
-
+	</HediffDef>	<!--HediffAndroid-->
 	<HediffDef>
 		<defName>FractalPillAndroid</defName>
 		<hediffClass>HediffWithComps</hediffClass>
@@ -786,7 +715,6 @@
 				<label>Little effect</label>
 				<becomeVisible>false</becomeVisible>
 			</li>
-
 			<li>
 				<minSeverity>0.05</minSeverity>
 				<label>I</label>
@@ -818,7 +746,7 @@
 					<GlobalLearningFactor>0.05</GlobalLearningFactor>
 					<WorkSpeedGlobal>0.05</WorkSpeedGlobal>
 				</statOffsets>
-			</li>	
+			</li>
 			<li>
 				<minSeverity>0.15</minSeverity>
 				<label>III</label>
@@ -836,7 +764,7 @@
 					<GlobalLearningFactor>0.1</GlobalLearningFactor>
 					<WorkSpeedGlobal>0.1</WorkSpeedGlobal>
 				</statOffsets>
-			</li>	
+			</li>
 			<li>
 				<minSeverity>0.2</minSeverity>
 				<label>IV</label>
@@ -856,7 +784,7 @@
 					<WorkSpeedGlobal>0.20</WorkSpeedGlobal>
 					<MentalBreakThreshold>0.05</MentalBreakThreshold>
 				</statOffsets>
-			</li>	
+			</li>
 			<li>
 				<minSeverity>0.25</minSeverity>
 				<label>V</label>
@@ -876,7 +804,7 @@
 					<WorkSpeedGlobal>0.25</WorkSpeedGlobal>
 					<MentalBreakThreshold>0.1</MentalBreakThreshold>
 				</statOffsets>
-			</li>	
+			</li>
 			<li>
 				<minSeverity>0.3</minSeverity>
 				<label>VI</label>
@@ -898,7 +826,7 @@
 					<ArmorRating_Blunt>0.05</ArmorRating_Blunt>
 					<ArmorRating_Sharp>0.05</ArmorRating_Sharp>
 				</statOffsets>
-			</li>	
+			</li>
 			<li>
 				<minSeverity>0.35</minSeverity>
 				<label>VII</label>
@@ -920,7 +848,7 @@
 					<ArmorRating_Blunt>0.07</ArmorRating_Blunt>
 					<ArmorRating_Sharp>0.1</ArmorRating_Sharp>
 				</statOffsets>
-			</li>	
+			</li>
 			<li>
 				<minSeverity>0.4</minSeverity>
 				<label>VIII</label>
@@ -946,7 +874,7 @@
 					<ArmorRating_Blunt>0.1</ArmorRating_Blunt>
 					<ArmorRating_Sharp>0.15</ArmorRating_Sharp>
 				</statOffsets>
-			</li>	
+			</li>
 			<li>
 				<minSeverity>0.45</minSeverity>
 				<label>IX</label>
@@ -978,7 +906,7 @@
 					<ArmorRating_Blunt>0.20</ArmorRating_Blunt>
 					<ArmorRating_Sharp>0.25</ArmorRating_Sharp>
 				</statOffsets>
-			</li>	
+			</li>
 			<li>
 				<minSeverity>0.5</minSeverity>
 				<label>X</label>
@@ -1010,7 +938,7 @@
 					<ArmorRating_Blunt>0.25</ArmorRating_Blunt>
 					<ArmorRating_Sharp>0.30</ArmorRating_Sharp>
 				</statOffsets>
-			</li>	
+			</li>
 			<li>
 				<minSeverity>0.55</minSeverity>
 				<label>XI</label>
@@ -1042,7 +970,7 @@
 					<ArmorRating_Blunt>0.30</ArmorRating_Blunt>
 					<ArmorRating_Sharp>0.35</ArmorRating_Sharp>
 				</statOffsets>
-			</li>	
+			</li>
 			<li>
 				<minSeverity>0.6</minSeverity>
 				<label>XII</label>
@@ -1074,7 +1002,7 @@
 					<ArmorRating_Blunt>0.40</ArmorRating_Blunt>
 					<ArmorRating_Sharp>0.45</ArmorRating_Sharp>
 				</statOffsets>
-			</li>	
+			</li>
 			<li>
 				<minSeverity>0.65</minSeverity>
 				<label>XIII</label>
@@ -1246,7 +1174,7 @@
 					<ArmorRating_Blunt>0.55</ArmorRating_Blunt>
 					<ArmorRating_Sharp>0.55</ArmorRating_Sharp>
 				</statOffsets>
-			</li>	
+			</li>
 			<li>
 				<minSeverity>0.9</minSeverity>
 				<label>XVIII</label>
@@ -1282,7 +1210,7 @@
 					<ArmorRating_Blunt>0.55</ArmorRating_Blunt>
 					<ArmorRating_Sharp>0.55</ArmorRating_Sharp>
 				</statOffsets>
-			</li>	
+			</li>
 			<li>
 				<minSeverity>0.95</minSeverity>
 				<label>XIX</label>
@@ -1318,7 +1246,7 @@
 					<ArmorRating_Blunt>0.55</ArmorRating_Blunt>
 					<ArmorRating_Sharp>0.55</ArmorRating_Sharp>
 				</statOffsets>
-			</li>		
+			</li>
 			<li>
 				<minSeverity>1</minSeverity>
 				<label>XX</label>
@@ -1354,7 +1282,7 @@
 					<ArmorRating_Blunt>0.55</ArmorRating_Blunt>
 					<ArmorRating_Sharp>0.55</ArmorRating_Sharp>
 				</statOffsets>
-			</li>	
+			</li>
 			<li>
 				<minSeverity>1.05</minSeverity>
 				<label>Peak</label>
@@ -1391,13 +1319,9 @@
 					<ArmorRating_Blunt>0.65</ArmorRating_Blunt>
 					<ArmorRating_Sharp>0.75</ArmorRating_Sharp>
 				</statOffsets>
-			</li>	
+			</li>
 		</stages>
-	</HediffDef>
-
-
-	<!--Regen Pill-->
-
+	</HediffDef>	<!--Regen Pill-->
 	<ThingDef ParentName="MakeableDrugBase">
 		<defName>RegenPillAt</defName>
 		<label>Mono-salve pill</label>
@@ -1427,7 +1351,7 @@
 					<hediffDef_Human>RegenHumanoid</hediffDef_Human>
 					<hediffDef_Android>RegenAndroid</hediffDef_Android>
 					<severity>1</severity>
-				</li>      
+				</li>
 			</outcomeDoers>
 		</ingestible>
 		<recipeMaker>
@@ -1446,7 +1370,6 @@
 			</li>
 		</comps>
 	</ThingDef>
-
 	<HediffDef>
 		<defName>RegenHumanoid</defName>
 		<hediffClass>HediffWithComps</hediffClass>
@@ -1472,8 +1395,6 @@
 				<label>Difficulty Breathing</label>
 				<becomeVisible>false</becomeVisible>
 			</li>
-
-
 			<li>
 				<minSeverity>0.1</minSeverity>
 				<label>Weak</label>
@@ -1489,8 +1410,6 @@
 					</li>
 				</capMods>
 			</li>
-
-
 			<li>
 				<minSeverity>0.25</minSeverity>
 				<label>Medium</label>
@@ -1510,8 +1429,6 @@
 					</li>
 				</capMods>
 			</li>
-
-
 			<li>
 				<minSeverity>0.6</minSeverity>
 				<label>Strong</label>
@@ -1532,8 +1449,6 @@
 					</li>
 				</capMods>
 			</li>
-
-
 			<li>
 				<minSeverity>0.7</minSeverity>
 				<label>Peak</label>
@@ -1555,10 +1470,7 @@
 				</capMods>
 			</li>
 		</stages>
-	</HediffDef>
-
-	<!--HediffAndroid-->
-
+	</HediffDef>	<!--HediffAndroid-->
 	<HediffDef>
 		<defName>RegenAndroid</defName>
 		<hediffClass>HediffWithComps</hediffClass>
@@ -1579,7 +1491,6 @@
 			</li>
 		</comps>
 	</HediffDef>
-
 	<ThoughtDef>
 		<defName>RegenHumanoid_Thought</defName>
 		<workerClass>ThoughtWorker_Hediff</workerClass>
@@ -1601,7 +1512,7 @@
 				<label>Mono-Salve (Medium)</label>
 				<description>My body feels slow and there's a small pain running up my limbs.</description>
 				<baseMoodEffect>-6</baseMoodEffect>
-			</li>     
+			</li>
 			<li>
 				<label>Mono-Salve (Strong)</label>
 				<description>My arms feel heavy and lethargic as if something in sapping all my energy.</description>
@@ -1611,7 +1522,7 @@
 				<label>Mono-Salve (Peak)</label>
 				<description>My veins ache and my vision is spinning. It hurts a lot.</description>
 				<baseMoodEffect>-12</baseMoodEffect>
-			</li>   
+			</li>
 		</stages>
 	</ThoughtDef>
 </Defs>

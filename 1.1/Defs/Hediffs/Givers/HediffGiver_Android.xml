@@ -1,21 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-	<HediffGiverSetDef>
-<defName>AndroidStandardAtlas</defName>
-	<hediffGivers>
-			<li Class="HediffGiver_Bleeding">
-				<hediff>AndroidCoolantLoss</hediff>
-			</li>
-			<li Class="HediffGiver_Hypothermia">
-				<hediff>Hypothermia</hediff>
-			</li>
-			<li Class="HediffGiver_Heat">
-				<hediff>Heatstroke</hediff>
-			</li>
-	<!--Age-->
-
-<li Class="HediffGiver_Birthday">
-
+  <HediffGiverSetDef>
+    <defName>AndroidStandardAtlas</defName>
+    <hediffGivers>
+      <li Class="HediffGiver_Bleeding">
+        <hediff>AndroidCoolantLoss</hediff>
+      </li>
+      <li Class="HediffGiver_Hypothermia">
+        <hediff>Hypothermia</hediff>
+      </li>
+      <li Class="HediffGiver_Heat">
+        <hediff>Heatstroke</hediff>
+      </li>      <!--Age-->
+      <li Class="HediffGiver_Birthday">
         <hediff>DecayedFrame</hediff>
         <partsToAffect>
           <li>Framework</li>
@@ -28,7 +25,6 @@
           </points>
         </ageFractionChanceCurve>
       </li>
-	 
       <li Class="HediffGiver_Birthday">
         <hediff>CorruptMemory</hediff>
         <partsToAffect>
@@ -42,7 +38,6 @@
           </points>
         </ageFractionChanceCurve>
       </li>
-	 
       <li Class="MOARANDROIDS.HediffGiver_BirthdayMechanical">
         <hediff>CorruptMemory</hediff>
         <partsToAffect>
@@ -56,7 +51,6 @@
           </points>
         </ageFractionChanceCurve>
       </li>
-	  
       <li Class="HediffGiver_Birthday">
         <hediff>FaultyPump</hediff>
         <partsToAffect>
@@ -71,8 +65,7 @@
         </ageFractionChanceCurve>
         <averageSeverityPerDayBeforeGeneration>0.00005</averageSeverityPerDayBeforeGeneration>
       </li>
-
-	 <li Class="HediffGiver_Birthday">
+      <li Class="HediffGiver_Birthday">
         <hediff>WeakValves</hediff>
         <partsToAffect>
           <li>MechanicalThorax</li>
@@ -86,8 +79,7 @@
         </ageFractionChanceCurve>
         <averageSeverityPerDayBeforeGeneration>0.00002</averageSeverityPerDayBeforeGeneration>
       </li>
-
-	<li Class="HediffGiver_Birthday">
+      <li Class="HediffGiver_Birthday">
         <hediff>ExaggeratedHealing</hediff>
         <partsToAffect>
           <li>MRightKidney</li>
@@ -100,7 +92,6 @@
           </points>
         </ageFractionChanceCurve>
       </li>
-	  
-	</hediffGivers>
-	</HediffGiverSetDef>
+    </hediffGivers>
+  </HediffGiverSetDef>
 </Defs>

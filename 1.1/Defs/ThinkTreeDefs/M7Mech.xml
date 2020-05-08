@@ -1,19 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-
-
 <Defs>
-
   <ThinkTreeDef>
     <defName>MechM7Like</defName>
     <thinkRoot Class="ThinkNode_Priority">
-      <subNodes>
-        <!-- Downed -->
+      <subNodes>        <!-- Downed -->
         <li Class="ThinkNode_Subtree">
           <treeDef>Downed</treeDef>
         </li>
-        
         <li Class="ThinkNode_QueuedJob" />
-
         <!-- Wait if drafted -->
         <li Class="ThinkNode_ConditionalColonist">
           <subNodes>
@@ -25,8 +19,7 @@
             </li>
           </subNodes>
         </li>
-		
-		 <li Class="ThinkNode_ConditionalMentalStateClass">
+        <li Class="ThinkNode_ConditionalMentalStateClass">
           <stateClass>MOARANDROIDS.MentalState_ManhunterNotColony</stateClass>
           <subNodes>
             <li Class="ThinkNode_Priority">
@@ -42,31 +35,24 @@
               </subNodes>
             </li>
           </subNodes>
-        </li>
-		
-        <!-- Lord -->
+        </li>        <!-- Lord -->
         <li Class="ThinkNode_Subtree">
           <treeDef>LordDuty</treeDef>
-        </li>
-
-        <!-- Idle -->
+        </li>        <!-- Idle -->
         <li Class="ThinkNode_Tagger">
           <tagToGive>Idle</tagToGive>
           <subNodes>
-                <li Class="JobGiver_WanderAnywhere">
-                  <maxDanger>Deadly</maxDanger>
-                  <ticksBetweenWandersRange>
-                    <min>120</min>
-                    <max>240</max>
-                  </ticksBetweenWandersRange>
-                </li>
+            <li Class="JobGiver_WanderAnywhere">
+              <maxDanger>Deadly</maxDanger>
+              <ticksBetweenWandersRange>
+                <min>120</min>
+                <max>240</max>
+              </ticksBetweenWandersRange>
+            </li>
           </subNodes>
-        </li>
-        
-        <!-- Idle error -->
+        </li>        <!-- Idle error -->
         <li Class="JobGiver_IdleError"/>
       </subNodes>
     </thinkRoot>
   </ThinkTreeDef>
-  
 </Defs>

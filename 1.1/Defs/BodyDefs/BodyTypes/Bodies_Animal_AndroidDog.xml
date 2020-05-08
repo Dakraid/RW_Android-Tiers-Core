@@ -1,24 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-
 <Defs>
-
-	<BodyDef>
-		<defName>AndroidAnimalDoggo</defName>
-		<label>cybernetic animal</label>
-		<corePart>
- <def>MechanicalThorax</def>
+  <BodyDef>
+    <defName>AndroidAnimalDoggo</defName>
+    <label>cybernetic animal</label>
+    <corePart>
+      <def>MechanicalThorax</def>
       <height>Middle</height>
       <depth>Outside</depth>
       <parts>
-	  	  	<li>
+        <li>
           <def>Framework</def>
           <coverage>0</coverage>
           <depth>Outside</depth>
         </li>
-				<li>
-					<def>CounterWeightTail</def>
-					<coverage>0.07</coverage>
-				</li>
+        <li>
+          <def>CounterWeightTail</def>
+          <coverage>0.07</coverage>
+        </li>
         <li>
           <def>MStomach</def>
           <coverage>0.023</coverage>
@@ -75,28 +73,28 @@
             <li>Torso</li>
           </groups>
         </li>
-				<li>
+        <li>
           <def>MechanicalNeck</def>
           <coverage>0.10</coverage>
           <height>Top</height>
           <parts>
-                     <li>
+            <li>
               <def>Head</def>
               <coverage>0.72</coverage>
               <groups>
                 <li>UpperHead</li>
                 <li>FullHead</li>
-			   <li>HeadAttackTool</li>
+                <li>HeadAttackTool</li>
               </groups>
               <parts>
                 <li>
                   <def>ArtificialBrain</def>
                   <coverage>0.10</coverage>
                   <depth>Inside</depth>
-				      <groups>
-                        <li>UpperHead</li>
-                        <li>FullHead</li>
-                      </groups>
+                  <groups>
+                    <li>UpperHead</li>
+                    <li>FullHead</li>
+                  </groups>
                 </li>
                 <li>
                   <def>LeftSightSensor</def>
@@ -137,69 +135,68 @@
                     <li>FullHead</li>
                   </groups>
                 </li>
-				<li>
-					<def>CyberneticAnimalJaw</def>
-					<coverage>0.1</coverage>
-				<groups>
-                   <li>Teeth</li>
-                </groups>
-				</li>
+                <li>
+                  <def>CyberneticAnimalJaw</def>
+                  <coverage>0.1</coverage>
+                  <groups>
+                    <li>Teeth</li>
+                  </groups>
+                </li>
               </parts>
             </li>
           </parts>
         </li>
-				<li>
-					<def>FrontLeftMechanicalLeg</def>
-					<coverage>0.07</coverage>
-					<height>Bottom</height>
-					<parts>
-						<li>
-							<def>FrontLeftMechanicalPaw</def>
-							<coverage>0.15</coverage>
-							<groups>
-								<li>FrontLeftPaw</li>
-							</groups>
-						</li>
-					</parts>
-				</li>
-				<li>
-					<def>FrontRightMechanicalLeg</def>
-					<coverage>0.07</coverage>
-					<height>Bottom</height>
-					<parts>
-						<li>
-							<def>FrontRightMechanicalPaw</def>
-							<coverage>0.15</coverage>
-							<groups>
-								<li>FrontRightPaw</li>
-							</groups>
-						</li>
-					</parts>
-				</li>
-				<li>
-					<def>RearLeftMechanicalLeg</def>
-					<coverage>0.07</coverage>
-					<height>Bottom</height>
-					<parts>
-						<li>
-							<def>RearLeftMechanicalPaw</def>
-							<coverage>0.15</coverage>
-						</li>
-					</parts>
-				</li>
-				<li>
-					<def>RearRightMechanicalLeg</def>
-					<coverage>0.07</coverage>
-					<height>Bottom</height>
-					<parts>
-						<li>
-							<def>RearRightMechanicalPaw</def>
-							<coverage>0.15</coverage>
-						</li>
-					</parts>
-				</li>
-			</parts>
-		</corePart>
-	</BodyDef>
-
+        <li>
+          <def>FrontLeftMechanicalLeg</def>
+          <coverage>0.07</coverage>
+          <height>Bottom</height>
+          <parts>
+            <li>
+              <def>FrontLeftMechanicalPaw</def>
+              <coverage>0.15</coverage>
+              <groups>
+                <li>FrontLeftPaw</li>
+              </groups>
+            </li>
+          </parts>
+        </li>
+        <li>
+          <def>FrontRightMechanicalLeg</def>
+          <coverage>0.07</coverage>
+          <height>Bottom</height>
+          <parts>
+            <li>
+              <def>FrontRightMechanicalPaw</def>
+              <coverage>0.15</coverage>
+              <groups>
+                <li>FrontRightPaw</li>
+              </groups>
+            </li>
+          </parts>
+        </li>
+        <li>
+          <def>RearLeftMechanicalLeg</def>
+          <coverage>0.07</coverage>
+          <height>Bottom</height>
+          <parts>
+            <li>
+              <def>RearLeftMechanicalPaw</def>
+              <coverage>0.15</coverage>
+            </li>
+          </parts>
+        </li>
+        <li>
+          <def>RearRightMechanicalLeg</def>
+          <coverage>0.07</coverage>
+          <height>Bottom</height>
+          <parts>
+            <li>
+              <def>RearRightMechanicalPaw</def>
+              <coverage>0.15</coverage>
+            </li>
+          </parts>
+        </li>
+      </parts>
+    </corePart>
+  </BodyDef>
 </Defs>

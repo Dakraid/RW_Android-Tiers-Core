@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-
   <ThingDef Name="ATPP_Motebase" Abstract="True">
     <thingClass>MoteThrown</thingClass>
     <label>Mote</label>
@@ -14,14 +13,12 @@
     <useHitPoints>false</useHitPoints>
     <isSaveable>false</isSaveable>
     <rotatable>false</rotatable>
-	<mote>
+    <mote>
       <fadeInTime>0.5</fadeInTime>
       <solidTime>1.15</solidTime>
       <fadeOutTime>0.6</fadeOutTime>
     </mote>
   </ThingDef>
-
-
   <ThingDef ParentName="ATPP_Motebase">
     <defName>ATPP_MoteBIII</defName>
     <graphicData>
@@ -29,7 +26,6 @@
     </graphicData>
     <altitudeLayer>MoteOverhead</altitudeLayer>
   </ThingDef>
-  
   <ThingDef ParentName="ATPP_Motebase">
     <defName>ATPP_MoteBII</defName>
     <graphicData>
@@ -37,7 +33,6 @@
     </graphicData>
     <altitudeLayer>MoteOverhead</altitudeLayer>
   </ThingDef>
-  
   <ThingDef ParentName="ATPP_Motebase">
     <defName>ATPP_MoteBI</defName>
     <graphicData>
@@ -45,5 +40,4 @@
     </graphicData>
     <altitudeLayer>MoteOverhead</altitudeLayer>
   </ThingDef>
-
 </Defs>

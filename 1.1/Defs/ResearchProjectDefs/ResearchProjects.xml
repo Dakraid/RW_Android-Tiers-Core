@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-
   <ResearchProjectDef>
     <defName>ATPP_ResearchSM7</defName>
     <label>SM7 battle surrogate series</label>
@@ -11,10 +10,9 @@
     <prerequisites>
       <li>ATPP_ResearchSurrogateHost</li>
     </prerequisites>
-	<researchViewX>5</researchViewX>
+    <researchViewX>5</researchViewX>
     <researchViewY>0</researchViewY>
   </ResearchProjectDef>
-
   <ResearchProjectDef>
     <defName>ATPP_ResearchServerI100Serie</defName>
     <label>I100 series servers</label>
@@ -25,11 +23,9 @@
     <prerequisites>
       <li>MicroelectronicsBasics</li>
     </prerequisites>
-	<researchViewX>4</researchViewX>
+    <researchViewX>4</researchViewX>
     <researchViewY>4</researchViewY>
   </ResearchProjectDef>
-  
-  
   <ResearchProjectDef>
     <defName>ATPP_ResearchServerI300Serie</defName>
     <label>I300 series servers</label>
@@ -40,10 +36,9 @@
     <prerequisites>
       <li>ATPP_ResearchServerI100Serie</li>
     </prerequisites>
-	<researchViewX>5</researchViewX>
+    <researchViewX>5</researchViewX>
     <researchViewY>4</researchViewY>
   </ResearchProjectDef>
-  
   <ResearchProjectDef>
     <defName>ATPP_ResearchServerI500Serie</defName>
     <label>I500 series servers</label>
@@ -54,10 +49,9 @@
     <prerequisites>
       <li>ATPP_ResearchServerI300Serie</li>
     </prerequisites>
-	<researchViewX>6</researchViewX>
+    <researchViewX>6</researchViewX>
     <researchViewY>4</researchViewY>
   </ResearchProjectDef>
-  
   <ResearchProjectDef>
     <defName>ATPP_ResearchSkyCloudCore</defName>
     <label>SkyCloud Core</label>
@@ -67,12 +61,11 @@
     <techLevel>Spacer</techLevel>
     <prerequisites>
       <li>ATPP_ResearchVX2Chip</li>
-	  <li>ATPP_ResearchServerI500Serie</li>
+      <li>ATPP_ResearchServerI500Serie</li>
     </prerequisites>
-	<researchViewX>7</researchViewX>
+    <researchViewX>7</researchViewX>
     <researchViewY>2</researchViewY>
   </ResearchProjectDef>
-  
   <ResearchProjectDef>
     <defName>ATPP_ResearchVX3Chip</defName>
     <label>VX3 Neural Chip</label>
@@ -83,10 +76,9 @@
     <prerequisites>
       <li>ATPP_ResearchVX2Chip</li>
     </prerequisites>
-	<researchViewX>7</researchViewX>
+    <researchViewX>7</researchViewX>
     <researchViewY>1</researchViewY>
   </ResearchProjectDef>
-  
   <ResearchProjectDef>
     <defName>ATPP_ResearchVX2Chip</defName>
     <label>VX2 Neural Chip</label>
@@ -97,10 +89,9 @@
     <prerequisites>
       <li>ATPP_ResearchVX1Chip</li>
     </prerequisites>
-	<researchViewX>6</researchViewX>
+    <researchViewX>6</researchViewX>
     <researchViewY>1</researchViewY>
   </ResearchProjectDef>
-
   <ResearchProjectDef>
     <defName>ATPP_ResearchVX1Chip</defName>
     <label>VX1 Neural Chip</label>
@@ -111,10 +102,9 @@
     <prerequisites>
       <li>ATPP_ResearchSurrogateHost</li>
     </prerequisites>
-	<researchViewX>5</researchViewX>
+    <researchViewX>5</researchViewX>
     <researchViewY>1</researchViewY>
   </ResearchProjectDef>
-  
   <ResearchProjectDef>
     <defName>ATPP_ResearchVX0Chip</defName>
     <label>VX0 Neural Chip</label>
@@ -125,10 +115,9 @@
     <prerequisites>
       <li>MicroelectronicsBasics</li>
     </prerequisites>
-	<researchViewX>5</researchViewX>
+    <researchViewX>5</researchViewX>
     <researchViewY>5</researchViewY>
   </ResearchProjectDef>
-  
   <ResearchProjectDef>
     <defName>ATPP_ResearchBatteryOverload</defName>
     <label>Battery overload</label>
@@ -139,10 +128,9 @@
     <prerequisites>
       <li>T2ReplacementsOrgans</li>
     </prerequisites>
-	<researchViewX>4</researchViewX>
+    <researchViewX>4</researchViewX>
     <researchViewY>5</researchViewY>
   </ResearchProjectDef>
-  
   <ResearchProjectDef>
     <defName>ATPP_ResearchSkyMindWAN</defName>
     <label>SkyMind Antenna V2</label>
@@ -153,10 +141,9 @@
     <prerequisites>
       <li>T4Androids</li>
     </prerequisites>
-	<researchViewX>5</researchViewX>
+    <researchViewX>5</researchViewX>
     <researchViewY>3</researchViewY>
   </ResearchProjectDef>
-  
   <ResearchProjectDef>
     <defName>ATPP_ResearchSurrogateHost</defName>
     <label>SX androids series</label>
@@ -167,10 +154,9 @@
     <prerequisites>
       <li>T4Androids</li>
     </prerequisites>
-	<researchViewX>4</researchViewX>
+    <researchViewX>4</researchViewX>
     <researchViewY>1</researchViewY>
   </ResearchProjectDef>
-  
   <ResearchProjectDef>
     <defName>ATPP_ResearchSkyMindLAN</defName>
     <label>SkyMind Antenna V1</label>
@@ -181,10 +167,9 @@
     <prerequisites>
       <li>BasicRobotics</li>
     </prerequisites>
-	<researchViewX>0</researchViewX>
+    <researchViewX>0</researchViewX>
     <researchViewY>0</researchViewY>
   </ResearchProjectDef>
-  
   <ResearchProjectDef>
     <defName>ATPP_ResearchCharchingStation</defName>
     <label>Charging station</label>
@@ -195,10 +180,9 @@
     <prerequisites>
       <li>BasicRobotics</li>
     </prerequisites>
-	<researchViewX>0</researchViewX>
+    <researchViewX>0</researchViewX>
     <researchViewY>1</researchViewY>
   </ResearchProjectDef>
-
   <ResearchProjectDef>
     <defName>ATPP_ResearchCraftBasicNanoKit</defName>
     <label>Basic NanoKit</label>
@@ -209,10 +193,9 @@
     <prerequisites>
       <li>BasicRobotics</li>
     </prerequisites>
-	<researchViewX>1</researchViewX>
+    <researchViewX>1</researchViewX>
     <researchViewY>0</researchViewY>
   </ResearchProjectDef>
-  
   <ResearchProjectDef>
     <defName>ATPP_ResearchCraftIntermediateNanoKit</defName>
     <label>Intermediate NanoKit</label>
@@ -223,11 +206,10 @@
     <prerequisites>
       <li>ATPP_ResearchCraftBasicNanoKit</li>
     </prerequisites>
-	<researchViewX>2</researchViewX>
+    <researchViewX>2</researchViewX>
     <researchViewY>0</researchViewY>
   </ResearchProjectDef>
-  
-   <ResearchProjectDef>
+  <ResearchProjectDef>
     <defName>ATPP_ResearchCraftAdvancedNanoKit</defName>
     <label>Advanced NanoKit</label>
     <tab>AtlasAndroids</tab>
@@ -237,10 +219,9 @@
     <prerequisites>
       <li>ATPP_ResearchCraftIntermediateNanoKit</li>
     </prerequisites>
-	<researchViewX>3</researchViewX>
+    <researchViewX>3</researchViewX>
     <researchViewY>0</researchViewY>
   </ResearchProjectDef>
-  
   <ResearchProjectDef>
     <defName>ATPP_ResearchCraftRepairNaniteBanks</defName>
     <label>Cure old age malfunction</label>
@@ -251,8 +232,7 @@
     <prerequisites>
       <li>ATPP_ResearchCraftAdvancedNanoKit</li>
     </prerequisites>
-	<researchViewX>4</researchViewX>
+    <researchViewX>4</researchViewX>
     <researchViewY>0</researchViewY>
   </ResearchProjectDef>
-
 </Defs>

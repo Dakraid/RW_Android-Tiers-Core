@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-
   <BodyDef>
     <defName>MechanicalMicroDrone</defName>
     <label>Drone</label>
@@ -8,11 +7,11 @@
       <def>MechanicalChassis</def>
       <height>Middle</height>
       <depth>Outside</depth>
-	  <groups>
+      <groups>
         <li>Torso</li>
       </groups>
       <parts>
-	  	<li>
+        <li>
           <def>Framework</def>
           <coverage>0</coverage>
           <depth>Outside</depth>
@@ -60,17 +59,17 @@
               <groups>
                 <li>UpperHead</li>
                 <li>FullHead</li>
-			   <li>HeadAttackTool</li>
+                <li>HeadAttackTool</li>
               </groups>
               <parts>
                 <li>
                   <def>ArtificialBrain</def>
                   <coverage>0.10</coverage>
                   <depth>Inside</depth>
-				      <groups>
-                        <li>UpperHead</li>
-                        <li>FullHead</li>
-                      </groups>
+                  <groups>
+                    <li>UpperHead</li>
+                    <li>FullHead</li>
+                  </groups>
                 </li>
                 <li>
                   <def>LeftSightSensor</def>
@@ -95,17 +94,17 @@
         <li>
           <def>LeftWingBlade</def>
           <coverage>0.17</coverage>
-		  <groups>
+          <groups>
             <li>Arms</li>
-			<li>LeftWingBlade</li>
+            <li>LeftWingBlade</li>
           </groups>
         </li>
         <li>
           <def>RightWingBlade</def>
           <coverage>0.17</coverage>
-		  <groups>
+          <groups>
             <li>Arms</li>
-			<li>RightWingBlade</li>
+            <li>RightWingBlade</li>
           </groups>
         </li>
         <li>
@@ -128,5 +127,4 @@
       </parts>
     </corePart>
   </BodyDef>
-  
 </Defs>

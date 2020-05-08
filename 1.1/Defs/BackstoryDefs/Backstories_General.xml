@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Defs>
-
-	<!--Android General-->
-
+<Defs>	<!--Android General-->
 	<AlienRace.BackstoryDef>
 		<defName>AndroidCleaner</defName>
 		<title>Glitterworld cleaner</title>
@@ -31,7 +28,6 @@
 			<li>Intellectual</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidSoldier</defName>
 		<title>Shock troop</title>
@@ -68,7 +64,6 @@
 			<li>Intellectual</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidAgent</defName>
 		<title>Special agent</title>
@@ -98,7 +93,6 @@
 			<li>Intellectual</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidPilot</defName>
 		<title>Spaceplane pilot</title>
@@ -121,7 +115,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidStarship</defName>
 		<title>Starship commander</title>
@@ -148,7 +141,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>AndroidRiot</defName>
 		<title>Riot officer</title>
@@ -180,7 +172,6 @@
 			<li>PlantWork</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidGuard</defName>
 		<title>Bodyguard</title>
@@ -203,7 +194,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidSoldierInjured</defName>
 		<title>Broken soldier</title>
@@ -241,7 +231,6 @@
 			<li>ManualSkilled</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidHighChef</defName>
 		<title>Gourmet chef</title>
@@ -266,8 +255,6 @@
 			<li>Mining</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidUrbworldChef</defName>
 		<title>Urbworld chef</title>
@@ -289,7 +276,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidBartender</defName>
 		<title>Bartender</title>
@@ -315,7 +301,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidPrisonCook</defName>
 		<title>Prison cook</title>
@@ -337,7 +322,6 @@
 			<li>Intellectual</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidPet</defName>
 		<title>Subservient machine</title>
@@ -364,7 +348,6 @@
 			<li>Mining</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidDeepMiner</defName>
 		<title>Mining drone</title>
@@ -393,7 +376,6 @@
 			<li>MiningArm</li>
 		</forcedHediffs>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidMiner</defName>
 		<title>Tunnel worker</title>
@@ -425,7 +407,6 @@
 			</li>
 		</forcedTraits>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidProspector</defName>
 		<title>Prospector drone</title>
@@ -447,7 +428,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidConstructor</defName>
 		<title>Orbital engineer</title>
@@ -469,7 +449,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidBuilder</defName>
 		<title>Android architect</title>
@@ -495,7 +474,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidGrunt</defName>
 		<title>Construction drone</title>
@@ -525,7 +503,6 @@
 			<li>Intellectual</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidHydroponicFarmer</defName>
 		<title>Hydroponics engineer</title>
@@ -548,7 +525,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidFarmer</defName>
 		<title>Mechanical farmer</title>
@@ -570,7 +546,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidGardener</defName>
 		<title>Mechanical gardener</title>
@@ -595,7 +570,6 @@
 			<li>Violent</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidMechanic</defName>
 		<title>Android mechanic</title>
@@ -621,7 +595,6 @@
 			<li>ALReceptor</li>
 		</forcedHediffs>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidAerofleetEngineer</defName>
 		<title>Aerofleet engineer</title>
@@ -649,7 +622,6 @@
 			<li>PlantWork</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidComabtEngineer</defName>
 		<title>Combat engineer</title>
@@ -677,7 +649,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidFactoryWorker</defName>
 		<title>Factory worker</title>
@@ -709,7 +680,6 @@
 			<li>Artistic</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidSurgeon</defName>
 		<title>Pinpoint surgeon</title>
@@ -738,7 +708,6 @@
 			<li>ARArm</li>
 		</forcedHediffs>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidDoctor</defName>
 		<title>Clinic worker</title>
@@ -768,7 +737,6 @@
 			<li>Crafting</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidCarer</defName>
 		<title>Care worker</title>
@@ -798,7 +766,6 @@
 			<li>Crafting</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidResearcher</defName>
 		<title>Cybernetics researcher</title>
@@ -828,7 +795,6 @@
 			<li>OverclockedAndroid</li>
 		</forcedHediffs>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidChessPlayer</defName>
 		<title>Chess pro</title>
@@ -853,7 +819,6 @@
 			<li>Violent</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidDamaged</defName>
 		<title>Damaged android</title>
@@ -884,7 +849,6 @@
 			<li>Intellectual</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidHeavyLifter</defName>
 		<title>Heavy lifter</title>
@@ -910,7 +874,6 @@
 			<li>HydraulicFrame</li>
 		</forcedHediffs>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidProtected</defName>
 		<title>Protected creation</title>
@@ -937,7 +900,6 @@
 			<li>Intellectual</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidExiled</defName>
 		<title>Exiled android</title>
@@ -968,7 +930,6 @@
 			</li>
 		</forcedTraits>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidMusician</defName>
 		<title>Restaurant musician</title>
@@ -991,11 +952,9 @@
 		</skillGains>
 		<workDisables>
 			<li>Violent</li>
-
 			<li>Intellectual</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidExperiment</defName>
 		<title>Experimental android</title>
@@ -1026,7 +985,6 @@
 			<li>Artistic</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidComputer</defName>
 		<title>Mobile computer</title>
@@ -1057,7 +1015,6 @@
 			<li>Animals</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidDeity</defName>
 		<title>Worshipped android</title>
@@ -1088,7 +1045,6 @@
 			<li>Animals</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidScarred</defName>
 		<title>Scarred android</title>
@@ -1132,7 +1088,6 @@
 			<li>Violent</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidWaste</defName>
 		<title>Disposal unit</title>
@@ -1157,7 +1112,6 @@
 			<li>HydraulicArm</li>
 		</forcedHediffs>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidSecurity</defName>
 		<title>Station security</title>
@@ -1186,7 +1140,6 @@
 			<li>ManualSkilled</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidStationCook</defName>
 		<title>Station cook</title>
@@ -1215,7 +1168,6 @@
 			<li>Crafting</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidAnimalGeneticist</defName>
 		<title>Animal geneticist</title>
@@ -1240,7 +1192,6 @@
 			<li>Violent</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidApocalypseAndroid</defName>
 		<title>Apocalypse android</title>
@@ -1278,7 +1229,6 @@
 			</li>
 		</forcedTraits>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidHumanist</defName>
 		<title>Humanist</title>
@@ -1316,7 +1266,6 @@
 			</li>
 		</forcedTraits>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidPacifist</defName>
 		<title>Pacifist</title>
@@ -1351,7 +1300,6 @@
 			<li>Violent</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidAndroidRights</defName>
 		<title>Android activist</title>
@@ -1387,7 +1335,6 @@
 			<li>Violent</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidHumanSon</defName>
 		<title>Human's son</title>
@@ -1423,7 +1370,6 @@
 			<li>Violent</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidFoundryWorker</defName>
 		<title>Foundry worker</title>
@@ -1448,7 +1394,6 @@
 			<li>PlantWork</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidMaintenanceWorker</defName>
 		<title>Maintenance worker</title>
@@ -1470,7 +1415,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidMechanicalFarmhand</defName>
 		<title>Mechanical farmhand</title>
@@ -1488,7 +1432,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>CreationHatmaker</defName>
 		<title>Hatmaker</title>
@@ -1497,7 +1440,7 @@
 		<bodyTypeGlobal>Male</bodyTypeGlobal>
 		<slot>Adulthood</slot>
 		<spawnCategories>
-		    <li>BigMeanies</li>
+			<li>BigMeanies</li>
 			<li>AndroidGeneral</li>
 			<li>CollectiveSoldiers</li>
 		</spawnCategories>
@@ -1512,7 +1455,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>AndroidParticlePhysicist</defName>
 		<title>Particle physicist</title>
@@ -1540,7 +1482,6 @@
 			<li>PositronMind</li>
 		</forcedHediffs>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>AndroidPopIdol</defName>
 		<title>Pop idol</title>
@@ -1569,7 +1510,6 @@
 			<li>Intellectual</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidNegotiator</defName>
 		<title>Hostage negotiator</title>
@@ -1598,7 +1538,6 @@
 			<li>NegotiatorMind</li>
 		</forcedHediffs>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidMilitarySniper</defName>
 		<title>Military sniper</title>
@@ -1632,7 +1571,6 @@
 			</li>
 		</forcedTraits>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidGlassworldTerraformer</defName>
 		<title>Glassworld revivalist</title>
@@ -1654,7 +1592,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidDronePilot</defName>
 		<title>Drone pilot</title>
@@ -1676,7 +1613,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidDogWalker</defName>
 		<title>Dog walker</title>
@@ -1698,7 +1634,6 @@
 			<li>Intellectual</li>
 		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidMechanicalPriest</defName>
 		<title>Mechanical priest</title>
@@ -1731,7 +1666,6 @@
 			<li>CorruptMemory</li>
 		</forcedHediffs>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidHacked</defName>
 		<title>Hacked android</title>

@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 	<AlienRace.ThingDef_AlienRace ParentName="BasePawn">
-
 		<defName>Android2Tier</defName>
 		<label>T2 Android</label>
 		<description>A somewhat advanced android, capable of almost perfectly storing an AI consciousness and with reasonable levels of motor skills. A good all round android that is uses extensively on glitterworlds for basic maintenance and cleaning.</description>
 		<alienRace>
-
 			<raceRestriction>
 				<traitList>
 					<li>FeelingsTowardHumanity</li>
 				</traitList>
 			</raceRestriction>
-
 			<generalSettings>
 				<maleGenderProbability>2</maleGenderProbability>
 				<allowHumanBios>false</allowHumanBios>
@@ -45,7 +42,6 @@
 					<alienbodytypes>
 						<li>Male</li>
 					</alienbodytypes>
-
 					<aliencrowntypes>
 						<li>Average_Normal</li>
 						<li>AndroidPaintJob_2</li>
@@ -122,7 +118,6 @@
 				<relationChanceModifierSpouse>0</relationChanceModifierSpouse>
 			</relationSettings>
 		</alienRace>
-
 		<statBases>
 			<MarketValue>2500</MarketValue>
 			<MoveSpeed>4.50</MoveSpeed>
@@ -182,7 +177,6 @@
 					</extraMeleeDamages>
 				</surpriseAttack>
 			</li>
-
 			<li>
 				<label>head</label>
 				<capacities>
@@ -236,16 +230,16 @@
 			</specialShadowData>
 			<ageGenerationCurve>
 				<points>
-          <li>(0,0)</li>
-		  <li>(1,100)</li>
-		  <li>(2,100)</li>
-		  <li>(20,5)</li>
-          <li>(50,15)</li>
-		  <li>(100,40)</li>
-		  <li>(200,30)</li>
-		  <li>(400,20)</li>
-		  <li>(480,15)</li>
-		  <li>(500,0)</li>
+					<li>(0,0)</li>
+					<li>(1,100)</li>
+					<li>(2,100)</li>
+					<li>(20,5)</li>
+					<li>(50,15)</li>
+					<li>(100,40)</li>
+					<li>(200,30)</li>
+					<li>(400,20)</li>
+					<li>(480,15)</li>
+					<li>(500,0)</li>
 				</points>
 			</ageGenerationCurve>
 			<hediffGiverSets>
@@ -253,28 +247,28 @@
 			</hediffGiverSets>
 		</race>
 		<recipes>
-			  <li>ATPP_InstallT2ArtificialBrain</li>
-			  <li>ATPP_ApplyHealCPUSerum</li>
-			  <li>ATPP_ApplyHealCoolingSystem</li>
-			  <li>ATPP_ApplyHealFrameworkSystem</li>
-			  <li>ATPP_ApplyHydraulicNaniteBank</li>
-			  <li>ATPP_InstallRXChipOnAndroid</li>
-			  <li>ATPP_InstallVX0ChipOnAndroid</li>
-			  <li>ATPP_InstallVX1ChipOnAndroid</li>
-			  <li>ATPP_InstallVX2ChipOnAndroid</li>
-			  <li>ATPP_InstallVX3ChipOnAndroid</li>
-			  <li>ATPP_PaintAndroidFrameworkDefault</li>
-			  <li>ATPP_PaintAndroidFrameworkRed</li>
-			  <li>ATPP_PaintAndroidFrameworkOrange</li>
-			  <li>ATPP_PaintAndroidFrameworkYellow</li>
-			  <li>ATPP_PaintAndroidFrameworkKhaki</li>
-			  <li>ATPP_PaintAndroidFrameworkGreen</li>
-			  <li>ATPP_PaintAndroidFrameworkBlue</li>
-			  <li>ATPP_PaintAndroidFrameworkCyan</li>
-			  <li>ATPP_PaintAndroidFrameworkPurple</li>
-			  <li>ATPP_PaintAndroidFrameworkPink</li>
-			  <li>ATPP_PaintAndroidFrameworkBlack</li>
-			  <li>ATPP_PaintAndroidFrameworkWhite</li>
+			<li>ATPP_InstallT2ArtificialBrain</li>
+			<li>ATPP_ApplyHealCPUSerum</li>
+			<li>ATPP_ApplyHealCoolingSystem</li>
+			<li>ATPP_ApplyHealFrameworkSystem</li>
+			<li>ATPP_ApplyHydraulicNaniteBank</li>
+			<li>ATPP_InstallRXChipOnAndroid</li>
+			<li>ATPP_InstallVX0ChipOnAndroid</li>
+			<li>ATPP_InstallVX1ChipOnAndroid</li>
+			<li>ATPP_InstallVX2ChipOnAndroid</li>
+			<li>ATPP_InstallVX3ChipOnAndroid</li>
+			<li>ATPP_PaintAndroidFrameworkDefault</li>
+			<li>ATPP_PaintAndroidFrameworkRed</li>
+			<li>ATPP_PaintAndroidFrameworkOrange</li>
+			<li>ATPP_PaintAndroidFrameworkYellow</li>
+			<li>ATPP_PaintAndroidFrameworkKhaki</li>
+			<li>ATPP_PaintAndroidFrameworkGreen</li>
+			<li>ATPP_PaintAndroidFrameworkBlue</li>
+			<li>ATPP_PaintAndroidFrameworkCyan</li>
+			<li>ATPP_PaintAndroidFrameworkPurple</li>
+			<li>ATPP_PaintAndroidFrameworkPink</li>
+			<li>ATPP_PaintAndroidFrameworkBlack</li>
+			<li>ATPP_PaintAndroidFrameworkWhite</li>
 			<li>AdministerMechSerumHealer</li>
 			<li>InstallJoywire</li>
 			<li>InstallBasicReplacementArm</li>
@@ -314,13 +308,10 @@
 			<li>InstallHydraulicReplacementLeg</li>
 			<li>InstallHydraulicReplacementArm</li>
 			<li>InstallDrillArm</li>
-
 			<li>ReprogramTraitsAndroidSimple</li>
 			<li>OverclockAndroid</li>
 			<li>RemoveAndroidSentience</li>
-			<li>RerollAndroidTraits</li>
-			<!--InstallPlating-->
-		</recipes>
+			<li>RerollAndroidTraits</li>			<!--InstallPlating--></recipes>
 		<butcherProducts>
 			<Plasteel>20</Plasteel>
 			<ComponentIndustrial>3</ComponentIndustrial>
@@ -331,5 +322,4 @@
 			</li>
 		</modExtensions>
 	</AlienRace.ThingDef_AlienRace>
-
 </Defs>

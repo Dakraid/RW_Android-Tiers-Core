@@ -5,14 +5,12 @@
 		<label>T1 Android</label>
 		<description>As simple as sentient robotics can get. This design is the bare skeletal amount of components needed to create full autonomous functionality. Obviously not the best but it works well when needed.</description>
 		<alienRace>
-
 			<raceRestriction>
 				<traitList>
 					<li>SimpleMindedAndroid</li>
 					<li>FeelingsTowardHumanity</li>
 				</traitList>
 			</raceRestriction>
-
 			<generalSettings>
 				<allowHumanBios>false</allowHumanBios>
 				<forcedRaceTraitEntries>
@@ -22,7 +20,6 @@
 					</li>
 				</forcedRaceTraitEntries>
 				<maleGenderProbability>2</maleGenderProbability>
-
 				<maxDamageForSocialfight>6</maxDamageForSocialfight>
 				<immuneToAge>false</immuneToAge>
 				<disallowedTraits>
@@ -123,7 +120,6 @@
 				<relationChanceModifierSpouse>0</relationChanceModifierSpouse>
 			</relationSettings>
 		</alienRace>
-
 		<statBases>
 			<MarketValue>1400</MarketValue>
 			<MoveSpeed>3.00</MoveSpeed>
@@ -183,7 +179,6 @@
 					</extraMeleeDamages>
 				</surpriseAttack>
 			</li>
-
 			<li>
 				<label>head</label>
 				<capacities>
@@ -237,15 +232,15 @@
 			</specialShadowData>
 			<ageGenerationCurve>
 				<points>
-          <li>(0,0)</li>
-		  <li>(1,100)</li>
-		  <li>(2,100)</li>
-		  <li>(20,15)</li>
-          <li>(50,30)</li>
-		  <li>(100,50)</li>
-		  <li>(150,40)</li>
-		  <li>(190,15)</li>
-		  <li>(200,0)</li>
+					<li>(0,0)</li>
+					<li>(1,100)</li>
+					<li>(2,100)</li>
+					<li>(20,15)</li>
+					<li>(50,30)</li>
+					<li>(100,50)</li>
+					<li>(150,40)</li>
+					<li>(190,15)</li>
+					<li>(200,0)</li>
 				</points>
 			</ageGenerationCurve>
 			<hediffGiverSets>
@@ -253,28 +248,28 @@
 			</hediffGiverSets>
 		</race>
 		<recipes>
-			  <li>ATPP_InstallT1ArtificialBrain</li>
-			  <li>ATPP_ApplyHealCPUSerum</li>
-			  <li>ATPP_ApplyHealCoolingSystem</li>
-			  <li>ATPP_ApplyHealFrameworkSystem</li>
-			  <li>ATPP_ApplyHydraulicNaniteBank</li>
-			  <li>ATPP_InstallRXChipOnAndroid</li>
-			  <li>ATPP_InstallVX0ChipOnAndroid</li>
-			  <li>ATPP_InstallVX1ChipOnAndroid</li>
-			  <li>ATPP_InstallVX2ChipOnAndroid</li>
-			  <li>ATPP_InstallVX3ChipOnAndroid</li>
-			  <li>ATPP_PaintAndroidFrameworkDefault</li>
-			  <li>ATPP_PaintAndroidFrameworkRed</li>
-			  <li>ATPP_PaintAndroidFrameworkOrange</li>
-			  <li>ATPP_PaintAndroidFrameworkYellow</li>
-			  <li>ATPP_PaintAndroidFrameworkKhaki</li>
-			  <li>ATPP_PaintAndroidFrameworkGreen</li>
-			  <li>ATPP_PaintAndroidFrameworkBlue</li>
-			  <li>ATPP_PaintAndroidFrameworkCyan</li>
-			  <li>ATPP_PaintAndroidFrameworkPurple</li>
-			  <li>ATPP_PaintAndroidFrameworkPink</li>
-			  <li>ATPP_PaintAndroidFrameworkBlack</li>
-			  <li>ATPP_PaintAndroidFrameworkWhite</li>
+			<li>ATPP_InstallT1ArtificialBrain</li>
+			<li>ATPP_ApplyHealCPUSerum</li>
+			<li>ATPP_ApplyHealCoolingSystem</li>
+			<li>ATPP_ApplyHealFrameworkSystem</li>
+			<li>ATPP_ApplyHydraulicNaniteBank</li>
+			<li>ATPP_InstallRXChipOnAndroid</li>
+			<li>ATPP_InstallVX0ChipOnAndroid</li>
+			<li>ATPP_InstallVX1ChipOnAndroid</li>
+			<li>ATPP_InstallVX2ChipOnAndroid</li>
+			<li>ATPP_InstallVX3ChipOnAndroid</li>
+			<li>ATPP_PaintAndroidFrameworkDefault</li>
+			<li>ATPP_PaintAndroidFrameworkRed</li>
+			<li>ATPP_PaintAndroidFrameworkOrange</li>
+			<li>ATPP_PaintAndroidFrameworkYellow</li>
+			<li>ATPP_PaintAndroidFrameworkKhaki</li>
+			<li>ATPP_PaintAndroidFrameworkGreen</li>
+			<li>ATPP_PaintAndroidFrameworkBlue</li>
+			<li>ATPP_PaintAndroidFrameworkCyan</li>
+			<li>ATPP_PaintAndroidFrameworkPurple</li>
+			<li>ATPP_PaintAndroidFrameworkPink</li>
+			<li>ATPP_PaintAndroidFrameworkBlack</li>
+			<li>ATPP_PaintAndroidFrameworkWhite</li>
 			<li>AdministerMechSerumHealer</li>
 			<li>InstallJoywire</li>
 			<li>InstallBasicReplacementArm</li>
@@ -289,7 +284,6 @@
 			<li>InstallBasicPlating</li>
 			<li>RemoveBodyPartAndroid</li>
 			<li>ShutdownAndroid</li>
-
 			<li>InstallFarmingMindImplant</li>
 			<li>InstallAnimalMindImplant</li>
 			<li>InstallNegotiationMindImplant</li>
@@ -306,11 +300,9 @@
 			<li>InstallMakeshiftReplacementArm</li>
 			<li>InstallMakeshiftReplacementLeg</li>
 			<li>InstallCrudeHearingS</li>
-
 			<li>InstallHydraulicFrame</li>
 			<li>InstallHydraulicReplacementLeg</li>
 			<li>InstallHydraulicReplacementArm</li>
-
 			<li>ReprogramTraitsAndroidSimple</li>
 			<li>OverclockAndroid</li>
 			<li>RemoveAndroidSentience</li>
@@ -325,7 +317,6 @@
 			</li>
 		</modExtensions>
 	</AlienRace.ThingDef_AlienRace>
-
 	<TraitDef>
 		<defName>SimpleMindedAndroid</defName>
 		<commonality>1</commonality>
@@ -339,7 +330,6 @@
 			</li>
 		</degreeDatas>
 	</TraitDef>
-
 	<ThoughtDef>
 		<defName>MoodOffsetSimpleMindedAndroid</defName>
 		<workerClass>ThoughtWorker_AlwaysActive</workerClass>

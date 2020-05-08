@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-
 	<ThingDef ParentName="AnimalAndroidThingBase">
 		<defName>AndroidDog</defName>
 		<label>K-9 cybernetic unit</label>
@@ -134,12 +133,8 @@
 			<li>InstallLowPowerTransformer</li>
 			<li>InstallBasicDCConverter</li>
 			<li>InstallAdv2Plating</li>
-
 			<li>InstallHydraulicFrame</li>
-			<li>InstallHydraulicReplacementLeg</li>
-
-			<!--Plating and shield-->
-		</recipes>
+			<li>InstallHydraulicReplacementLeg</li>			<!--Plating and shield--></recipes>
 		<butcherProducts>
 			<Plasteel>30</Plasteel>
 			<ComponentIndustrial>4</ComponentIndustrial>
@@ -150,7 +145,6 @@
 			</li>
 		</modExtensions>
 	</ThingDef>
-
 	<PawnKindDef ParentName="AnimalAndroidKindBaseDog">
 		<defName>AndroidDog</defName>
 		<label>K-9 cybernetic unit</label>
@@ -173,10 +167,6 @@
 					<drawSize>1.4</drawSize>
 				</dessicatedBodyGraphicData>
 			</li>
-
 		</lifeStages>
 	</PawnKindDef>
-
-
-
 </Defs>

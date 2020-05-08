@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<LanguageData>
-
-  <!-- AI Generator description -->
-  
+<LanguageData>  <!-- AI Generator description -->
   <ATPP_T4BlankGeneratorAI.label>T4 Blank android</ATPP_T4BlankGeneratorAI.label>
   <ATPP_T4BlankGeneratorAI.description>Create a blank neural network android</ATPP_T4BlankGeneratorAI.description>
-  
   <ATPP_T3BlankGeneratorAI.label>T3 Blank android</ATPP_T3BlankGeneratorAI.label>
   <ATPP_T3BlankGeneratorAI.description>Create a blank neural network android</ATPP_T3BlankGeneratorAI.description>
-  
 </LanguageData>

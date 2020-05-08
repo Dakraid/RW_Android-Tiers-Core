@@ -1,8 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Defs>
-
-  <!-- Random social interactions OK -->
-
+<Defs>  <!-- Random social interactions OK -->
   <ThoughtDef>
     <defName>RoboticsChat</defName>
     <thoughtClass>Thought_MemorySocialCumulative</thoughtClass>
@@ -18,7 +15,6 @@
       </li>
     </stages>
   </ThoughtDef>
- 
   <ThoughtDef>
     <defName>AndroidsChat</defName>
     <thoughtClass>Thought_MemorySocialCumulative</thoughtClass>
@@ -34,6 +30,4 @@
       </li>
     </stages>
   </ThoughtDef>
-
-  
 </Defs>

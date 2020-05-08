@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-
   <ThingDef Name="BodyPartBase" Abstract="True">
     <thingClass>ThingWithComps</thingClass>
     <category>Item</category>
@@ -9,8 +8,8 @@
     <statBases>
       <MaxHitPoints>50</MaxHitPoints>
       <Flammability>0.7</Flammability>
-			<Beauty>-4</Beauty>
-		</statBases>
+      <Beauty>-4</Beauty>
+    </statBases>
     <altitudeLayer>Item</altitudeLayer>
     <tickerType>Never</tickerType>
     <alwaysHaulable>true</alwaysHaulable>
@@ -23,17 +22,14 @@
     </comps>
     <pathCost>10</pathCost>
   </ThingDef>
-
-
   <ThingDef ParentName="BodyPartBase" Name="BodyPartAndroidBase" Abstract="True">
     <thingCategories>
       <li>BodyPartsAndroid</li>
     </thingCategories>
-		<statBases>
-			<DeteriorationRate>2.0</DeteriorationRate>
-		</statBases>
+    <statBases>
+      <DeteriorationRate>2.0</DeteriorationRate>
+    </statBases>
   </ThingDef>
-
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>SteelPlating</defName>
     <label>steel framing</label>
@@ -50,7 +46,6 @@
       <li>Simple</li>
     </techHediffsTags>
   </ThingDef>
-  
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>PlasteelPlating</defName>
     <label>plasteel frame coverings</label>
@@ -67,7 +62,6 @@
       <li>Simple</li>
     </techHediffsTags>
   </ThingDef>
- 
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>CompositePlating</defName>
     <label>composite frame plating</label>
@@ -83,9 +77,7 @@
     <techHediffsTags>
       <li>Advanced</li>
     </techHediffsTags>
-  </ThingDef>
-
-	<!--Utility Parts-->
+  </ThingDef>  <!--Utility Parts-->
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>HydraulicFrame</defName>
     <label>hydraulic frame</label>
@@ -102,7 +94,6 @@
       <li>Utility</li>
     </techHediffsTags>
   </ThingDef>
-  
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>HydraulicLeg</defName>
     <label>hydraulic leg</label>
@@ -119,7 +110,6 @@
       <li>Utility</li>
     </techHediffsTags>
   </ThingDef>
-  
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>HydraulicArm</defName>
     <label>hydraulic arm</label>
@@ -136,8 +126,6 @@
       <li>Utility</li>
     </techHediffsTags>
   </ThingDef>
-  
- 
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>MiningArm</defName>
     <label>mining arm</label>
@@ -153,10 +141,7 @@
     <techHediffsTags>
       <li>Utility</li>
     </techHediffsTags>
-  </ThingDef>
-  
- <!--======================================-->
- 
+  </ThingDef>  <!--======================================-->
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>BasicReplacementArm</defName>
     <label>basic replacement arm</label>
@@ -173,7 +158,6 @@
       <li>Simple</li>
     </techHediffsTags>
   </ThingDef>
-
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>BasicReplacementLeg</defName>
     <label>basic replacement leg</label>
@@ -190,7 +174,6 @@
       <li>Simple</li>
     </techHediffsTags>
   </ThingDef>
- 
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>CrudeHeatsink</defName>
     <label>crude heatsink</label>
@@ -207,7 +190,6 @@
       <li>Simple</li>
     </techHediffsTags>
   </ThingDef>
- 
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>LightReceivingDiode</defName>
     <label>crude light sensor</label>
@@ -224,7 +206,6 @@
       <li>Simple</li>
     </techHediffsTags>
   </ThingDef>
-  
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>FlimsyCoolantPump</defName>
     <label>crude coolant pump</label>
@@ -241,7 +222,6 @@
       <li>Simple</li>
     </techHediffsTags>
   </ThingDef>
-  
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>SmallBatteryPack</defName>
     <label>crude battery pack</label>
@@ -258,7 +238,6 @@
       <li>Simple</li>
     </techHediffsTags>
   </ThingDef>
- 
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>TubeSealantTank</defName>
     <label>crude mechanite storage</label>
@@ -275,7 +254,6 @@
       <li>Simple</li>
     </techHediffsTags>
   </ThingDef>
-  
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>LowPowerTransformer</defName>
     <label>crude bio-reactor</label>
@@ -292,7 +270,6 @@
       <li>Simple</li>
     </techHediffsTags>
   </ThingDef>
-  
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>BasicDCConverter</defName>
     <label>crude power converter</label>
@@ -309,7 +286,6 @@
       <li>Simple</li>
     </techHediffsTags>
   </ThingDef>
-
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>AdvancedReplacementArm</defName>
     <label>high power arm</label>
@@ -329,7 +305,6 @@
       <li>Advanced</li>
     </techHediffsTags>
   </ThingDef>
-  
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>AdvancedReplacementLeg</defName>
     <label>high power leg</label>
@@ -349,7 +324,6 @@
       <li>Advanced</li>
     </techHediffsTags>
   </ThingDef>
-  
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>MultiSpectrumEye</defName>
     <label>advanced light sensor</label>
@@ -369,7 +343,6 @@
       <li>Advanced</li>
     </techHediffsTags>
   </ThingDef>
-  
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>MultiLayerHeatsink</defName>
     <label>advanced heatsink</label>
@@ -389,7 +362,6 @@
       <li>Advanced</li>
     </techHediffsTags>
   </ThingDef>
-  
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>AdvancedCoolantInjector</defName>
     <label>advanced coolant pump</label>
@@ -409,7 +381,6 @@
       <li>Advanced</li>
     </techHediffsTags>
   </ThingDef>
- 
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>NanowireBattery</defName>
     <label>advanced battery pack</label>
@@ -429,8 +400,7 @@
       <li>Advanced</li>
     </techHediffsTags>
   </ThingDef>
-
-   <ThingDef ParentName="BodyPartAndroidBase">
+  <ThingDef ParentName="BodyPartAndroidBase">
     <defName>NaniteStorageDevice</defName>
     <label>advanced mechanite storage</label>
     <description>Compared to it's precursor; this mechanism of repair allows for quicker operation and recovery from memetic hazards such as malicious viruses by releasing a swarm of nanites within the coolant of the android it is host to.\n\n Increases android healing rate by 30% \n\n Can be installed on \n - T3 Androids \n - T4 Androids \n - T5 Androids</description>
@@ -449,7 +419,6 @@
       <li>Advanced</li>
     </techHediffsTags>
   </ThingDef>
-
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>HighPowerTransformer</defName>
     <label>advanced bio-reactor</label>
@@ -469,7 +438,6 @@
       <li>Advanced</li>
     </techHediffsTags>
   </ThingDef>
-  
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>HighPowerConverter</defName>
     <label>advanced power converter</label>
@@ -489,7 +457,6 @@
       <li>Advanced</li>
     </techHediffsTags>
   </ThingDef>
-  
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>BasicRearCounterweight</defName>
     <label>basic counterweight</label>
@@ -509,7 +476,6 @@
       <li>Simple</li>
     </techHediffsTags>
   </ThingDef>
- 
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>AdvRearCounterweight</defName>
     <label>advanced counterweight</label>
@@ -529,7 +495,6 @@
       <li>Advanced</li>
     </techHediffsTags>
   </ThingDef>
-  
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>CrudeJawAndroid</defName>
     <label>crude jaw</label>
@@ -549,7 +514,6 @@
       <li>Simple</li>
     </techHediffsTags>
   </ThingDef>
- 
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>AdvJawAndroid</defName>
     <label>cybernetic jaw</label>
@@ -568,11 +532,8 @@
     <techHediffsTags>
       <li>Advanced</li>
     </techHediffsTags>
-  </ThingDef>
-  
- <!--Implants-->
- 
-   <ThingDef ParentName="BodyPartAndroidBase">
+  </ThingDef>  <!--Implants-->
+  <ThingDef ParentName="BodyPartAndroidBase">
     <defName>PositronMindImplant</defName>
     <label>positronic rewiring</label>
     <description>This implant completely overhauls the standard electronic wiring of the artificial brain. Replacing it with higher efficiency positronic wire pathways.\n\n Can be installed on \n - T1 Androids \n - T2 Androids \n - T3 Androids \n - T4 Androids \n - T5 Androids</description>
@@ -591,8 +552,7 @@
       <li>Advanced</li>
     </techHediffsTags>
   </ThingDef>
- 
-   <ThingDef ParentName="BodyPartAndroidBase">
+  <ThingDef ParentName="BodyPartAndroidBase">
     <defName>SoldierMindImplant</defName>
     <label>soldier implant</label>
     <description>This implant allows the android to perceive the trajectories of projectiles in real time. Along with the ability to perform war simulations inside their own mind as a secondary function.\n\n Can be installed on \n - T1 Androids \n - T2 Androids \n - T3 Androids \n - T4 Androids \n - T5 Androids</description>
@@ -611,8 +571,7 @@
       <li>Advanced</li>
     </techHediffsTags>
   </ThingDef>
- 
-   <ThingDef ParentName="BodyPartAndroidBase">
+  <ThingDef ParentName="BodyPartAndroidBase">
     <defName>BuilderMindImplant</defName>
     <label>blueprints implant</label>
     <description>Allowing the android to store multiple banks of blueprints at once, this helps the android massively with construction.\n\n Can be installed on \n - T1 Androids \n - T2 Androids \n - T3 Androids \n - T4 Androids \n - T5 Androids</description>
@@ -631,8 +590,7 @@
       <li>Advanced</li>
     </techHediffsTags>
   </ThingDef>
- 
-   <ThingDef ParentName="BodyPartAndroidBase">
+  <ThingDef ParentName="BodyPartAndroidBase">
     <defName>SurgeonMindImplant</defName>
     <label>tricorder implant</label>
     <description>This tricorder has been minified by a factor of ten for fitting within an androids mind. This version allows the android to scan biological creatures and determine a diagnosis with just a glance.\n\n Can be installed on \n - T1 Androids \n - T2 Androids \n - T3 Androids \n - T4 Androids \n - T5 Androids</description>
@@ -650,9 +608,8 @@
     <techHediffsTags>
       <li>Advanced</li>
     </techHediffsTags>
-  </ThingDef> 
-  
-   <ThingDef ParentName="BodyPartAndroidBase">
+  </ThingDef>
+  <ThingDef ParentName="BodyPartAndroidBase">
     <defName>SpeedMindImplant</defName>
     <label>neural highways</label>
     <description>This implant remaps the inner workings of the mind, allowing the formation of "highways" for electronic signals.\n\n Can be installed on \n - T1 Androids \n - T2 Androids \n - T3 Androids \n - T4 Androids \n - T5 Androids</description>
@@ -670,9 +627,8 @@
     <techHediffsTags>
       <li>Advanced</li>
     </techHediffsTags>
-  </ThingDef> 
-  
-   <ThingDef ParentName="BodyPartAndroidBase">
+  </ThingDef>
+  <ThingDef ParentName="BodyPartAndroidBase">
     <defName>GeoMindImplant</defName>
     <label>Geological implant</label>
     <description>This implant when installed; helps an android by overlaying augmented vision of the rock face they are mining from. Showing them real time updates on how to remove rock and material from rock with the highest efficiency.\n\n Can be installed on \n - T1 Androids \n - T2 Androids \n - T3 Androids \n - T4 Androids \n - T5 Androids</description>
@@ -690,9 +646,8 @@
     <techHediffsTags>
       <li>Advanced</li>
     </techHediffsTags>
-  </ThingDef> 
- 
-   <ThingDef ParentName="BodyPartAndroidBase">
+  </ThingDef>
+  <ThingDef ParentName="BodyPartAndroidBase">
     <defName>MechanicMindImplant</defName>
     <label>Engineering implant</label>
     <description>This implant when installed; aids an android in all things mechanical, severely increasing android surgery success and mechanoid disassembly efficiency.\n\n Can be installed on \n - T1 Androids \n - T2 Androids \n - T3 Androids \n - T4 Androids \n - T5 Androids</description>
@@ -710,9 +665,8 @@
     <techHediffsTags>
       <li>Advanced</li>
     </techHediffsTags>
-  </ThingDef> 
- 
-   <ThingDef ParentName="BodyPartAndroidBase">
+  </ThingDef>
+  <ThingDef ParentName="BodyPartAndroidBase">
     <defName>CookingMindImplant</defName>
     <label>Cuisine implant</label>
     <description>When installed, this implant will automatically upload information on basic health and safety, along with various cooking techniques. Used widely in glitterworld restaurants for VIP Guests.\n\n Can be installed on \n - T1 Androids \n - T2 Androids \n - T3 Androids \n - T4 Androids \n - T5 Androids</description>
@@ -730,9 +684,8 @@
     <techHediffsTags>
       <li>Advanced</li>
     </techHediffsTags>
-  </ThingDef> 
- 
-    <ThingDef ParentName="BodyPartAndroidBase">
+  </ThingDef>
+  <ThingDef ParentName="BodyPartAndroidBase">
     <defName>CharismaMindImplant</defName>
     <label>Charisma implant</label>
     <description>Whether you simply want your androids to be more sociable or for a doctor to have better bedside manner, this implant will help. Allowing an android to more easily notice micro emotions in voices and body language. \n\n Can be installed on \n - T1 Androids \n - T2 Androids \n - T3 Androids \n - T4 Androids \n - T5 Androids</description>
@@ -750,9 +703,8 @@
     <techHediffsTags>
       <li>Advanced</li>
     </techHediffsTags>
-  </ThingDef> 
-  
-     <ThingDef ParentName="BodyPartAndroidBase">
+  </ThingDef>
+  <ThingDef ParentName="BodyPartAndroidBase">
     <defName>NegotiationMindImplant</defName>
     <label>Negotiator implant</label>
     <description>Installed mandatorily onto bodyguard androids and specialist police force androids. This implant aids in negotiation techniques through a wide range of scenarios, whether they be: interrogation or simple trading. This implant was made quite infamous through use in "Connor" model androids. \n\n Can be installed on \n - T1 Androids \n - T2 Androids \n - T3 Androids \n - T4 Androids \n - T5 Androids</description>
@@ -770,9 +722,8 @@
     <techHediffsTags>
       <li>Advanced</li>
     </techHediffsTags>
-  </ThingDef> 
- 
-     <ThingDef ParentName="BodyPartAndroidBase">
+  </ThingDef>
+  <ThingDef ParentName="BodyPartAndroidBase">
     <defName>AnimalMindImplant</defName>
     <label>Zoology implant</label>
     <description>A simple implant that aids any androids in the ability to control and tame animals by being able to notice the animalistic emotions of most creatures in much more depth. \n\n Can be installed on \n - T1 Androids \n - T2 Androids \n - T3 Androids \n - T4 Androids \n - T5 Androids</description>
@@ -790,9 +741,8 @@
     <techHediffsTags>
       <li>Advanced</li>
     </techHediffsTags>
-  </ThingDef> 
- 
-     <ThingDef ParentName="BodyPartAndroidBase">
+  </ThingDef>
+  <ThingDef ParentName="BodyPartAndroidBase">
     <defName>FarmingMindImplant</defName>
     <label>Agricultural implant</label>
     <description>This implant adds an augmented view to any android's sight that helps in argiculture hugely, overlaying a special UI that displays the minerals in the soil and health of crops through the use of several spectrographic scans emitted from the orbit of the eye. \n\n Can be installed on \n - T1 Androids \n - T2 Androids \n - T3 Androids \n - T4 Androids \n - T5 Androids</description>
@@ -810,10 +760,8 @@
     <techHediffsTags>
       <li>Advanced</li>
     </techHediffsTags>
-  </ThingDef> 
- 
- 
-   <ThingDef ParentName="BodyPartAndroidBase">
+  </ThingDef>
+  <ThingDef ParentName="BodyPartAndroidBase">
     <defName>BasicLaborMindImplant</defName>
     <label>Basic labor chip</label>
     <description>A basic labor chip; the standard for most factory androids, it will teach the android several new ways of performing tasks in a much quicker, more efficient fashion.\n\n Can be installed on \n - T1 Androids \n - T2 Androids \n - T3 Androids \n - T4 Androids \n - T5 Androids</description>
@@ -831,12 +779,8 @@
     <techHediffsTags>
       <li>Advanced</li>
     </techHediffsTags>
-  </ThingDef> 
-  
-  
-  <!--Secret-->
-
-    <ThingDef ParentName="BodyPartAndroidBase">
+  </ThingDef>  <!--Secret-->
+  <ThingDef ParentName="BodyPartAndroidBase">
     <defName>EvolvingImplant</defName>
     <label>Evolving AI Upgrade</label>
     <description>This implant allows the current AI to evolve on itself. Over time - this pawn will slowly become more and more mentally complex. Reaching peak efficiency in all it does.\n\n Can be installed on \n - T1 Androids \n - T2 Androids \n - T3 Androids \n - T4 Androids \n - T5 Androids</description>
@@ -854,9 +798,8 @@
     <techHediffsTags>
       <li>secret</li>
     </techHediffsTags>
-  </ThingDef> 
-
-    <ThingDef ParentName="BodyPartAndroidBase">
+  </ThingDef>
+  <ThingDef ParentName="BodyPartAndroidBase">
     <defName>CyberReplacementArm</defName>
     <label>Cybernetic arm</label>
     <description>This arm uses Ultraweave composites developed by only the most advanced glitterworld societies to produce an extremely strong and durable upgrade.\n\n Can be installed on \n - T4 Androids \n - T5 Androids</description>
@@ -872,7 +815,6 @@
       <li>secret</li>
     </techHediffsTags>
   </ThingDef>
-
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>CyberReplacementLeg</defName>
     <label>Cybernetic leg</label>
@@ -889,7 +831,6 @@
       <li>secret</li>
     </techHediffsTags>
   </ThingDef>
- 
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>SecretHeatsink</defName>
     <label>archotech heatsink</label>
@@ -906,7 +847,6 @@
       <li>secret</li>
     </techHediffsTags>
   </ThingDef>
- 
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>MDEye</defName>
     <label>archotech light sensor</label>
@@ -923,7 +863,6 @@
       <li>secret</li>
     </techHediffsTags>
   </ThingDef>
-  
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>SecretCoolantPump</defName>
     <label>archotech coolant pump</label>
@@ -940,7 +879,6 @@
       <li>secret</li>
     </techHediffsTags>
   </ThingDef>
-  
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>SecretBatteryPack</defName>
     <label>archotech battery pack</label>
@@ -957,7 +895,6 @@
       <li>secret</li>
     </techHediffsTags>
   </ThingDef>
- 
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>ArchotechNanites</defName>
     <label>archotech mechanite storage</label>
@@ -974,7 +911,6 @@
       <li>secret</li>
     </techHediffsTags>
   </ThingDef>
-  
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>MolecularDecomposer</defName>
     <label>archotech archotech bio-reactor</label>
@@ -991,7 +927,6 @@
       <li>secret</li>
     </techHediffsTags>
   </ThingDef>
-  
   <ThingDef ParentName="BodyPartAndroidBase">
     <defName>QuantumConverter</defName>
     <label>archotech power converter</label>
@@ -1008,9 +943,7 @@
       <li>secret</li>
     </techHediffsTags>
   </ThingDef>
-  
-  
-    <ThingDef ParentName="BodyPartAndroidBase">
+  <ThingDef ParentName="BodyPartAndroidBase">
     <defName>CrudeHearingS</defName>
     <label>crude hearing sensor</label>
     <description>This hearing sensor simply acts as a basic interpretation implant, allowing for the translation of only the most basic sounds.\n\n Can be installed on \n - T1 Androids \n - T2 Androids \n - T3 Androids \n - T4 Androids \n - T5 Androids</description>
@@ -1026,8 +959,7 @@
       <li>Simple</li>
     </techHediffsTags>
   </ThingDef>
-  
-    <ThingDef ParentName="BodyPartAndroidBase">
+  <ThingDef ParentName="BodyPartAndroidBase">
     <defName>AdvHearingS</defName>
     <label>advanced hearing sensor</label>
     <description>This hearing sensor is accurate up to a kilometer. Making it very useful when picking up the faintest of sounds.\n\n Can be installed on \n - T3 Androids \n - T4 Androids \n - T5 Androids</description>
@@ -1043,8 +975,7 @@
       <li>Advanced</li>
     </techHediffsTags>
   </ThingDef>
-  
-    <ThingDef ParentName="BodyPartAndroidBase">
+  <ThingDef ParentName="BodyPartAndroidBase">
     <defName>ArchHearingS</defName>
     <label>archotech hearing sensor</label>
     <description>This sensor is the state of the line in sound detection, able to detect all frequencies of sound. It has potentially unlimited detection.\n\n Can be installed on \n - T4 Androids \n - T5 Androids</description>
@@ -1060,8 +991,7 @@
       <li>secret</li>
     </techHediffsTags>
   </ThingDef>
-  
-    <ThingDef ParentName="BodyPartAndroidBase">
+  <ThingDef ParentName="BodyPartAndroidBase">
     <defName>SmellingAdvS</defName>
     <label>advanced smelling sensor</label>
     <description>The widened openings on this smell sensor not only allow for the detection of odor but also increases ventilation.\n\n Can be installed on \n - T2 Androids \n - T3 Androids \n - T4 Androids \n - T5 Androids</description>

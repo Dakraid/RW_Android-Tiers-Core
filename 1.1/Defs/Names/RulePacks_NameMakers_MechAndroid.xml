@@ -1,12 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-
   <RulePackDef>
     <defName>AndroidAtlasMech</defName>
     <rulePack>
       <rulesStrings>
         <li>name->[AndroidAtlasMechNames]</li>
-
       </rulesStrings>
       <rulesRaw>
         <li Class="Rule_File">
@@ -16,5 +14,4 @@
       </rulesRaw>
     </rulePack>
   </RulePackDef>
-
 </Defs>

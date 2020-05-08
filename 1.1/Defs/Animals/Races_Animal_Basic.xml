@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-
 	<ThingDef ParentName="AnimalAndroidThingBase">
 		<defName>AndroidMuff</defName>
 		<label>M.U.F.F unit</label>
@@ -78,10 +77,7 @@
 			<li>InstallTubeSealantTank</li>
 			<li>InstallLowPowerTransformer</li>
 			<li>InstallBasicDCConverter</li>
-			<li>InstallAdv2Plating</li>
-
-			<!--Plating and shield-->
-		</recipes>
+			<li>InstallAdv2Plating</li>			<!--Plating and shield--></recipes>
 		<butcherProducts>
 			<Plasteel>20</Plasteel>
 			<ComponentIndustrial>2</ComponentIndustrial>
@@ -92,7 +88,6 @@
 			</li>
 		</modExtensions>
 	</ThingDef>
-
 	<PawnKindDef ParentName="AnimalAndroidKindBaseDog">
 		<defName>AndroidMuff</defName>
 		<label>M.U.F.F unit</label>
@@ -115,11 +110,8 @@
 					<drawSize>2.2</drawSize>
 				</dessicatedBodyGraphicData>
 			</li>
-
 		</lifeStages>
 	</PawnKindDef>
-
-
 	<ThingDef ParentName="AnimalAndroidThingBase">
 		<defName>AndroidChicken</defName>
 		<label>Chemical processing unit</label>
@@ -206,10 +198,7 @@
 			<li>InstallTubeSealantTank</li>
 			<li>InstallLowPowerTransformer</li>
 			<li>InstallBasicDCConverter</li>
-			<li>InstallAdv2Plating</li>
-
-			<!--Plating and shield-->
-		</recipes>
+			<li>InstallAdv2Plating</li>			<!--Plating and shield--></recipes>
 		<butcherProducts>
 			<Plasteel>10</Plasteel>
 			<ComponentIndustrial>1</ComponentIndustrial>
@@ -220,7 +209,6 @@
 			</li>
 		</modExtensions>
 	</ThingDef>
-
 	<PawnKindDef ParentName="AnimalAndroidKindBaseDog">
 		<defName>AndroidChicken</defName>
 		<label>Chemical processing unit</label>
@@ -243,9 +231,6 @@
 					<drawSize>0.8</drawSize>
 				</dessicatedBodyGraphicData>
 			</li>
-
 		</lifeStages>
 	</PawnKindDef>
-
-
 </Defs>

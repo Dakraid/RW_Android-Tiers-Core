@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-
   <ThingDef Abstract="True" Name="OrbitalStrikeBaseMech" ParentName="EtherealThingBase">
     <thingClass>OrbitalStrike</thingClass>
     <tickerType>Normal</tickerType>
@@ -21,7 +20,6 @@
       </li>
     </comps>
   </ThingDef>
-  
   <ThingDef ParentName="OrbitalStrikeBaseMech">
     <defName>MechFallBeam</defName>
     <label>mech-fall</label>
@@ -34,13 +32,11 @@
       </li>
     </comps>
   </ThingDef>
-
-
   <ThingDef ParentName="BaseWeapon">
     <defName>OrbitalTargeterMechFall</defName>
     <label>orbital mech-fall targeter</label>
     <description>An ancient targeting apparatus for automatic deployment of a mark-7 mechanized infantry unit, dropped from orbit. It's charge is limited however and requires specialist charging equipment to replenish. Making it limited to how long it takes for the charge to run dry.</description>
-	<thingCategories>
+    <thingCategories>
       <li>WeaponsRanged</li>
     </thingCategories>
     <graphicData>

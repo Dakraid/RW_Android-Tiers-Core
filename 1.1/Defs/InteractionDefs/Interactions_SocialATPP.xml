@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-
   <InteractionDef>
     <defName>ATPP_SkyMindChat</defName>
     <label>talked about SkyMind</label>
@@ -15,8 +14,7 @@
     <logRulesInitiator>
       <rulesStrings>
         <li>r_logentry->[talkedabout] with [RECIPIENT_nameDef] about immortality through SkyMind and SkyClouds Cores.</li>
-	
-		<li>talkedabout->communicated thoughts</li>
+        <li>talkedabout->communicated thoughts</li>
         <li>talkedabout->exchanged thoughts</li>
         <li>talkedabout->exchanged ideas</li>
         <li>talkedabout->shared views</li>
@@ -26,10 +24,7 @@
         <li>talkedabout->talked</li>
         <li>talkedabout->talked deeply</li>
         <li>talkedabout->spoke</li>
-		
       </rulesStrings>
     </logRulesInitiator>
   </InteractionDef>
-
-  
 </Defs>

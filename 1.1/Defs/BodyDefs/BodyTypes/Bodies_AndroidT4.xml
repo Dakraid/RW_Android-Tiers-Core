@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-
   <BodyDef>
     <defName>Android4Tier</defName>
     <label>Android</label>
@@ -8,11 +7,11 @@
       <def>MechanicalThorax</def>
       <height>Middle</height>
       <depth>Outside</depth>
-	  <groups>
+      <groups>
         <li>Torso</li>
       </groups>
       <parts>
-	  	<li>
+        <li>
           <def>Framework</def>
           <coverage>0.036</coverage>
           <depth>Outside</depth>
@@ -84,17 +83,17 @@
               <groups>
                 <li>UpperHead</li>
                 <li>FullHead</li>
-			   <li>HeadAttackTool</li>
+                <li>HeadAttackTool</li>
               </groups>
               <parts>
                 <li>
                   <def>ArtificialBrain</def>
                   <coverage>0.10</coverage>
                   <depth>Inside</depth>
-				      <groups>
-                        <li>UpperHead</li>
-                        <li>FullHead</li>
-                      </groups>
+                  <groups>
+                    <li>UpperHead</li>
+                    <li>FullHead</li>
+                  </groups>
                 </li>
                 <li>
                   <def>LeftSightSensor</def>
@@ -142,7 +141,7 @@
         <li>
           <def>LeftMechanicalShoulder</def>
           <coverage>0.17</coverage>
-		  <groups>
+          <groups>
             <li>Shoulders</li>
           </groups>
           <parts>
@@ -202,7 +201,7 @@
         <li>
           <def>RightMechanicalShoulder</def>
           <coverage>0.17</coverage>
-		  <groups>
+          <groups>
             <li>Shoulders</li>
           </groups>
           <parts>
@@ -226,7 +225,7 @@
                       <coverage>0.15</coverage>
                       <groups>
                         <li>RightHand</li>
-						<li>Hands</li>
+                        <li>Hands</li>
                       </groups>
                     </li>
                     <li>
@@ -234,7 +233,7 @@
                       <coverage>0.15</coverage>
                       <groups>
                         <li>RightHand</li>
-						<li>Hands</li>
+                        <li>Hands</li>
                       </groups>
                     </li>
                     <li>
@@ -242,7 +241,7 @@
                       <coverage>0.15</coverage>
                       <groups>
                         <li>RightHand</li>
-						<li>Hands</li>
+                        <li>Hands</li>
                       </groups>
                     </li>
                     <li>
@@ -250,7 +249,7 @@
                       <coverage>0.15</coverage>
                       <groups>
                         <li>RightHand</li>
-						<li>Hands</li>
+                        <li>Hands</li>
                       </groups>
                     </li>
                   </parts>
@@ -259,7 +258,7 @@
             </li>
           </parts>
         </li>
-				        <li>
+        <li>
           <def>Waist</def>
           <coverage>0</coverage>
           <height>Bottom</height>
@@ -271,7 +270,7 @@
           <def>LeftMechanicalLeg</def>
           <coverage>0.14</coverage>
           <height>Bottom</height>
-		  <groups>
+          <groups>
             <li>Legs</li>
           </groups>
           <parts>
@@ -304,5 +303,4 @@
       </parts>
     </corePart>
   </BodyDef>
-  
 </Defs>

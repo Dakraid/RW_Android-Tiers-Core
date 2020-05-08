@@ -1,10 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-
   <ThoughtDef>
     <defName>ATPP_VX0PuppetThought</defName>
     <durationDays>6</durationDays>
-	<stackLimit>5</stackLimit>
+    <stackLimit>5</stackLimit>
     <nullifyingTraits>
       <li>Psychopath</li>
       <li>Bloodlust</li>
@@ -17,5 +16,4 @@
       </li>
     </stages>
   </ThoughtDef>
-
 </Defs>

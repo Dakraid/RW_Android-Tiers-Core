@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-
 	<FactionDef>
 		<defName>Abomination</defName>
 		<label>Fractal Mutant</label>
@@ -16,12 +15,10 @@
 		<canUseAvoidGrid>false</canUseAvoidGrid>
 		<settlementTexturePath>World/WorldObjects/DefaultSettlement</settlementTexturePath>
 	</FactionDef>
-
 	<FactionDef ParentName="PlayerFactionBase">
 		<defName>PlayerColonyAndroid</defName>
 		<label>New Android Arrivals</label>
 		<description>Your Android colony.</description>
-		
 		<isPlayer>true</isPlayer>
 		<backstoryCategories>
 			<li>Civil</li>
@@ -46,8 +43,6 @@
 			</thingDefs>
 		</apparelStuffFilter>
 	</FactionDef>
-
-
 	<FactionDef>
 		<defName>AndroidRebellionAtlas</defName>
 		<label>Android Insurrection</label>
@@ -91,8 +86,7 @@
 			</points>
 		</maxPawnCostPerTotalPointsCurve>
 		<pawnGroupMakers>
-			<li>
-				<!-- Normal fights, standard mix -->
+			<li>				<!-- Normal fights, standard mix -->
 				<kindDef>Combat</kindDef>
 				<commonality>100</commonality>
 				<options>
@@ -109,8 +103,7 @@
 					<AndroidT1SlaveFactionSpecific>4</AndroidT1SlaveFactionSpecific>
 				</options>
 			</li>
-			<li>
-				<!-- Base defense -->
+			<li>				<!-- Base defense -->
 				<kindDef>Settlement</kindDef>
 				<options>
 					<AndroidT1RaiderFactionSpecific>2</AndroidT1RaiderFactionSpecific>
@@ -123,7 +116,6 @@
 		</pawnGroupMakers>
 		<settlementTexturePath>World/WorldObjects/DefaultSettlement</settlementTexturePath>
 	</FactionDef>
-
 	<FactionDef ParentName="HumanFactionBase">
 		<defName>AndroidFriendliesAtlas</defName>
 		<label>Civil Androids</label>
@@ -187,8 +179,7 @@
 			</points>
 		</maxPawnCostPerTotalPointsCurve>
 		<pawnGroupMakers>
-			<li>
-				<!-- Normal fights, standard mix -->
+			<li>				<!-- Normal fights, standard mix -->
 				<kindDef>Combat</kindDef>
 				<options>
 					<AndroidT1CollectiveColonist>2</AndroidT1CollectiveColonist>

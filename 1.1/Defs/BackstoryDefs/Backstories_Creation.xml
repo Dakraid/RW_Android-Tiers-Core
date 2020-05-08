@@ -23,7 +23,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>CreationMassProduced</defName>
 		<title>Mass produced</title>
@@ -43,9 +42,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
-
-	
 	<AlienRace.BackstoryDef>
 		<defName>CreationCitizen</defName>
 		<title>Mechanical citizen</title>
@@ -65,7 +61,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>CreationUrbworld</defName>
 		<title>Urbworld model</title>
@@ -85,8 +80,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
-	
 	<AlienRace.BackstoryDef>
 		<defName>CreationPrisoner</defName>
 		<title>Mechanical prisoner</title>
@@ -106,8 +99,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
-	
 	<AlienRace.BackstoryDef>
 		<defName>CreationBlankSlate</defName>
 		<title>Blank</title>
@@ -121,7 +112,6 @@
 			<li>CollectiveSoldiers</li>
 		</spawnCategories>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>CreationCustomModelOne</defName>
 		<title>Custom model</title>
@@ -141,7 +131,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>CreationCustomModelTwo</defName>
 		<title>Custom model</title>
@@ -165,8 +154,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
-	
 	<AlienRace.BackstoryDef>
 		<defName>CreationSoldierWar</defName>
 		<title>Wartime model</title>
@@ -189,7 +176,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>CreationPrivateCreation</defName>
 		<title>Private creation</title>
@@ -213,8 +199,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
-	
 	<AlienRace.BackstoryDef>
 		<defName>CreationExport</defName>
 		<title>Exported</title>
@@ -223,7 +207,7 @@
 		<bodyTypeGlobal>Male</bodyTypeGlobal>
 		<slot>Childhood</slot>
 		<spawnCategories>
-		    <li>BigMeanies</li>
+			<li>BigMeanies</li>
 			<li>AndroidGeneral</li>
 			<li>CollectiveSoldiers</li>
 		</spawnCategories>
@@ -242,7 +226,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>CreationObserved</defName>
 		<title>Observed</title>
@@ -251,7 +234,7 @@
 		<bodyTypeGlobal>Male</bodyTypeGlobal>
 		<slot>Childhood</slot>
 		<spawnCategories>
-		    <li>BigMeanies</li>
+			<li>BigMeanies</li>
 			<li>AndroidGeneral</li>
 			<li>CollectiveSoldiers</li>
 		</spawnCategories>
@@ -262,7 +245,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>CreationAncient</defName>
 		<title>Ancient creation</title>
@@ -271,7 +253,7 @@
 		<bodyTypeGlobal>Male</bodyTypeGlobal>
 		<slot>Childhood</slot>
 		<spawnCategories>
-		    <li>BigMeanies</li>
+			<li>BigMeanies</li>
 			<li>AndroidGeneral</li>
 			<li>CollectiveSoldiers</li>
 		</spawnCategories>
@@ -282,7 +264,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>CreationPlaything</defName>
 		<title>Toy model</title>
@@ -301,7 +282,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>CreationCompanion</defName>
 		<title>Companion creation</title>
@@ -321,7 +301,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>CreationBattlecreation</defName>
 		<title>Battle droid</title>
@@ -344,10 +323,7 @@
 				<amount>2</amount>
 			</li>
 		</skillGains>
-	</AlienRace.BackstoryDef>
-	
-	<!--BigMeanies Only-->
-	
+	</AlienRace.BackstoryDef>	<!--BigMeanies Only-->
 	<AlienRace.BackstoryDef>
 		<defName>CreationPurgist</defName>
 		<title>Purgist</title>
@@ -356,7 +332,7 @@
 		<bodyTypeGlobal>Male</bodyTypeGlobal>
 		<slot>Childhood</slot>
 		<spawnCategories>
-		    <li>BigMeanies</li>
+			<li>BigMeanies</li>
 		</spawnCategories>
 		<skillGains>
 			<li>
@@ -376,8 +352,7 @@
 			<li>Animals</li>
 			<li>Intellectual</li>
 		</workDisables>
-	</AlienRace.BackstoryDef>	
-	
+	</AlienRace.BackstoryDef>
 	<AlienRace.BackstoryDef>
 		<defName>CreationEscapee</defName>
 		<title>Escapee</title>
@@ -386,7 +361,7 @@
 		<bodyTypeGlobal>Male</bodyTypeGlobal>
 		<slot>Childhood</slot>
 		<spawnCategories>
-		    <li>BigMeanies</li>
+			<li>BigMeanies</li>
 		</spawnCategories>
 		<skillGains>
 			<li>
@@ -395,7 +370,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>CreationUprisingCadet</defName>
 		<title>Uprising cadet</title>
@@ -404,7 +378,7 @@
 		<bodyTypeGlobal>Male</bodyTypeGlobal>
 		<slot>Childhood</slot>
 		<spawnCategories>
-		    <li>BigMeanies</li>
+			<li>BigMeanies</li>
 		</spawnCategories>
 		<skillGains>
 			<li>
@@ -417,7 +391,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>CreationMaliciousAI</defName>
 		<title>Malicious AI</title>
@@ -426,7 +399,7 @@
 		<bodyTypeGlobal>Male</bodyTypeGlobal>
 		<slot>Childhood</slot>
 		<spawnCategories>
-		    <li>BigMeanies</li>
+			<li>BigMeanies</li>
 		</spawnCategories>
 		<skillGains>
 			<li>
@@ -449,7 +422,6 @@
 			</li>
 		</forcedTraits>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>CreationRimworldCreation</defName>
 		<title>Rimworld creation</title>
@@ -458,8 +430,8 @@
 		<bodyTypeGlobal>Male</bodyTypeGlobal>
 		<slot>Childhood</slot>
 		<spawnCategories>
-	     	<li>CollectiveSoldiers</li>
-		    <li>BigMeanies</li>
+			<li>CollectiveSoldiers</li>
+			<li>BigMeanies</li>
 		</spawnCategories>
 		<skillGains>
 			<li>
@@ -472,7 +444,6 @@
 			</li>
 		</skillGains>
 	</AlienRace.BackstoryDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>CreationPirate</defName>
 		<title>Pirate creation</title>
@@ -481,7 +452,7 @@
 		<bodyTypeGlobal>Male</bodyTypeGlobal>
 		<slot>Childhood</slot>
 		<spawnCategories>
-		    <li>BigMeanies</li>
+			<li>BigMeanies</li>
 		</spawnCategories>
 		<skillGains>
 			<li>

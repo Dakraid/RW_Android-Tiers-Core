@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-
   <RecipeDef>
     <defName>ExtractMetalFromOther</defName>
     <label>smelt metal into steel</label>
@@ -28,77 +27,74 @@
         <li>SteelWool</li>
       </thingDefs>
     </fixedIngredientFilter>
-	 <recipeUsers>
-		<li>ElectricSmelter</li>
-      </recipeUsers>
+    <recipeUsers>
+      <li>ElectricSmelter</li>
+    </recipeUsers>
   </RecipeDef>
-  
-	<RecipeDef>
-		<defName>Make_ChemfuelFromChemicalEgg</defName>
-		<label>make chemfuel from chemical capsules</label>
-		<description>Make a batch of chemfuel by refining the raw resources within chemical capsules.</description>
-		<jobString>Refining chemfuel from capsules.</jobString>
-		<effectWorking>Cremate</effectWorking>
-		<soundWorking>Recipe_Cremate</soundWorking>
-		<workAmount>2000</workAmount>
+  <RecipeDef>
+    <defName>Make_ChemfuelFromChemicalEgg</defName>
+    <label>make chemfuel from chemical capsules</label>
+    <description>Make a batch of chemfuel by refining the raw resources within chemical capsules.</description>
+    <jobString>Refining chemfuel from capsules.</jobString>
+    <effectWorking>Cremate</effectWorking>
+    <soundWorking>Recipe_Cremate</soundWorking>
+    <workAmount>2000</workAmount>
     <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
-		<ingredients>
-			<li>
-				<filter>
-					<thingDefs>
-						<li>ChemicalEgg</li>
-					</thingDefs>
-				</filter>
-				<count>2</count>
-			</li>
-		</ingredients>
-		<fixedIngredientFilter>
-			<thingDefs>
-				<li>ChemicalEgg</li>
-			</thingDefs>
-		</fixedIngredientFilter>
-		<products>
-			<Chemfuel>15</Chemfuel>
-		</products>
-	 <recipeUsers>
-		<li>BiofuelRefinery</li>
-		<li>DrugLab</li>
-      </recipeUsers>
-	</RecipeDef>
-	
-	<RecipeDef>
-		<defName>Make_NeutroamineFromChemicalEgg</defName>
-		<label>make neutroamine from chemical capsules</label>
-		<description>Make a batch of neutroamine by refining the raw resources within chemical capsules.</description>
-		<jobString>Refining neutroamine from capsules.</jobString>
-		<effectWorking>Cremate</effectWorking>
-		<soundWorking>Recipe_Cremate</soundWorking>
-		<workAmount>2000</workAmount>
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>ChemicalEgg</li>
+          </thingDefs>
+        </filter>
+        <count>2</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs>
+        <li>ChemicalEgg</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <products>
+      <Chemfuel>15</Chemfuel>
+    </products>
+    <recipeUsers>
+      <li>BiofuelRefinery</li>
+      <li>DrugLab</li>
+    </recipeUsers>
+  </RecipeDef>
+  <RecipeDef>
+    <defName>Make_NeutroamineFromChemicalEgg</defName>
+    <label>make neutroamine from chemical capsules</label>
+    <description>Make a batch of neutroamine by refining the raw resources within chemical capsules.</description>
+    <jobString>Refining neutroamine from capsules.</jobString>
+    <effectWorking>Cremate</effectWorking>
+    <soundWorking>Recipe_Cremate</soundWorking>
+    <workAmount>2000</workAmount>
     <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
-		<ingredients>
-			<li>
-				<filter>
-					<thingDefs>
-						<li>ChemicalEgg</li>
-					</thingDefs>
-				</filter>
-				<count>2</count>
-			</li>
-		</ingredients>
-		<fixedIngredientFilter>
-			<thingDefs>
-				<li>ChemicalEgg</li>
-			</thingDefs>
-		</fixedIngredientFilter>
-		<products>
-			<Neutroamine>5</Neutroamine>
-		</products>
-	 <recipeUsers>
-		<li>BiofuelRefinery</li>
-		<li>DrugLab</li>
-      </recipeUsers>
-	</RecipeDef>
-
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>ChemicalEgg</li>
+          </thingDefs>
+        </filter>
+        <count>2</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs>
+        <li>ChemicalEgg</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <products>
+      <Neutroamine>5</Neutroamine>
+    </products>
+    <recipeUsers>
+      <li>BiofuelRefinery</li>
+      <li>DrugLab</li>
+    </recipeUsers>
+  </RecipeDef>
   <ThingDef ParentName="ResourceBase">
     <defName>ChemicalEgg</defName>
     <label>Chemical Capsule</label>
@@ -106,7 +102,7 @@
     <graphicData>
       <texPath>Things/ChemicalEgg</texPath>
       <graphicClass>Graphic_StackCount</graphicClass>
-	  <color>(80,80,125)</color>
+      <color>(80,80,125)</color>
     </graphicData>
     <soundInteract>Metal_Drop</soundInteract>
     <soundDrop>Standard_Drop</soundDrop>
@@ -116,15 +112,13 @@
       <MarketValue>10</MarketValue>
       <Mass>0.1</Mass>
       <Flammability>1.2</Flammability>
-			<DeteriorationRate>2.0</DeteriorationRate>
-		</statBases>
+      <DeteriorationRate>2.0</DeteriorationRate>
+    </statBases>
     <intricate>true</intricate>
     <thingCategories>
       <li>Manufactured</li>
     </thingCategories>
   </ThingDef>
-  
-  
   <ThingDef ParentName="ResourceBase">
     <defName>SteelWool</defName>
     <label>metallic wool</label>
@@ -165,7 +159,6 @@
       <li>Textiles</li>
     </thingCategories>
   </ThingDef>
-  
   <ThingDef ParentName="OrganicProductBase">
     <defName>NSolution</defName>
     <label>nutrient solution</label>
@@ -173,12 +166,12 @@
     <graphicData>
       <texPath>Things/ArtificalMilk</texPath>
     </graphicData>
-	<stackLimit>150</stackLimit>
+    <stackLimit>150</stackLimit>
     <socialPropernessMatters>true</socialPropernessMatters>
     <statBases>
       <MarketValue>8</MarketValue>
       <Mass>0.02</Mass>
-	  <MaxHitPoints>60</MaxHitPoints>
+      <MaxHitPoints>60</MaxHitPoints>
       <Flammability>0.1</Flammability>
       <Nutrition>0.15</Nutrition>
       <FoodPoisonChanceFixedHuman>0.02</FoodPoisonChanceFixedHuman>
@@ -186,7 +179,7 @@
     <comps>
       <li Class="CompProperties_Rottable">
         <daysToRotStart>18</daysToRotStart>
-				<rotDestroys>true</rotDestroys>
+        <rotDestroys>true</rotDestroys>
       </li>
     </comps>
     <ingestible>

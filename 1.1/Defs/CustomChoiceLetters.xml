@@ -4,7 +4,6 @@
     <defName>ATPP_CLPayCryptoRansom</defName>
     <letterClass>MOARANDROIDS.ChoiceLetter_RansomDemand</letterClass>
   </LetterDef>
-  
   <LetterDef ParentName="CustomChoiceLetterBase">
     <defName>ATPP_CLPayRansomwareRansom</defName>
     <letterClass>MOARANDROIDS.ChoiceLetter_RansomwareDemand</letterClass>

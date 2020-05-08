@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-  
   <RecordDef>
     <defName>TimeInBedForMedicalReasons</defName>
     <label>time in a bed for medical reasons</label>
@@ -8,5 +7,4 @@
     <type>Time</type>
     <workerClass>MOARANDROIDS.TimeinbedformedicalreasonsAndroid</workerClass>
   </RecordDef>
-  
 </Defs>

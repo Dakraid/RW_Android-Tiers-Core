@@ -1,15 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-
 <Defs>
-	<BodyDef>
-		<defName>AndroidAnimalBird</defName>
-		<label>cybernetic animal</label>
-		<corePart>
- <def>MechanicalThorax</def>
+  <BodyDef>
+    <defName>AndroidAnimalBird</defName>
+    <label>cybernetic animal</label>
+    <corePart>
+      <def>MechanicalThorax</def>
       <height>Middle</height>
       <depth>Outside</depth>
       <parts>
-	  	  	<li>
+        <li>
           <def>Framework</def>
           <coverage>0</coverage>
           <depth>Outside</depth>
@@ -70,28 +69,28 @@
             <li>Torso</li>
           </groups>
         </li>
-				<li>
+        <li>
           <def>MechanicalNeck</def>
           <coverage>0.10</coverage>
           <height>Top</height>
           <parts>
-                     <li>
+            <li>
               <def>Head</def>
               <coverage>0.72</coverage>
               <groups>
                 <li>UpperHead</li>
                 <li>FullHead</li>
-			   <li>HeadAttackTool</li>
+                <li>HeadAttackTool</li>
               </groups>
               <parts>
                 <li>
                   <def>ArtificialBrain</def>
                   <coverage>0.20</coverage>
                   <depth>Inside</depth>
-				      <groups>
-                        <li>UpperHead</li>
-                        <li>FullHead</li>
-                      </groups>
+                  <groups>
+                    <li>UpperHead</li>
+                    <li>FullHead</li>
+                  </groups>
                 </li>
                 <li>
                   <def>LeftSightSensor</def>
@@ -131,7 +130,7 @@
           <def>LeftMechanicalLeg</def>
           <coverage>0.1</coverage>
           <height>Bottom</height>
-		  <groups>
+          <groups>
             <li>Legs</li>
           </groups>
           <parts>
@@ -161,8 +160,7 @@
             </li>
           </parts>
         </li>
-			</parts>
-		</corePart>
-	</BodyDef>
-
+      </parts>
+    </corePart>
+  </BodyDef>
 </Defs>

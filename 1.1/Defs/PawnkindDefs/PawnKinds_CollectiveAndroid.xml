@@ -7,11 +7,11 @@
 		<combatPower>60</combatPower>
 		<isFighter>false</isFighter>
 		<backstoryFiltersOverride>
-		  <li>
-			<categories>
-			  <li>AndroidGeneral</li>
-			</categories>
-		  </li>
+			<li>
+				<categories>
+					<li>AndroidGeneral</li>
+				</categories>
+			</li>
 		</backstoryFiltersOverride>
 		<minGenerationAge>20</minGenerationAge>
 		<defaultFactionType>AndroidFriendliesAtlas</defaultFactionType>
@@ -50,8 +50,6 @@
 			<li>Advanced</li>
 		</techHediffsTags>
 	</PawnKindDef>
-
-
 	<PawnKindDef ParentName="BasePlayerPawnKind">
 		<defName>AndroidT1CollectiveColonist</defName>
 		<label>T1 Android Citizen</label>
@@ -59,11 +57,11 @@
 		<combatPower>40</combatPower>
 		<isFighter>false</isFighter>
 		<backstoryFiltersOverride>
-		  <li>
-			<categories>
-			  <li>AndroidGeneral</li>
-			</categories>
-		  </li>
+			<li>
+				<categories>
+					<li>AndroidGeneral</li>
+				</categories>
+			</li>
 		</backstoryFiltersOverride>
 		<minGenerationAge>20</minGenerationAge>
 		<defaultFactionType>AndroidFriendliesAtlas</defaultFactionType>
@@ -86,7 +84,7 @@
 			<max>1200</max>
 		</apparelMoney>
 		<apparelTags>
-		      <li>IndustrialBasic</li>
+			<li>IndustrialBasic</li>
 			<li>IndustrialMilitaryBasic</li>
 			<li>IndustrialMilitaryAdvanced</li>
 			<li>BeltDefensePop</li>
@@ -103,7 +101,6 @@
 			<li>Advanced</li>
 		</techHediffsTags>
 	</PawnKindDef>
-
 	<PawnKindDef ParentName="BasePlayerPawnKind">
 		<defName>AndroidT2CollectiveTrader</defName>
 		<label>T2 Android Trader</label>
@@ -112,11 +109,11 @@
 		<combatPower>40</combatPower>
 		<isFighter>false</isFighter>
 		<backstoryFiltersOverride>
-		  <li>
-			<categories>
-			  <li>AndroidGeneral</li>
-			</categories>
-		  </li>
+			<li>
+				<categories>
+					<li>AndroidGeneral</li>
+				</categories>
+			</li>
 		</backstoryFiltersOverride>
 		<minGenerationAge>20</minGenerationAge>
 		<defaultFactionType>AndroidFriendliesAtlas</defaultFactionType>
@@ -156,17 +153,16 @@
 			<li>Advanced</li>
 		</techHediffsTags>
 	</PawnKindDef>
-
 	<PawnKindDef>
 		<defName>AndroidT1CollectiveSoldier</defName>
 		<label>T1 Android Soldier</label>
 		<labelPlural>Raider androids</labelPlural>
 		<backstoryFiltersOverride>
-		  <li>
-			<categories>
-			  <li>CollectiveSoldiers</li>
-			</categories>
-		  </li>
+			<li>
+				<categories>
+					<li>CollectiveSoldiers</li>
+				</categories>
+			</li>
 		</backstoryFiltersOverride>
 		<race>Android1Tier</race>
 		<combatPower>60</combatPower>
@@ -208,17 +204,16 @@
 		</techHediffsTags>
 		<techHediffsChance>0.08</techHediffsChance>
 	</PawnKindDef>
-
 	<PawnKindDef>
 		<defName>AndroidT2CollectiveSoldier</defName>
 		<label>T2 Android Soldier</label>
 		<labelPlural>Android Soldiers</labelPlural>
 		<backstoryFiltersOverride>
-		  <li>
-			<categories>
-			  <li>CollectiveSoldiers</li>
-			</categories>
-		  </li>
+			<li>
+				<categories>
+					<li>CollectiveSoldiers</li>
+				</categories>
+			</li>
 		</backstoryFiltersOverride>
 		<baseRecruitDifficulty>0.70</baseRecruitDifficulty>
 		<race>Android2Tier</race>
@@ -260,17 +255,16 @@
 		</techHediffsTags>
 		<techHediffsChance>0.08</techHediffsChance>
 	</PawnKindDef>
-
 	<PawnKindDef>
 		<defName>AndroidT3CollectiveSoldier</defName>
 		<label>T3 Android Soldier</label>
 		<labelPlural>Android Soldiers</labelPlural>
 		<backstoryFiltersOverride>
-		  <li>
-			<categories>
-			  <li>CollectiveSoldiers</li>
-			</categories>
-		  </li>
+			<li>
+				<categories>
+					<li>CollectiveSoldiers</li>
+				</categories>
+			</li>
 		</backstoryFiltersOverride>
 		<baseRecruitDifficulty>0.80</baseRecruitDifficulty>
 		<race>Android3Tier</race>
@@ -313,17 +307,16 @@
 		</techHediffsTags>
 		<techHediffsChance>0.1</techHediffsChance>
 	</PawnKindDef>
-
 	<PawnKindDef>
 		<defName>AndroidT4CollectiveSoldier</defName>
 		<label>T4 Android Soldier</label>
 		<labelPlural>Android Soldiers</labelPlural>
 		<backstoryFiltersOverride>
-		  <li>
-			<categories>
-			  <li>CollectiveSoldiers</li>
-			</categories>
-		  </li>
+			<li>
+				<categories>
+					<li>CollectiveSoldiers</li>
+				</categories>
+			</li>
 		</backstoryFiltersOverride>
 		<baseRecruitDifficulty>0.90</baseRecruitDifficulty>
 		<race>Android4Tier</race>
@@ -366,17 +359,16 @@
 		</techHediffsTags>
 		<techHediffsChance>0.25</techHediffsChance>
 	</PawnKindDef>
-
 	<PawnKindDef>
 		<defName>AndroidT4CollectiveLeader</defName>
 		<label>Android leader</label>
 		<labelPlural>Android leaders</labelPlural>
 		<backstoryFiltersOverride>
-		  <li>
-			<categories>
-			  <li>CollectiveSoldiers</li>
-			</categories>
-		  </li>
+			<li>
+				<categories>
+					<li>CollectiveSoldiers</li>
+				</categories>
+			</li>
 		</backstoryFiltersOverride>
 		<baseRecruitDifficulty>0.99</baseRecruitDifficulty>
 		<race>Android4Tier</race>

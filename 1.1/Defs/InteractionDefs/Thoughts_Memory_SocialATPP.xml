@@ -15,8 +15,6 @@
       </li>
     </stages>
   </ThoughtDef>
-  
-  
   <ThoughtDef>
     <defName>ATPP_SkyMindChatThought</defName>
     <thoughtClass>Thought_MemorySocialCumulative</thoughtClass>

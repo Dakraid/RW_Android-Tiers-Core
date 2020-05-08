@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-
   <ThingDef ParentName="BasePawnMech">
     <defName>MicroScyther</defName>
     <label>Micro Scyther</label>
     <description>A small modified drone that flies incredibly quickly, equipped with 2 small, yet very sharp wings on either side of it's main body; used for dealing low amounts of damage over long periods. Quite pathetic alone but highly dangerous in groups.</description>
-		<statBases>
-			<MarketValue>40</MarketValue>
-			<MoveSpeed>6.20</MoveSpeed>
-			<Flammability>0</Flammability>
-			<PsychicSensitivity>0</PsychicSensitivity>
-			<ComfyTemperatureMin>-200</ComfyTemperatureMin>
-			<ComfyTemperatureMax>200</ComfyTemperatureMax>
-			<PainShockThreshold>5</PainShockThreshold>
-			<ToxicSensitivity>0.05</ToxicSensitivity>
-			<MentalBreakThreshold>0.01</MentalBreakThreshold>
-			<GlobalLearningFactor>2</GlobalLearningFactor>
-			<WorkSpeedGlobal>1.8</WorkSpeedGlobal>
-			<ImmunityGainSpeed>10</ImmunityGainSpeed>
-			<LeatherAmount>0</LeatherAmount>
-			<MeatAmount>0</MeatAmount>
-			<SocialImpact>0.1</SocialImpact>
-			<Mass>1</Mass>
-		</statBases>
+    <statBases>
+      <MarketValue>40</MarketValue>
+      <MoveSpeed>6.20</MoveSpeed>
+      <Flammability>0</Flammability>
+      <PsychicSensitivity>0</PsychicSensitivity>
+      <ComfyTemperatureMin>-200</ComfyTemperatureMin>
+      <ComfyTemperatureMax>200</ComfyTemperatureMax>
+      <PainShockThreshold>5</PainShockThreshold>
+      <ToxicSensitivity>0.05</ToxicSensitivity>
+      <MentalBreakThreshold>0.01</MentalBreakThreshold>
+      <GlobalLearningFactor>2</GlobalLearningFactor>
+      <WorkSpeedGlobal>1.8</WorkSpeedGlobal>
+      <ImmunityGainSpeed>10</ImmunityGainSpeed>
+      <LeatherAmount>0</LeatherAmount>
+      <MeatAmount>0</MeatAmount>
+      <SocialImpact>0.1</SocialImpact>
+      <Mass>1</Mass>
+    </statBases>
     <tools>
       <li>
         <label>head</label>
@@ -56,22 +55,22 @@
     <race>
       <thinkTreeMain>MechM7Like</thinkTreeMain>
       <thinkTreeConstant>HumanlikeConstant</thinkTreeConstant>
-			<intelligence>ToolUser</intelligence>
-			<makesFootprints>false</makesFootprints>
-			<hasGenders>false</hasGenders>
-			<lifeExpectancy>200</lifeExpectancy>
-			<body>MechanicalMicroDrone</body>
-			<baseHealthScale>0.15</baseHealthScale>
-			<leatherDef>Tainted_Skin</leatherDef>
-			<needsRest>false</needsRest>
-			<foodType>None</foodType>
-			<baseHungerRate>0.01</baseHungerRate>
-			<fleshType>Android</fleshType>
-			<bloodDef>CoolantAndroidTier</bloodDef>
-			<useMeatFrom>Alpaca</useMeatFrom>
-						<baseBodySize>0.4</baseBodySize>
-			<gestationPeriodDays>1</gestationPeriodDays>
-			<canBePredatorPrey>false</canBePredatorPrey>
+      <intelligence>ToolUser</intelligence>
+      <makesFootprints>false</makesFootprints>
+      <hasGenders>false</hasGenders>
+      <lifeExpectancy>200</lifeExpectancy>
+      <body>MechanicalMicroDrone</body>
+      <baseHealthScale>0.15</baseHealthScale>
+      <leatherDef>Tainted_Skin</leatherDef>
+      <needsRest>false</needsRest>
+      <foodType>None</foodType>
+      <baseHungerRate>0.01</baseHungerRate>
+      <fleshType>Android</fleshType>
+      <bloodDef>CoolantAndroidTier</bloodDef>
+      <useMeatFrom>Alpaca</useMeatFrom>
+      <baseBodySize>0.4</baseBodySize>
+      <gestationPeriodDays>1</gestationPeriodDays>
+      <canBePredatorPrey>false</canBePredatorPrey>
       <litterSizeCurve>
         <points>
           <li>(0.5, 0)</li>
@@ -90,33 +89,34 @@
       <soundMeleeHitPawn>Pawn_Melee_SmallScratch_HitPawn</soundMeleeHitPawn>
       <soundMeleeHitBuilding>Pawn_Melee_SmallScratch_HitBuilding</soundMeleeHitBuilding>
       <soundMeleeMiss>Pawn_Melee_SmallScratch_Miss</soundMeleeMiss>
-			<ageGenerationCurve>
-				<points>
-					<li>(0,0)</li>
-					<li>(1,100)</li>
-					<li>(2,0)</li>
-				</points>
-			</ageGenerationCurve>
+      <ageGenerationCurve>
+        <points>
+          <li>(0,0)</li>
+          <li>(1,100)</li>
+          <li>(2,0)</li>
+        </points>
+      </ageGenerationCurve>
     </race>
-		<butcherProducts>
-			<Steel>3</Steel>
-		</butcherProducts>
-<modExtensions>
-    <li Class="MOARANDROIDS.AndroidTweaker">
+    <butcherProducts>
+      <Steel>3</Steel>
+    </butcherProducts>
+    <modExtensions>
+      <li Class="MOARANDROIDS.AndroidTweaker">
         <tweakCorpseRot>true</tweakCorpseRot>
-    </li>
-</modExtensions>
+      </li>
+    </modExtensions>
   </ThingDef>
-  
   <PawnKindDef ParentName="BasePlayerPawnKind">
     <defName>MicroScyther</defName>
     <label>Micro-Scyther</label>
     <race>MicroScyther</race>
-		<canArriveManhunter>false</canArriveManhunter>
-		<ecoSystemWeight>9999</ecoSystemWeight>
-		<combatPower>1000</combatPower>
-		<backstoryCategories><li>Mechdrop</li></backstoryCategories>
-		<defaultFactionType>PlayerColony</defaultFactionType>
+    <canArriveManhunter>false</canArriveManhunter>
+    <ecoSystemWeight>9999</ecoSystemWeight>
+    <combatPower>1000</combatPower>
+    <backstoryCategories>
+      <li>Mechdrop</li>
+    </backstoryCategories>
+    <defaultFactionType>PlayerColony</defaultFactionType>
     <lifeStages>
       <li>
         <bodyGraphicData>
@@ -128,10 +128,6 @@
           </shadowData>
         </bodyGraphicData>
       </li>
-
     </lifeStages>
   </PawnKindDef>
-
-
-
 </Defs>

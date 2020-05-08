@@ -18,7 +18,6 @@
 			<li>PositronMind</li>
 		</forcedHediffs>
 	</AlienRace.PawnBioDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>AndroidSoftwareCreator</defName>
 		<title>Software developer</title>

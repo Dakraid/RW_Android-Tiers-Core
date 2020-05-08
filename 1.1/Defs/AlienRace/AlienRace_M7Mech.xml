@@ -1,70 +1,62 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-
-  <ThingDef Name="BasePawnMech" Abstract="True">
-    <thingClass>Pawn</thingClass>
-    <category>Pawn</category>
-    <selectable>true</selectable>
-    <tickerType>Normal</tickerType>
-    <altitudeLayer>Pawn</altitudeLayer>
-    <useHitPoints>false</useHitPoints>
-    <hasTooltip>true</hasTooltip>
-    <soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
-    <statBases>
-      <Mass>70</Mass>
-    </statBases>
-    <inspectorTabs>
-      <li>ITab_Pawn_Health</li>
-      <li>ITab_Pawn_Gear</li>
-      <li>ITab_Pawn_Guest</li>
-      <li>ITab_Pawn_Prisoner</li>
-    </inspectorTabs>
-    <comps>
-      <li>
-        <compClass>CompAttachBase</compClass>
-      </li>
-    </comps>
-    <drawGUIOverlay>true</drawGUIOverlay>
-  </ThingDef>
-
-  
+	<ThingDef Name="BasePawnMech" Abstract="True">
+		<thingClass>Pawn</thingClass>
+		<category>Pawn</category>
+		<selectable>true</selectable>
+		<tickerType>Normal</tickerType>
+		<altitudeLayer>Pawn</altitudeLayer>
+		<useHitPoints>false</useHitPoints>
+		<hasTooltip>true</hasTooltip>
+		<soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
+		<statBases>
+			<Mass>70</Mass>
+		</statBases>
+		<inspectorTabs>
+			<li>ITab_Pawn_Health</li>
+			<li>ITab_Pawn_Gear</li>
+			<li>ITab_Pawn_Guest</li>
+			<li>ITab_Pawn_Prisoner</li>
+		</inspectorTabs>
+		<comps>
+			<li>
+				<compClass>CompAttachBase</compClass>
+			</li>
+		</comps>
+		<drawGUIOverlay>true</drawGUIOverlay>
+	</ThingDef>
 	<AlienRace.ThingDef_AlienRace ParentName="BasePawnMech">
 		<defName>M7Mech</defName>
 		<label>M7 Mechanised infantry</label>
 		<description>A form of mechanized infantry, produced during an ancient time on this rimworld. These units are very strong, powerful war machines but are subsequently slow and have limited battery to them.</description>
 		<alienRace>
-	<raceRestriction>
-	
-    <apparelList>
-    </apparelList>
-    <onlyUseRaceRestrictedApparel>true</onlyUseRaceRestrictedApparel>
-	
-	<traitList>
-	<li>MechAtlas</li>
-	</traitList>
-	
-	<weaponList>
-        <li>Mech40MMCannon</li>
-		<li>MechMastiffGun</li>
-		<li>MechHandCannon</li>
-		<li>MeleeWeapon_MechKnife</li>
-		<li>MechGaussCannon</li>
-		<li>AutoCannonMech</li>
-		<li>Weapon_80MMLauncher</li>
-		<li>MechGaussRifle</li>
-    </weaponList>
-    <onlyUseRaceRestrictedWeapons>true</onlyUseRaceRestrictedWeapons>
-	
-	</raceRestriction>
+			<raceRestriction>
+				<apparelList></apparelList>
+				<onlyUseRaceRestrictedApparel>true</onlyUseRaceRestrictedApparel>
+				<traitList>
+					<li>MechAtlas</li>
+				</traitList>
+				<weaponList>
+					<li>Mech40MMCannon</li>
+					<li>MechMastiffGun</li>
+					<li>MechHandCannon</li>
+					<li>MeleeWeapon_MechKnife</li>
+					<li>MechGaussCannon</li>
+					<li>AutoCannonMech</li>
+					<li>Weapon_80MMLauncher</li>
+					<li>MechGaussRifle</li>
+				</weaponList>
+				<onlyUseRaceRestrictedWeapons>true</onlyUseRaceRestrictedWeapons>
+			</raceRestriction>
 			<generalSettings>
-			<maleGenderProbability>1</maleGenderProbability>
+				<maleGenderProbability>1</maleGenderProbability>
 				<maxDamageForSocialfight>1</maxDamageForSocialfight>
-				            <forcedRaceTraitEntries>
-                <li>
-                    <defName>MechAtlas</defName>
-                    <chance>100</chance>
-                </li>
-							</forcedRaceTraitEntries>
+				<forcedRaceTraitEntries>
+					<li>
+						<defName>MechAtlas</defName>
+						<chance>100</chance>
+					</li>
+				</forcedRaceTraitEntries>
 				<immuneToAge>false</immuneToAge>
 				<disallowedTraits>
 					<li>DrugDesire</li>
@@ -85,18 +77,18 @@
 					<li>SuperImmune</li>
 					<li>Beautiful</li>
 				</disallowedTraits>
-		   <notXenophobistTowards>
-              <li>Human</li>
-			  <li>Android3Tier</li>
-			  <li>Android1Tier</li>
-			  <li>Android2Tier</li>
-           </notXenophobistTowards>
+				<notXenophobistTowards>
+					<li>Human</li>
+					<li>Android3Tier</li>
+					<li>Android1Tier</li>
+					<li>Android2Tier</li>
+				</notXenophobistTowards>
 				<alienPartGenerator>
 					<alienbodytypes>
 						<li>Male</li>
 					</alienbodytypes>
-            <alienskinsecondcolorgen Class="ColorGenerator_Options">
-                <options>
+					<alienskinsecondcolorgen Class="ColorGenerator_Options">
+						<options>
 							<li>
 								<weight>5</weight>
 								<only>RGBA(0.36,0.36,0.36,1)</only>
@@ -109,8 +101,8 @@
 								<weight>5</weight>
 								<only>RGBA(0.25,0.25,0.25,1)</only>
 							</li>
-                </options>
-            </alienskinsecondcolorgen>
+						</options>
+					</alienskinsecondcolorgen>
 					<alienskincolorgen Class="ColorGenerator_Options">
 						<options>
 							<li>
@@ -131,7 +123,6 @@
 							</li>
 						</options>
 					</alienskincolorgen>
-					
 					<customDrawSize>(2.8, 2.9)</customDrawSize>
 				</alienPartGenerator>
 			</generalSettings>
@@ -147,7 +138,7 @@
 			<thoughtSettings>
 				<cannotReceiveThoughtsAtAll>true</cannotReceiveThoughtsAtAll>
 			</thoughtSettings>
-		<relationSettings>
+			<relationSettings>
 				<relationChanceModifierChild>0</relationChanceModifierChild>
 				<relationChanceModifierExLover>0</relationChanceModifierExLover>
 				<relationChanceModifierExSpouse>0</relationChanceModifierExSpouse>
@@ -156,7 +147,7 @@
 				<relationChanceModifierParent>0</relationChanceModifierParent>
 				<relationChanceModifierSibling>0</relationChanceModifierSibling>
 				<relationChanceModifierSpouse>0</relationChanceModifierSpouse>
-		</relationSettings>
+			</relationSettings>
 		</alienRace>
 		<statBases>
 			<MarketValue>18000</MarketValue>
@@ -215,11 +206,11 @@
 			</li>
 		</tools>
 		<race>
-      <thinkTreeMain>MechM7Like</thinkTreeMain>
-      <thinkTreeConstant>HumanlikeConstant</thinkTreeConstant>
+			<thinkTreeMain>MechM7Like</thinkTreeMain>
+			<thinkTreeConstant>HumanlikeConstant</thinkTreeConstant>
 			<intelligence>Humanlike</intelligence>
 			<makesFootprints>true</makesFootprints>
-			      <nameGenerator>AndroidAtlasMech</nameGenerator>
+			<nameGenerator>AndroidAtlasMech</nameGenerator>
 			<lifeExpectancy>8000</lifeExpectancy>
 			<body>AndroidM7Mech</body>
 			<leatherDef>Tainted_Skin</leatherDef>
@@ -230,7 +221,7 @@
 			<fleshType>MechanisedInfantry</fleshType>
 			<bloodDef>CoolantAndroidTier</bloodDef>
 			<useMeatFrom>Alpaca</useMeatFrom>
-						<baseBodySize>5.2</baseBodySize>
+			<baseBodySize>5.2</baseBodySize>
 			<gestationPeriodDays>1</gestationPeriodDays>
 			<canBePredatorPrey>false</canBePredatorPrey>
 			<lifeStageAges>
@@ -267,32 +258,30 @@
 			</hediffGiverSets>
 		</race>
 		<recipes>
- 		  <li>ATPP_PaintAndroidFrameworkDefault</li>
-		  <li>ATPP_PaintAndroidFrameworkRed</li>
-		  <li>ATPP_PaintAndroidFrameworkOrange</li>
-		  <li>ATPP_PaintAndroidFrameworkYellow</li>
-		  <li>ATPP_PaintAndroidFrameworkKhaki</li>
-		  <li>ATPP_PaintAndroidFrameworkGreen</li>
-		  <li>ATPP_PaintAndroidFrameworkBlue</li>
-		  <li>ATPP_PaintAndroidFrameworkCyan</li>
-		  <li>ATPP_PaintAndroidFrameworkPurple</li>
-		  <li>ATPP_PaintAndroidFrameworkPink</li>
-		  <li>ATPP_PaintAndroidFrameworkBlack</li>
-		  <li>ATPP_PaintAndroidFrameworkWhite</li>
+			<li>ATPP_PaintAndroidFrameworkDefault</li>
+			<li>ATPP_PaintAndroidFrameworkRed</li>
+			<li>ATPP_PaintAndroidFrameworkOrange</li>
+			<li>ATPP_PaintAndroidFrameworkYellow</li>
+			<li>ATPP_PaintAndroidFrameworkKhaki</li>
+			<li>ATPP_PaintAndroidFrameworkGreen</li>
+			<li>ATPP_PaintAndroidFrameworkBlue</li>
+			<li>ATPP_PaintAndroidFrameworkCyan</li>
+			<li>ATPP_PaintAndroidFrameworkPurple</li>
+			<li>ATPP_PaintAndroidFrameworkPink</li>
+			<li>ATPP_PaintAndroidFrameworkBlack</li>
+			<li>ATPP_PaintAndroidFrameworkWhite</li>
 		</recipes>
-		
 		<butcherProducts>
 			<Plasteel>160</Plasteel>
 			<ComponentIndustrial>50</ComponentIndustrial>
 			<Gold>6</Gold>
 		</butcherProducts>
-<modExtensions>
-    <li Class="MOARANDROIDS.AndroidTweaker">
-        <tweakCorpseRot>true</tweakCorpseRot>
-    </li>
-</modExtensions>
+		<modExtensions>
+			<li Class="MOARANDROIDS.AndroidTweaker">
+				<tweakCorpseRot>true</tweakCorpseRot>
+			</li>
+		</modExtensions>
 	</AlienRace.ThingDef_AlienRace>
-
 	<PawnKindDef ParentName="BasePlayerPawnKind">
 		<defName>M7MechPawn</defName>
 		<label>M7 mech</label>
@@ -301,34 +290,33 @@
 		<canArriveManhunter>false</canArriveManhunter>
 		<ecoSystemWeight>9999</ecoSystemWeight>
 		<backstoryFiltersOverride>
-		  <li>
-			<categories>
-			  <li>Mechdrop</li>
-			</categories>
-		  </li>
+			<li>
+				<categories>
+					<li>Mechdrop</li>
+				</categories>
+			</li>
 		</backstoryFiltersOverride>
 		<defaultFactionType>PlayerColony</defaultFactionType>
 		<aiAvoidCover>true</aiAvoidCover>
-   <weaponMoney>
-      <min>800</min>
-      <max>1200</max>
-    </weaponMoney>
-    <weaponTags>
-      <li>MechM7Gun</li>
-    </weaponTags>
-    <lifeStages>
-      <li>
-        <bodyGraphicData>
-          <drawSize>4, 4.5</drawSize>
-          <shadowData>
-            <volume>(0.85, 2.3, 0.85)</volume>
-            <offset>(0,0,-0.15)</offset>
-          </shadowData>
-        </bodyGraphicData>
-      </li>
-    </lifeStages>
+		<weaponMoney>
+			<min>800</min>
+			<max>1200</max>
+		</weaponMoney>
+		<weaponTags>
+			<li>MechM7Gun</li>
+		</weaponTags>
+		<lifeStages>
+			<li>
+				<bodyGraphicData>
+					<drawSize>4, 4.5</drawSize>
+					<shadowData>
+						<volume>(0.85, 2.3, 0.85)</volume>
+						<offset>(0,0,-0.15)</offset>
+					</shadowData>
+				</bodyGraphicData>
+			</li>
+		</lifeStages>
 	</PawnKindDef>
-	
 	<AlienRace.BackstoryDef>
 		<defName>MechanizedInfantry</defName>
 		<title>Mechanized infantry</title>
@@ -337,32 +325,31 @@
 		<bodyTypeMale>Male</bodyTypeMale>
 		<bodyTypeFemale>Female</bodyTypeFemale>
 		<slot>Adulthood</slot>
-				<spawnCategories>
+		<spawnCategories>
 			<li>Mechdrop</li>
 			<li>ColonyMechStory</li>
 		</spawnCategories>
 		<skillGains>
-          <li>
-            <defName>Melee</defName>
-            <amount>12</amount>
-          </li>
-          <li>
-            <defName>Shooting</defName>
-            <amount>12</amount>
-          </li>
-        </skillGains>
-    <workDisables>
-        <li>Artistic</li>
-		<li>Caring</li>
-		<li>PlantWork</li>
-		<li>Animals</li>
-		<li>Intellectual</li>
-		<li>ManualSkilled</li>
-		<li>Crafting</li>
-		<li>Cleaning</li>
-    </workDisables>
+			<li>
+				<defName>Melee</defName>
+				<amount>12</amount>
+			</li>
+			<li>
+				<defName>Shooting</defName>
+				<amount>12</amount>
+			</li>
+		</skillGains>
+		<workDisables>
+			<li>Artistic</li>
+			<li>Caring</li>
+			<li>PlantWork</li>
+			<li>Animals</li>
+			<li>Intellectual</li>
+			<li>ManualSkilled</li>
+			<li>Crafting</li>
+			<li>Cleaning</li>
+		</workDisables>
 	</AlienRace.BackstoryDef>
-
 	<AlienRace.BackstoryDef>
 		<defName>FactoryMade</defName>
 		<title>Factory made</title>
@@ -370,41 +357,39 @@
 		<baseDescription>this mech was formed inside an ancient factory.</baseDescription>
 		<bodyTypeMale>Male</bodyTypeMale>
 		<slot>Childhood</slot>
-				<spawnCategories>
+		<spawnCategories>
 			<li>Mechdrop</li>
 		</spawnCategories>
-    <forcedHediffs>
-      <li>BatteryChargeMech</li>
-    </forcedHediffs>
+		<forcedHediffs>
+			<li>BatteryChargeMech</li>
+		</forcedHediffs>
 	</AlienRace.BackstoryDef>
-	
-  <TraitDef>
-    <defName>MechAtlas</defName>
-	    <commonality>1</commonality>
-    <degreeDatas>
-      <li>
-        <label>Mech</label>
-        <description>A mechanized infantry unit, they do not think or feel.</description>
-		<statOffsets>
-          <SocialImpact>-0.90</SocialImpact>
-        </statOffsets>
-      </li>
-    </degreeDatas>
-  </TraitDef>
-  
-    <ThoughtDef>
-    <defName>MoodOffsetMech</defName>
-    <workerClass>ThoughtWorker_AlwaysActive</workerClass>
-    <validWhileDespawned>true</validWhileDespawned>
-    <requiredTraits>
-      <li>MechAtlas</li>
-    </requiredTraits>
-    <stages>
-      <li>
-        <label>Unfeeling</label>
-        <description>this mechanised infantry is unfeeling and without emotion.</description>
-        <baseMoodEffect>100</baseMoodEffect>
-      </li>
-    </stages>
-  </ThoughtDef>
+	<TraitDef>
+		<defName>MechAtlas</defName>
+		<commonality>1</commonality>
+		<degreeDatas>
+			<li>
+				<label>Mech</label>
+				<description>A mechanized infantry unit, they do not think or feel.</description>
+				<statOffsets>
+					<SocialImpact>-0.90</SocialImpact>
+				</statOffsets>
+			</li>
+		</degreeDatas>
+	</TraitDef>
+	<ThoughtDef>
+		<defName>MoodOffsetMech</defName>
+		<workerClass>ThoughtWorker_AlwaysActive</workerClass>
+		<validWhileDespawned>true</validWhileDespawned>
+		<requiredTraits>
+			<li>MechAtlas</li>
+		</requiredTraits>
+		<stages>
+			<li>
+				<label>Unfeeling</label>
+				<description>this mechanised infantry is unfeeling and without emotion.</description>
+				<baseMoodEffect>100</baseMoodEffect>
+			</li>
+		</stages>
+	</ThoughtDef>
 </Defs>

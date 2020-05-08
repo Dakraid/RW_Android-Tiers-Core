@@ -4,7 +4,7 @@
 		<defName>CoolantAndroidTier</defName>
 		<label>coolant</label>
 		<statBases>
-		<Cleanliness>-5</Cleanliness>
+			<Cleanliness>-5</Cleanliness>
 			<Beauty>-10</Beauty>
 		</statBases>
 		<filth>

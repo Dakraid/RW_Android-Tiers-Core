@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-
 	<ThingDef ParentName="BedWithQualityBase">
 		<defName>AndroidOperationBed</defName>
 		<label>android upgrade station</label>
@@ -54,51 +53,50 @@
 		<techLevel>Spacer</techLevel>
 		<uiIconScale>1</uiIconScale>
 	</ThingDef>
-
-  <ThingDef ParentName="FurnitureWithQualityBase">
-    <defName>AndroidOperationKit</defName>
-    <label>upgrade cabinet</label>
-    <description>A small cabinet that can be used in conjunction with the android upgrade station or bed. It contains very accurate, small tools for the most delicate of procedures.</description>
-    <surfaceType>Item</surfaceType>
-	<designationCategory>ATPP_DesignationAndroidTiers</designationCategory>
-	<rotatable>false</rotatable>
-    <graphicData>
-      <texPath>Things/Building/AndroidToolKit</texPath>
-      <graphicClass>Graphic_Single</graphicClass>
-	  <drawSize>(1.1,1.1)</drawSize>
-      <shadowData>
-        <volume>(0.3, 0.6, 0.3)</volume>
-      </shadowData>
-    </graphicData>
-    <statBases>
-      <MaxHitPoints>85</MaxHitPoints>
-      <WorkToBuild>1800</WorkToBuild>
-      <Mass>8</Mass>
-      <Flammability>0.7</Flammability>
-    </statBases>
-    <pathCost>60</pathCost>
+	<ThingDef ParentName="FurnitureWithQualityBase">
+		<defName>AndroidOperationKit</defName>
+		<label>upgrade cabinet</label>
+		<description>A small cabinet that can be used in conjunction with the android upgrade station or bed. It contains very accurate, small tools for the most delicate of procedures.</description>
+		<surfaceType>Item</surfaceType>
+		<designationCategory>ATPP_DesignationAndroidTiers</designationCategory>
+		<rotatable>false</rotatable>
+		<graphicData>
+			<texPath>Things/Building/AndroidToolKit</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+			<drawSize>(1.1,1.1)</drawSize>
+			<shadowData>
+				<volume>(0.3, 0.6, 0.3)</volume>
+			</shadowData>
+		</graphicData>
+		<statBases>
+			<MaxHitPoints>85</MaxHitPoints>
+			<WorkToBuild>1800</WorkToBuild>
+			<Mass>8</Mass>
+			<Flammability>0.7</Flammability>
+		</statBases>
+		<pathCost>60</pathCost>
 		<size>(1,1)</size>
 		<costList>
 			<Plasteel>30</Plasteel>
 			<Steel>30</Steel>
 			<ComponentIndustrial>3</ComponentIndustrial>
 		</costList>
-    <placeWorkers>
-      <li>PlaceWorker_ShowFacilitiesConnections</li>
-    </placeWorkers>
-    <researchPrerequisites>
-      <li>AndroidOperationFurniture</li>
-    </researchPrerequisites>
-    <comps>
-      <li Class="CompProperties_Facility">
-        <statOffsets>
-          <AndroidSurgerySuccessChanceFactor>0.08</AndroidSurgerySuccessChanceFactor>
-        </statOffsets>
-        <maxSimultaneous>1</maxSimultaneous>
-        <mustBePlacedAdjacentCardinalToBedHead>true</mustBePlacedAdjacentCardinalToBedHead>
-      </li>
-    </comps>
-    <staticSunShadowHeight>0</staticSunShadowHeight>
-    <castEdgeShadows>false</castEdgeShadows>
-  </ThingDef>
+		<placeWorkers>
+			<li>PlaceWorker_ShowFacilitiesConnections</li>
+		</placeWorkers>
+		<researchPrerequisites>
+			<li>AndroidOperationFurniture</li>
+		</researchPrerequisites>
+		<comps>
+			<li Class="CompProperties_Facility">
+				<statOffsets>
+					<AndroidSurgerySuccessChanceFactor>0.08</AndroidSurgerySuccessChanceFactor>
+				</statOffsets>
+				<maxSimultaneous>1</maxSimultaneous>
+				<mustBePlacedAdjacentCardinalToBedHead>true</mustBePlacedAdjacentCardinalToBedHead>
+			</li>
+		</comps>
+		<staticSunShadowHeight>0</staticSunShadowHeight>
+		<castEdgeShadows>false</castEdgeShadows>
+	</ThingDef>
 </Defs>
