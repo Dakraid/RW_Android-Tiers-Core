@@ -22,6 +22,7 @@ namespace MOARANDROIDS
 
             if (cpt == null)
                 return 0;
+
             return getCurrentAndroidPowerConsumed() + cpt.Props.basePowerConsumption;
         }
 

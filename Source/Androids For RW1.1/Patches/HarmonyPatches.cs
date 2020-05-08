@@ -19,7 +19,8 @@ namespace BlueLeakTest
             Utils.harmonyInstance = new Harmony("rimworld.rwmods.androidtiers");
             Utils.harmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
 
-            /*DefDatabase<ThingDef_AlienRace>.AllDefsListForReading.ForEach(delegate (ThingDef_AlienRace ar)
+            /*
+             DefDatabase<ThingDef_AlienRace>.AllDefsListForReading.ForEach(delegate (ThingDef_AlienRace ar)
             {
                 if (ar.race.FleshType == DefDatabase<FleshTypeDef>.GetNamed("Android") || ar.race.FleshType == DefDatabase<FleshTypeDef>.GetNamed("MechanisedInfantry"))
                 {
@@ -31,7 +32,8 @@ namespace BlueLeakTest
             });
 
             DefDatabase<RecipeDef>.GetNamed("ButcherCorpseAndroidAT").fixedIngredientFilter.SetAllow(MOARANDROIDS.ThingCategoryDefOf.androidCorpseCategory, true, null, null);
-            DefDatabase<RecipeDef>.GetNamed("ButcherCorpseFlesh").fixedIngredientFilter.SetAllow(MOARANDROIDS.ThingCategoryDefOf.androidCorpseCategory, false);*/
+            DefDatabase<RecipeDef>.GetNamed("ButcherCorpseFlesh").fixedIngredientFilter.SetAllow(MOARANDROIDS.ThingCategoryDefOf.androidCorpseCategory, false);
+            */
         }
     }
 

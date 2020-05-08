@@ -7,11 +7,6 @@ namespace MOARANDROIDS
 {
     public class Building_ReloadStation : Building
     {
-        public override void SpawnSetup(Map map, bool respawningAfterLoad)
-        {
-            base.SpawnSetup(map, respawningAfterLoad);
-        }
-
         private FloatMenuOption GetFailureReason(Pawn myPawn)
         {
             if (!myPawn.CanReach(this, PathEndMode.InteractionCell, Danger.Some)) return new FloatMenuOption("CannotUseNoPath".Translate(), null);

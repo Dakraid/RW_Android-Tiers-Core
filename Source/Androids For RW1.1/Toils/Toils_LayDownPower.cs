@@ -8,9 +8,7 @@ namespace MOARANDROIDS
     public static class Toils_LayDownPower
     {
         private const int TicksBetweenSleepZs = 100;
-
         public const float GroundRestEffectiveness = 0.8f;
-
         private const int GetUpOrStartJobWhileInBedCheckInterval = 211;
 
         public static Toil LayDown(TargetIndex bedOrRestSpotIndex, bool hasBed, bool lookForOtherJobs, bool canSleep = true, bool gainRestAndHealth = true)

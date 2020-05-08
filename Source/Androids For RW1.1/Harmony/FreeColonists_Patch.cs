@@ -39,7 +39,7 @@ namespace MOARANDROIDS
             [HarmonyPostfix]
             public static void Listener(Thing __instance, ref bool __result)
             {
-                if (!(__instance is Pawn pawn)) return;
+                if (!(__instance is Pawn pawn) || __result) return;
 
                 var cso = pawn.TryGetComp<CompSurrogateOwner>();
                 if (cso?.skyCloudHost != null)
