@@ -19,8 +19,7 @@ namespace MOARANDROIDS
                 {
                     if (__instance == null)
                         return;
-
-
+                    
                     var cas = __instance.TryGetComp<CompAndroidState>();
                     if (cas == null || !cas.isSurrogate || cas.externalController == null || newFaction == null || !newFaction.IsPlayer ||
                         Find.DesignatorManager.SelectedDesignator != null && Find.DesignatorManager.SelectedDesignator is Designator_SurrogateToHack) return;
@@ -34,7 +33,6 @@ namespace MOARANDROIDS
                         if (cas.surrogateController.TryGetComp<CompSurrogateOwner>() != null)
                             cas.surrogateController.TryGetComp<CompSurrogateOwner>().disconnectControlledSurrogate(null);
                     }
-
 
                     cas.externalController = null;
                 }
@@ -60,9 +58,7 @@ namespace MOARANDROIDS
 
 
                         var csm = __instance.TryGetComp<CompSkyMind>();
-                        if (csm != null)
-
-                            csm.tempHackingEnding();
+                        csm?.tempHackingEnding();
                     }
 
 

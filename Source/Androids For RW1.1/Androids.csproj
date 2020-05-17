@@ -34,9 +34,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony, Version=2.0.0.10, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="0Harmony, Version=2.0.1.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\..\..\References\0Harmony.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp, Version=1.1.7429.26553, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\..\..\References\Assembly-CSharp.dll</HintPath>

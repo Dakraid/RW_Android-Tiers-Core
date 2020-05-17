@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
+    <PawnKindDef Name="BaseAndroidPawnKind" ParentName="BasePlayerPawnKind">
+        <ageGenerationCurve>
+            <points>
+                <li>(0,2)</li>
+                <li>(7,20)</li>
+                <li>(14,100)</li>
+                <li>(28,100)</li>
+                <li>(36,30)</li>
+                <li>(50,12</li>
+                <li>(80,6)</li>
+                <li>(100,5)</li>
+            </points>
+        </ageGenerationCurve>
+        <minGenerationAge>1</minGenerationAge>
+        <maxGenerationAge>100</maxGenerationAge>
+    </PawnKindDef>
     <PawnKindDef ParentName="BasePlayerPawnKind">
         <defName>AbominationAtlas</defName>
         <label>Mutant</label>
@@ -34,7 +50,7 @@
             </li>
         </lifeStages>
     </PawnKindDef>
-    <PawnKindDef ParentName="BasePlayerPawnKind">
+    <PawnKindDef ParentName="BaseAndroidPawnKind">
         <defName>AndroidT5Colonist</defName>
         <label>T5 Android Colonist</label>
         <race>Android5Tier</race>
@@ -57,7 +73,7 @@
         <techHediffsChance>0.1</techHediffsChance>
         <backstoryCryptosleepCommonality>0</backstoryCryptosleepCommonality>
     </PawnKindDef>
-    <PawnKindDef ParentName="BasePlayerPawnKind">
+    <PawnKindDef ParentName="BaseAndroidPawnKind">
         <defName>AndroidT4Colonist</defName>
         <label>T4 Android Colonist</label>
         <race>Android4Tier</race>
@@ -68,13 +84,11 @@
                 </categories>
             </li>
         </backstoryFiltersOverride>
-        <minGenerationAge>1</minGenerationAge>
-        <maxGenerationAge>5</maxGenerationAge>
         <defaultFactionType>PlayerColonyAndroid</defaultFactionType>
         <chemicalAddictionChance>0.00</chemicalAddictionChance>
         <backstoryCryptosleepCommonality>0</backstoryCryptosleepCommonality>
     </PawnKindDef>
-    <PawnKindDef ParentName="BasePlayerPawnKind">
+    <PawnKindDef ParentName="BaseAndroidPawnKind">
         <defName>AndroidT3Colonist</defName>
         <label>T3 Android Colonist</label>
         <race>Android3Tier</race>
@@ -91,7 +105,7 @@
         <chemicalAddictionChance>0.00</chemicalAddictionChance>
         <backstoryCryptosleepCommonality>0</backstoryCryptosleepCommonality>
     </PawnKindDef>
-    <PawnKindDef ParentName="BasePlayerPawnKind">
+    <PawnKindDef ParentName="BaseAndroidPawnKind">
         <defName>AndroidT1Colonist</defName>
         <label>T1 Android Colonist</label>
         <race>Android1Tier</race>
@@ -102,13 +116,11 @@
                 </categories>
             </li>
         </backstoryFiltersOverride>
-        <minGenerationAge>1</minGenerationAge>
-        <maxGenerationAge>5</maxGenerationAge>
         <defaultFactionType>PlayerColonyAndroid</defaultFactionType>
         <chemicalAddictionChance>0.00</chemicalAddictionChance>
         <backstoryCryptosleepCommonality>0</backstoryCryptosleepCommonality>
     </PawnKindDef>
-    <PawnKindDef ParentName="BasePlayerPawnKind">
+    <PawnKindDef ParentName="BaseAndroidPawnKind">
         <defName>AndroidT2Colonist</defName>
         <label>T2 Android Colonist</label>
         <race>Android2Tier</race>
@@ -119,14 +131,12 @@
                 </categories>
             </li>
         </backstoryFiltersOverride>
-        <minGenerationAge>1</minGenerationAge>
-        <maxGenerationAge>5</maxGenerationAge>
         <defaultFactionType>PlayerColonyAndroid</defaultFactionType>
         <chemicalAddictionChance>0.00</chemicalAddictionChance>
         <backstoryCryptosleepCommonality>0</backstoryCryptosleepCommonality>
     </PawnKindDef>
     <!--Androids With Real Backstories-->
-    <PawnKindDef ParentName="BasePlayerPawnKind">
+    <PawnKindDef ParentName="BaseAndroidPawnKind">
         <defName>AndroidT4ColonistGeneral</defName>
         <label>T4 Android Colonist</label>
         <race>Android4Tier</race>
@@ -145,7 +155,7 @@
             <li>IndustrialBasic</li>
         </apparelTags>
     </PawnKindDef>
-    <PawnKindDef ParentName="BasePlayerPawnKind">
+    <PawnKindDef ParentName="BaseAndroidPawnKind">
         <defName>AndroidT3ColonistGeneral</defName>
         <label>T3 Android Colonist</label>
         <race>Android3Tier</race>
@@ -164,7 +174,7 @@
             <li>IndustrialBasic</li>
         </apparelTags>
     </PawnKindDef>
-    <PawnKindDef ParentName="BasePlayerPawnKind">
+    <PawnKindDef ParentName="BaseAndroidPawnKind">
         <defName>AndroidT1ColonistGeneral</defName>
         <label>T1 Android Colonist</label>
         <race>Android1Tier</race>
@@ -183,7 +193,7 @@
             <li>IndustrialBasic</li>
         </apparelTags>
     </PawnKindDef>
-    <PawnKindDef ParentName="BasePlayerPawnKind">
+    <PawnKindDef ParentName="BaseAndroidPawnKind">
         <defName>AndroidT2ColonistGeneral</defName>
         <label>T2 Android Colonist</label>
         <race>Android2Tier</race>

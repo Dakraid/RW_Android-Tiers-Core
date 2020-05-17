@@ -903,7 +903,7 @@ namespace MOARANDROIDS
                     }
                     else
                     {
-                        p = p = Math.Min(1.0f, (Find.TickManager.TicksGame - permuteStartGT) / (float) (permuteEndingGT - permuteStartGT));
+                        p = Math.Min(1.0f, (Find.TickManager.TicksGame - permuteStartGT) / (float) (permuteEndingGT - permuteStartGT));
                     }
 
                     ret += "ATPP_PermutationPercentage".Translate(((int) (p * 100)).ToString()) + "\n";
@@ -916,11 +916,11 @@ namespace MOARANDROIDS
                     if (duplicateEndingGT == -1)
                     {
                         var cso = duplicateRecipient.TryGetComp<CompSurrogateOwner>();
-                        p = p = Math.Min(1.0f, (Find.TickManager.TicksGame - cso.duplicateStartGT) / (float) (cso.duplicateEndingGT - cso.duplicateStartGT));
+                        p = Math.Min(1.0f, (Find.TickManager.TicksGame - cso.duplicateStartGT) / (float) (cso.duplicateEndingGT - cso.duplicateStartGT));
                     }
                     else
                     {
-                        p = p = Math.Min(1.0f, (Find.TickManager.TicksGame - duplicateStartGT) / (float) (duplicateEndingGT - duplicateStartGT));
+                        p = Math.Min(1.0f, (Find.TickManager.TicksGame - duplicateStartGT) / (float) (duplicateEndingGT - duplicateStartGT));
                     }
 
                     ret += "ATPP_DuplicationPercentage".Translate(((int) (p * 100)).ToString()) + "\n";
@@ -928,25 +928,19 @@ namespace MOARANDROIDS
 
                 if (uploadToSkyCloudEndingGT != -1)
                 {
-                    float p;
-
-                    p = p = Math.Min(1.0f, (Find.TickManager.TicksGame - uploadToSkyCloudStartGT) / (float) (uploadToSkyCloudEndingGT - uploadToSkyCloudStartGT));
+                    var p = Math.Min(1.0f, (Find.TickManager.TicksGame - uploadToSkyCloudStartGT) / (float) (uploadToSkyCloudEndingGT - uploadToSkyCloudStartGT));
                     ret += "ATPP_UploadSkyCloudPercentage".Translate(((int) (p * 100)).ToString()) + "\n";
                 }
 
                 if (downloadFromSkyCloudEndingGT != -1)
                 {
-                    float p;
-
-                    p = p = Math.Min(1.0f, (Find.TickManager.TicksGame - downloadFromSkyCloudStartGT) / (float) (downloadFromSkyCloudEndingGT - downloadFromSkyCloudStartGT));
+                    var p = Math.Min(1.0f, (Find.TickManager.TicksGame - downloadFromSkyCloudStartGT) / (float) (downloadFromSkyCloudEndingGT - downloadFromSkyCloudStartGT));
                     ret += "ATPP_DownloadFromSkyCloudPercentage".Translate(((int) (p * 100)).ToString()) + "\n";
                 }
 
                 if (mindAbsorptionEndingGT != -1)
                 {
-                    float p;
-
-                    p = p = Math.Min(1.0f, (Find.TickManager.TicksGame - mindAbsorptionStartGT) / (float) (mindAbsorptionEndingGT - mindAbsorptionStartGT));
+                    var p = Math.Min(1.0f, (Find.TickManager.TicksGame - mindAbsorptionStartGT) / (float) (mindAbsorptionEndingGT - mindAbsorptionStartGT));
                     ret += "ATPP_MindAbsorptionProgress".Translate(((int) (p * 100)).ToString()) + "\n";
                 }
 

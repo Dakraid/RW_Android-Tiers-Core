@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-    <PawnKindDef ParentName="BasePlayerPawnKind">
+    <PawnKindDef ParentName="BaseAndroidPawnKind">
         <defName>AndroidT3CollectiveColonist</defName>
         <label>T3 Android Citizen</label>
         <race>Android3Tier</race>
@@ -50,7 +50,7 @@
             <li>Advanced</li>
         </techHediffsTags>
     </PawnKindDef>
-    <PawnKindDef ParentName="BasePlayerPawnKind">
+    <PawnKindDef ParentName="BaseAndroidPawnKind">
         <defName>AndroidT1CollectiveColonist</defName>
         <label>T1 Android Citizen</label>
         <race>Android1Tier</race>
@@ -101,7 +101,7 @@
             <li>Advanced</li>
         </techHediffsTags>
     </PawnKindDef>
-    <PawnKindDef ParentName="BasePlayerPawnKind">
+    <PawnKindDef ParentName="BaseAndroidPawnKind">
         <defName>AndroidT2CollectiveTrader</defName>
         <label>T2 Android Trader</label>
         <race>Android2Tier</race>
