@@ -13,7 +13,6 @@
                 </categories>
             </li>
         </backstoryFiltersOverride>
-        <minGenerationAge>20</minGenerationAge>
         <defaultFactionType>AndroidFriendliesAtlas</defaultFactionType>
         <chemicalAddictionChance>0.00</chemicalAddictionChance>
         <backstoryCryptosleepCommonality>0</backstoryCryptosleepCommonality>
@@ -63,7 +62,6 @@
                 </categories>
             </li>
         </backstoryFiltersOverride>
-        <minGenerationAge>20</minGenerationAge>
         <defaultFactionType>AndroidFriendliesAtlas</defaultFactionType>
         <chemicalAddictionChance>0.00</chemicalAddictionChance>
         <backstoryCryptosleepCommonality>0</backstoryCryptosleepCommonality>
@@ -115,7 +113,6 @@
                 </categories>
             </li>
         </backstoryFiltersOverride>
-        <minGenerationAge>20</minGenerationAge>
         <defaultFactionType>AndroidFriendliesAtlas</defaultFactionType>
         <chemicalAddictionChance>0.00</chemicalAddictionChance>
         <backstoryCryptosleepCommonality>0</backstoryCryptosleepCommonality>
@@ -167,7 +164,6 @@
         <race>Android1Tier</race>
         <combatPower>60</combatPower>
         <baseRecruitDifficulty>0.60</baseRecruitDifficulty>
-        <minGenerationAge>20</minGenerationAge>
         <defaultFactionType>AndroidFriendliesAtlas</defaultFactionType>
         <aiAvoidCover>true</aiAvoidCover>
         <gearHealthRange>
@@ -218,7 +214,6 @@
         <baseRecruitDifficulty>0.70</baseRecruitDifficulty>
         <race>Android2Tier</race>
         <combatPower>120</combatPower>
-        <minGenerationAge>20</minGenerationAge>
         <defaultFactionType>AndroidFriendliesAtlas</defaultFactionType>
         <aiAvoidCover>false</aiAvoidCover>
         <gearHealthRange>
@@ -269,7 +264,6 @@
         <baseRecruitDifficulty>0.80</baseRecruitDifficulty>
         <race>Android3Tier</race>
         <combatPower>180</combatPower>
-        <minGenerationAge>20</minGenerationAge>
         <defaultFactionType>AndroidFriendliesAtlas</defaultFactionType>
         <aiAvoidCover>false</aiAvoidCover>
         <gearHealthRange>
@@ -321,7 +315,6 @@
         <baseRecruitDifficulty>0.90</baseRecruitDifficulty>
         <race>Android4Tier</race>
         <combatPower>230</combatPower>
-        <minGenerationAge>20</minGenerationAge>
         <defaultFactionType>AndroidFriendliesAtlas</defaultFactionType>
         <aiAvoidCover>false</aiAvoidCover>
         <gearHealthRange>
@@ -374,7 +367,6 @@
         <race>Android4Tier</race>
         <combatPower>250</combatPower>
         <factionLeader>true</factionLeader>
-        <minGenerationAge>20</minGenerationAge>
         <invNutrition>3.0</invNutrition>
         <defaultFactionType>AndroidFriendliesAtlas</defaultFactionType>
         <aiAvoidCover>false</aiAvoidCover>

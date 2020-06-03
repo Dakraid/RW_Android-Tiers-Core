@@ -68,8 +68,6 @@
                 </categories>
             </li>
         </backstoryFiltersOverride>
-        <minGenerationAge>1</minGenerationAge>
-        <maxGenerationAge>50</maxGenerationAge>
         <defaultFactionType>PlayerColonyAndroid</defaultFactionType>
         <chemicalAddictionChance>0.00</chemicalAddictionChance>
         <backstoryCryptosleepCommonality>0</backstoryCryptosleepCommonality>
@@ -85,8 +83,6 @@
                 </categories>
             </li>
         </backstoryFiltersOverride>
-        <minGenerationAge>1</minGenerationAge>
-        <maxGenerationAge>50</maxGenerationAge>
         <defaultFactionType>PlayerColonyAndroid</defaultFactionType>
         <chemicalAddictionChance>0.00</chemicalAddictionChance>
         <backstoryCryptosleepCommonality>0</backstoryCryptosleepCommonality>
@@ -102,8 +98,6 @@
                 </categories>
             </li>
         </backstoryFiltersOverride>
-        <minGenerationAge>1</minGenerationAge>
-        <maxGenerationAge>50</maxGenerationAge>
         <defaultFactionType>PlayerColonyAndroid</defaultFactionType>
         <chemicalAddictionChance>0.00</chemicalAddictionChance>
         <backstoryCryptosleepCommonality>0</backstoryCryptosleepCommonality>
@@ -119,8 +113,6 @@
                 </categories>
             </li>
         </backstoryFiltersOverride>
-        <minGenerationAge>1</minGenerationAge>
-        <maxGenerationAge>50</maxGenerationAge>
         <defaultFactionType>PlayerColonyAndroid</defaultFactionType>
         <chemicalAddictionChance>0.00</chemicalAddictionChance>
         <backstoryCryptosleepCommonality>0</backstoryCryptosleepCommonality>
@@ -137,7 +129,6 @@
                 </categories>
             </li>
         </backstoryFiltersOverride>
-        <minGenerationAge>20</minGenerationAge>
         <defaultFactionType>PlayerColonyAndroid</defaultFactionType>
         <chemicalAddictionChance>0.00</chemicalAddictionChance>
         <backstoryCryptosleepCommonality>0</backstoryCryptosleepCommonality>
@@ -156,7 +147,6 @@
                 </categories>
             </li>
         </backstoryFiltersOverride>
-        <minGenerationAge>20</minGenerationAge>
         <defaultFactionType>PlayerColonyAndroid</defaultFactionType>
         <chemicalAddictionChance>0.00</chemicalAddictionChance>
         <backstoryCryptosleepCommonality>0</backstoryCryptosleepCommonality>
@@ -175,7 +165,6 @@
                 </categories>
             </li>
         </backstoryFiltersOverride>
-        <minGenerationAge>20</minGenerationAge>
         <defaultFactionType>PlayerColonyAndroid</defaultFactionType>
         <chemicalAddictionChance>0.00</chemicalAddictionChance>
         <backstoryCryptosleepCommonality>0</backstoryCryptosleepCommonality>
@@ -195,7 +184,6 @@
             </li>
         </backstoryFiltersOverride>
         <defaultFactionType>PlayerColonyAndroid</defaultFactionType>
-        <minGenerationAge>20</minGenerationAge>
         <chemicalAddictionChance>0.00</chemicalAddictionChance>
         <backstoryCryptosleepCommonality>0</backstoryCryptosleepCommonality>
         <apparelTags>
